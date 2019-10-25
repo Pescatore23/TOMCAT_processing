@@ -25,11 +25,14 @@ num_cores=mp.cpu_count()
 #baseFolder="T:\\Samples_with_Water_inside"
 #baseFolder="R:\\Scratch\\305\\_Robert\\TOMCAT3_yarn"
 #baseFolder=r"T:\Zwischenlager\disk1"
-baseFolder=r"O:\disk2"
+#baseFolder=r"O:\disk2"
+baseFolder = r'S:\Zwischenlager\disk1'
+
 
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 #newDiskfolder=r'F:\Zwischenlager_Robert\TOMCAT_3'
 newDiskfolder=r'X:\TOMCAT3_processing_1'
+newBaseFolder=r'Y:\TOMCAT_3'
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition

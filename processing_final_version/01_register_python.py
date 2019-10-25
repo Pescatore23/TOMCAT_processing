@@ -23,9 +23,10 @@ mount=''
 #baseFolder=r"T:\Zwischenlager\disk1"
 baseFolder=r'O:\disk2'
 #baseFolder=r'T:\TOMCAT3_Test'
+baseFolder = r'S:\Zwischenlager\disk1'
 
 newBaseFolder=r'X:\TOMCAT3_processing_1'
-#newBaseFolder=baseFolder
+newBaseFolder=r'Y:\TOMCAT_3'
 
 num_cores = mp.cpu_count()
 

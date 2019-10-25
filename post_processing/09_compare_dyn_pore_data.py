@@ -23,10 +23,10 @@ num_cores = mp.cpu_count()
 
 drive = '//152.88.86.87/data118'
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
-processing_version = 'processed_1400_dry_seg_aniso_sep'
+processing_version = 'processed_1400_dry_seg_aniso_sep_all_samples'
 
 sourceFolder  = os.path.join(data_path, processing_version)
-plot_folder = r"R:\Scratch\305\_Robert\plots_pore_prop_corr"
+plot_folder = r"R:\Scratch\305\_Robert\plots_pore_prop_corr_good_samples_filtered"
 
 all_together = os.path.join(plot_folder, 'all')
 if not os.path.exists(all_together):
@@ -71,21 +71,34 @@ for sample in samples:
     data = dyn_data.merge(pore_data)
     data['parameter'] = parameter
 #    data.coords['sig_fit_var'] = ['t0 [s]', 'beta [1_s]', 'alpha [vx]', 'R2']
-    
+    variables = list(data['parameter'].data) + list(data['fit_var'].data) + list(data['sig_fit_var'].data) + list(data['property'].data) + ['rel_slope']+ ['max_filling_time [s]'] + ['norm_aspect_ratio']
     
 
     test_data = np.concatenate([data['dynamics'], data['fit_data'], data['sig_fit_data'], data['value_properties'], ], axis = 1)
-    test_data = np.concatenate([test_data, np.array([test_data[:,9]/test_data[:,8],]).transpose()], axis = 1) # rel_slope = slope/volume
     
-    steps = test_data[:,5].copy().astype(np.uint16)
+    fw_id = variables.index('final water volume [vx]')
+    relevant_pores = np.where(test_data[:,fw_id]>40)[0] #filter out noise speckles, pores that only have a few spurious pixel from bad registration at step 5
+    test_data = test_data[relevant_pores,:]
+    
+    
+    sl_id = variables.index('slope')
+    test_data = np.concatenate([test_data, np.array([test_data[:,sl_id]/test_data[:,fw_id],]).transpose()], axis = 1) # rel_slope = slope/volume
+    
+    tmax_id = variables.index('time step of max filling rate')
+    steps = test_data[:,tmax_id].copy().astype(np.uint16)
     time_max = np.array([time_list[step] for step in steps])
     
     test_data = np.concatenate([test_data, np.array([time_max,]).transpose()], axis = 1)
     
-    norm_a_r = test_data[:,15]/np.sqrt(test_data[:,29])
+    
+    
+    ma_id = variables.index("major_axis")
+    area_id = variables.index("mean_area")
+    
+    norm_a_r = test_data[:,ma_id]/np.sqrt(test_data[:, area_id])
     test_data = np.concatenate([test_data, np.array([norm_a_r,]).transpose()], axis = 1)
     
-    variables = list(data['parameter'].data) + list(data['fit_var'].data) + list(data['sig_fit_var'].data) + list(data['property'].data) + ['rel_slope']+ ['max_filling_time [s]'] + ['norm_aspect_ratio']
+    
 
     data_dict[sample[9:-3]] = test_data.copy()   
 
@@ -137,39 +150,39 @@ ylims = {'filling start time step': (0, 360),
          'filling end time step': (0, 360),
          'filling start [s]': (0, 1750),
          'filling end [s]': (0, 1750),
-         'max filling rate [vx_s]': (0, 50000), #(0, 5E9),
+         'max filling rate [vx_s]': (0, 40000), #(0, 5E9),
          'time step of max filling rate': (0, 360),
          'median filling rate [vx_s]': (0, 20), #(0, 120),
          'num filling peaks': (0, 20), #(0, 35),
          'pore volume [vx]': (0, 1000000), # (0, 2500000),
          'slope': (0, 4000), #(0, 30000),
-         'rel_slope': (0,0.2), #(0,1),
+         'rel_slope': (0,0.025), #(0,1),
          'onset': (0, 1800), #(0, 5E18),
          't0 [s]': (0, 1750), # (-80000, 50000),
          'beta [1_s]': (0,12), # (0, 600),
-         'alpha [vx]': (0, 1000000), #(0, 7E9),
+         'alpha [vx]': (0, 350000), #(0, 7E9),
          'R2': (0, 1.05),
          'major_axis': (0, 1800),
          'minor_axis': (0, 170),
          'aspect_ratio': (0,50), #(0, 90),
-         'median_shape_factor': (0, 0.2),
-         'mean_shape_factor': (0, 0.2), #(0, 0.8),
-         'shape_factor_std': (0, 0.8), #(0, 1.6),
+         'median_shape_factor': (0, 0.08),
+         'mean_shape_factor': (0, 0.08), #(0, 0.8),
+         'shape_factor_std': (0, 0.05), #(0, 1.6),
          'shp_fac_rel_var': (0,1), #(0,3),
          'tilt_axis_state': (-0.05, 1.05),
-         'tilt_angle_grad': (0, 50), #(0, 80),
+         'tilt_angle_grad': (0, 30), #(0, 80),
          'eccentricity_from_vertical_axis': (0, 25),
          'eccentricity_from_tilt_axis': (0, 16),
          'distance_end_to_end': (0, 1500),
          'arc_length': (0, 1750),
-         'tortuosity': (0.95, 1.5), #(0.95, 3),
-         'volume': (0, 1000000),
+         'tortuosity': (0.95, 1.3), #(0.95, 3),
+         'volume': (0, 600000),
          'mean_area': (0, 500),# (0, 2750),
          'median_area': (0, 500), #(0,3000),
          'area_std': (0,500), #(0,1750),
-         'area_rel_var': (0, 1.75),
+         'area_rel_var': (0, 1.25),
          'max_filling_time [s]': (0, 1750),
-         'norm_aspect_ratio': (0,9), #(0,15),
+         'norm_aspect_ratio': (0,1.25), #(0,15),
          'angular_dist': (0,100),#(0,360)
          'final_saturation': (0,1),
          'final water volume [vx]': (0, 200000)

@@ -9,11 +9,13 @@ import matplotlib.pyplot as plt
 plt.ioff()
 import numpy as np
 from skimage import measure
+from skimage.morphology import ball
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import os
 from joblib import Parallel, delayed
 import multiprocessing as mp
 import xarray as xr
+from scipy import ndimage
 
 num_cores = 12# mp.cpu_count()
 
@@ -74,6 +76,40 @@ def rendering(t, transitions, time, outfolder):
         ax.cla()
         plt.close(fig)
  
+    
+def specific_rendering(sample, label, neighbours=False, z_limit = 1400, sourcefolder=sourcefolder, targetfolder=targetfolder, num_cores=num_cores):
+    sample_file = ''.join(['dyn_data_',sample,'.nc'])
+    sample_data = xr.load_dataset(os.path.join(sourcefolder, sample_file))
+    label_matrix = sample_data['label_matrix'][:,:,:z_limit]
+    pore = label_matrix == label
+    time = sample_data['time'].data
+    t_max=len(time)
+    
+    if not neighbours:
+        bounding_box = ndimage.find_objects(pore)[0]
+        outfolder = os.path.join(targetfolder, sample, ''.join(['label_',str(label)]))
+    
+    if neighbours:
+        large_mask = np.zeros(label_matrix.shape, dtype=np.bool)
+        mask = ndimage.morphology.binary_dilation(pore, structure = ball(2))
+        labels = np.unique(label_matrix[mask])[1:]
+        for color in labels:
+            large_mask[label_matrix==color]=True
+        bounding_box = ndimage.find_objects(large_mask)[0]
+        outfolder = os.path.join(targetfolder, sample, ''.join(['label_',str(label),'_neighbours']))
+
+    if not os.path.exists(os.path.join(targetfolder, sample))  :
+        os.path.mkdir(os.path.join(targetfolder, sample))
+    
+    if not os.path.exists(outfolder):
+        os.mkdir(outfolder)
+    
+    transitions = sample_data['transition_matrix'][bounding_box].data
+    
+    Parallel(n_jobs=num_cores)(delayed(rendering)(t, transitions, time, outfolder) for t in range(t_max+1))
+    
+    
+    
 samples = os.listdir(sourcefolder)
 
 samples = reversed(samples)

@@ -32,7 +32,7 @@ theta = 50 #° plasma treated PET
 
 drive = '//152.88.86.87/data118'
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
-processing_version = 'processed_1400_dry_seg_aniso_sep'
+processing_version = 'processed_1400_dry_seg_aniso_sep_all_samples'
 
 sourceFolder  = os.path.join(data_path, processing_version)
 
