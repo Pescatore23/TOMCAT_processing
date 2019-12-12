@@ -13,7 +13,7 @@ created by: Robert Fischer
 import sys
 #MarceloCodePath= "H:\\10_Python\\005_Scripts_from_others\\005_Marcelos_Processing_Files\\wicking-yarn-master\\wicking-yarn-master"
 #homeCodePath=r'F:\Zwischenlager_Robert'
-homeCodePath=r"H:\10_Python\008_TOMCAT_processing"
+homeCodePath=r"H:\10_Python\008_TOMCAT_processing\tomcat-processing\processing_final_version"
 #if MarceloCodePath not in sys.path:
 #    sys.path.append(MarceloCodePath)
 if homeCodePath not in sys.path:
@@ -29,12 +29,15 @@ from ij.io import FileSaver
 
 #Interlace_training_path=r'R:\Scratch\305\_Robert\05_weka_training_sets\Interlaces'
 
-baseFolder=r'F:\Zwischenlager_Robert\TOMCAT_3'
-baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
+repeats = ['T3_300_3', 'T3_025_1', 'T3_025_4', 'T3_025_9_III']
+
+#baseFolder=r'F:\Zwischenlager_Robert\TOMCAT_3'
+#baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
 #baseFolder=r'T:\disk2'
 #baseFolder=r'U:\TOMCAT_3_segmentation'
 #baseFolder=r'V:\disk2'
-#baseFolder = r'T:\TOMCAT3_processing_1'
+baseFolder = r'X:\TOMCAT3_processing_1'
+#baseFolder = r'Y:\TOMCAT_3'
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition
@@ -45,7 +48,7 @@ excluded_samples=[
  'T3_300_8',        #FOV moved
  'T3_025_7',        #water only in small pores
  'T3_025_4_III',    #little water, data set incomplete, missing time steps reconstructed at PSI-ra-cluster, but only little water -> not reasonable to process?!
- 'T3_025_3_II'      #little, water wet with acetone
+ 'T3_025_3_II'      #little water, wet with acetone
  ]    
 
 def makesamplelist(baseFolder, **kwargs):
@@ -58,8 +61,9 @@ samples=makesamplelist(baseFolder)
 
 
 time00=time.time()
-sourceFolder = '02_pystack_registered'
+#sourceFolder = '02_pystack_registered'
 #sourceFolder = '00_raw'
+sourceFolder = '02_pystack_registered_from_5'
 
 Features = [
 			[1   ,   'Gaussian_blur'],
@@ -97,6 +101,7 @@ i=1
 
 
 for sample in reversed(samples):
+	if not sample in repeats: continue
 	print(sample, "(",i,"/",len(samples),")")
 	i=i+1
 	if sample[1] == '4': continue
@@ -104,8 +109,8 @@ for sample in reversed(samples):
 	#if not sample == 'T3_025_3_III': continue
 	
 	interlaceFlag=False
-#	targetFolder = os.path.join(baseFolder,sample,"01a_weka_segmented_dry") 
-	targetFolder = os.path.join(baseFolder,sample,"01b_weka_segmented_mean") 
+	targetFolder = os.path.join(baseFolder,sample,"01a_weka_segmented_dry") 
+#	targetFolder = os.path.join(baseFolder,sample,"01b_weka_segmented_mean") 
 
 
 
@@ -149,15 +154,15 @@ for sample in reversed(samples):
 	segmentator.trainClassifier()
 
 
-#	dryscan=os.listdir(os.path.join(baseFolder, sample, sourceFolder))[0]
-#	folder=os.path.join(baseFolder, sample, sourceFolder, dryscan)
-#	folder2=''.join([folder,'_2'])
-#	folder3=''.join([folder,'_3'])
-
-# SECOND VERSION USING THE TEMPORAL MEAN AS REFERENCE
-	folder=os.path.join(baseFolder, sample, '02a_temporal_mean')
+	dryscan=os.listdir(os.path.join(baseFolder, sample, sourceFolder))[0]
+	folder=os.path.join(baseFolder, sample, sourceFolder, dryscan)
 	folder2=''.join([folder,'_2'])
 	folder3=''.join([folder,'_3'])
+
+# SECOND VERSION USING THE TEMPORAL MEAN AS REFERENCE
+#	folder=os.path.join(baseFolder, sample, '02a_temporal_mean')
+#	folder2=''.join([folder,'_2'])
+#	folder3=''.join([folder,'_3'])
 	
 
 	x_folder=os.path.join(baseFolder, sample, targetFolder, "x_set")

@@ -14,31 +14,24 @@ Output
 
 @author: firo by adapting Marcelo's code
 """
-
-import sys
-library=r"R:\Scratch\305\_Robert\Python_Library"
-
-if library not in sys.path:
-    sys.path.append(library)
-
-
-
 import os
 import imageio
-import RobPyLib
+import robpylib
 import numpy as np
 from scipy.ndimage import morphology
 from skimage import io
 from joblib import Parallel, delayed
 import multiprocessing as mp
 
+repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 
 #baseFolder=r'U:\TOMCAT_3_segmentation'
-baseFolder = r'T:\TOMCAT3_processing_1'
+baseFolder = r'X:\TOMCAT3_processing_1'
+#baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
 
-
+OverWrite = True
 #newBaseFolder=False
-newBaseFolder = r'U:\TOMCAT_3_segmentation'
+newBaseFolder = r'W:\TOMCAT_3_segmentation'
 
 parallel=True
 waterpos=2016
@@ -67,7 +60,7 @@ excluded_samples=[
 #                    breakFlag=True
 #    return breakFlag
 
-def test_recalculate(sourceFolder,targetFolder,z,OverWrite=False):
+def test_recalculate(sourceFolder,targetFolder,z,OverWrite=OverWrite):
     breakFlag=False
     first_scan=os.listdir(sourceFolder)[0]
     if os.path.exists(targetFolder):   
@@ -124,7 +117,8 @@ def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
 
 #    tinitial = 10000 # initial threshold    -> deprecated (fibers are masked out before)
     jumpmin = 1500.0 # minimum jumpheight
-    X=Y=np.shape(imgs)[0]
+    X=imgs.shape[0]
+    Y=imgs.shape[1]
     for pX in range(X):
         for pY in range(Y):
 #            a=1
@@ -132,7 +126,7 @@ def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
             if poremask[pX,pY] >0:
                 # current pixel time series
                 currpx = imgs[pX,pY,:].astype(dtype='float')                
-                s_filtered = RobPyLib.CommonFunctions.Tools.fourier_filter(currpx,band=0.1,dt=1.2)
+                s_filtered = robpylib.CommonFunctions.Tools.fourier_filter(currpx,band=0.1,dt=1.2)
                 
 #                # find where maximum gradient occurs
                 g_filtered=np.gradient(s_filtered)
@@ -161,7 +155,7 @@ def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
 def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos):
     breakFlag=test_recalculate(sourceFolder,targetFolder,z,OverWrite=False)
     if not breakFlag:
-        Tstack, names, scans = RobPyLib.CommonFunctions.ImportExport.OpenTimeStack(sourceFolder, z)
+        Tstack, names, scans = robpylib.CommonFunctions.ImportExport.OpenTimeStack(sourceFolder, z)
         fibername=fibernames[z]
         fibermask=np.uint8(io.imread(os.path.join(baseFolder,fibermaskFolder,fibername)))
         fibermask=fibermask/np.max(fibermask)
@@ -169,7 +163,7 @@ def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_trans
         poremask=mask*(1-fibermask)
         Tstack=Tstack*poremask[:,:,None]
         binStack, transitions, transitions2 = fft_grad_segmentation(Tstack,poremask,z,waterpos=waterpos)
-        RobPyLib.CommonFunctions.ImportExport.WriteTimeSeries(targetFolder, binStack, names, scans)
+        robpylib.CommonFunctions.ImportExport.WriteTimeSeries(targetFolder, binStack, names, scans)
         imageio.imwrite(os.path.join(targetFolder_transitions,names[0]),transitions)
         imageio.imwrite(os.path.join(targetFolder_transitions2,names[0]),transitions2)
     return True
@@ -180,10 +174,11 @@ def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_trans
 def inner_segmentation_function(sample, newBaseFolder=False, tracefits=False, waterpos=waterpos):
     if not newBaseFolder: newBaseFolder = baseFolder
     sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered')#"02_registered_1300_rigid") 
+    sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')#"02_registered_1300_rigid") 
     fibermaskFolder = os.path.join(baseFolder, sample, "01a_weka_segmented_dry","classified")   #has to be True for fibers and False for the rest, but not necessarly binary
-    targetFolder = os.path.join(newBaseFolder, sample, "03_gradient_filtered")
-    targetFolder_transitions = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions")
-    targetFolder_transitions2 = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions2")
+    targetFolder = os.path.join(newBaseFolder, sample, "03_gradient_filtered_from_5")
+    targetFolder_transitions = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions_from_5")
+    targetFolder_transitions2 = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions2_from_5")
 #       
     if not os.path.exists(targetFolder):
            os.makedirs(targetFolder) 
@@ -213,6 +208,8 @@ def fft_segmentation(baseFolder=baseFolder, newDiskfolder=False):
     samples=makesamplelist(baseFolder)
     c=1
     for sample in samples:
+#        if not sample == 'T3_025_9_III': continue
+        if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
         print(sample,'(',c,'/',len(samples),')')
 #        if sample[1]=='4':
 #            c=c+1

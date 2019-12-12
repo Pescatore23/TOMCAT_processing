@@ -20,13 +20,15 @@ parallel=True
 
 number_reference_slices=100
 mount=''
-#baseFolder=r"T:\Zwischenlager\disk1"
-baseFolder=r'O:\disk2'
+baseFolder=r'X:\TOMCAT3_processing_1'
+#baseFolder=r'O:\disk2'
 #baseFolder=r'T:\TOMCAT3_Test'
-baseFolder = r'S:\Zwischenlager\disk1'
+#baseFolder = r'S:\Zwischenlager\disk1'
+#baseFolder=r'Y:\TOMCAT_3'
 
-newBaseFolder=r'X:\TOMCAT3_processing_1'
-newBaseFolder=r'Y:\TOMCAT_3'
+#newBaseFolder=r'X:\TOMCAT3_processing_1'
+#newBaseFolder=r'Y:\TOMCAT_3'
+newBaseFolder = baseFolder
 
 num_cores = mp.cpu_count()
 
@@ -126,7 +128,7 @@ def register_slice(sourceFolder,targetFolder,matFolder,z,regfile,trans_mat_flag=
     return True
         
 
-def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw', num_cores=num_cores, waterpos=waterpos):
+def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw', num_cores=num_cores, waterpos=waterpos, parallel=parallel):
     zmax=2016
     sourceFolder = os.path.join(baseFolder, sample, stage)
 #    targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered')

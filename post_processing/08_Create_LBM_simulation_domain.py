@@ -13,33 +13,33 @@ from skimage.transform import resize
 from skimage.morphology import ball
 from skimage.measure import label as sklabel
 
+
 #from joblib import Parallel, delayed
 #import multiprocessing as mp
 
 
-# FIXME include creation of PNM by cutting the void space at defined heights
-
 
 """INPUT"""
 
-domain_height = 0.1E-3 #m
-LBM_lattice_spacing = 2.75E-6 #m
+domain_height = 3E-3 #m
+LBM_lattice_spacing = 2.75E-6/3 #m
 R = 55E-6/2 #m
 
 pore_label = 27
 single_pore = False
 
-PNM = True
+PNM = False
+full_geo = True
 PNM_DZ = 50E-6 #m
 
 top_position = 0 #m, measured from top
 
 destination = ''
 
-dest_PNM = ''
+dest_PNM = r'C:\Users\firo\Desktop\T3_025_3_III_orig_res_2mm_triple.dat'
 
 fit_file = r"W:\Robert_TOMCAT_3\T3_025_3_III\06_fiber_tracing\T3_025_3_III_fiber_fit_data.nc"
-exp_file = r"C:\Zwischenlager\Dyn_Data_1200\dyn_data_T3_025_3_III.nc"
+exp_file = r"W:\Robert_TOMCAT_3_netcdf4_archives\processed_1200_dry_seg_aniso_sep\dyn_data_T3_025_3_III.nc"
 
 
 """END INPUT"""
@@ -111,11 +111,12 @@ if single_pore == True:
     
 #    sim_domain.tofile(destination)
         
-
-if PNM == True:
+# FIXME make parallel for large domains!!!
+if PNM == True or full_geo == True:
     dz_pnm = int(PNM_DZ/lx)
     
     void = expdata['label_matrix'][:,:,z0:z1]
+
 #    void = ndimage.morphology.binary_dilation(void, structure = ball(2)).astype(np.bool)
     
     DX = int(scaling*void.shape[0])
@@ -145,35 +146,44 @@ if PNM == True:
                     if (x-x0_lx)**2+(y-y0_lx)**2 < (R/lx)**2:
                         domain[x,y,z] = True
         hull[:,:,z] = skmorph.convex_hull_image(domain[:,:,z])
+       
         
-    sim_domain = np.bitwise_xor(hull, domain)
-           
-    
-    for z in range(sim_domain.shape[2]):
-        sim_domain[:,:,z] = skmorph.remove_small_objects(sim_domain[:,:,z], min_size=5, connectivity=1)
-    void = None
-    domain = None
-#    from here do pore segmentation, i.e. connected components after cutting in dz_pnm thick slices
-
-    pnm_domain = np.zeros(sim_domain.shape, dtype = np.uint16)
-    
-    num_segments = int(sim_domain.shape[2]/dz_pnm) + 1
-    ref_color = 0
-    
-    for i in range(num_segments):
-        z_pnm_0 = i*dz_pnm
-        if z_pnm_0 > pnm_domain.shape[2]-1: continue
-    
-        z_pnm_1 = min(z_pnm_0 + dz_pnm, pnm_domain.shape[2])
+    pnm_domain = domain
+    if PNM == True:
+        sim_domain = np.bitwise_xor(hull, domain)
+               
         
-        test_volume = sim_domain[:,:,z_pnm_0:z_pnm_1]
-        label = sklabel(test_volume, connectivity = 2)
-        num_pores = label.max()
-        label[np.where(label>0)] = label[np.where(label>0)] + ref_color
-        pnm_domain[:, :, z_pnm_0:z_pnm_1] = label
-        ref_color = ref_color + num_pores
+        for z in range(sim_domain.shape[2]):
+            sim_domain[:,:,z] = skmorph.remove_small_objects(sim_domain[:,:,z], min_size=5, connectivity=1)
+        void = None
+        domain = None
+    
+    ##    from here do pore segmentation, i.e. connected components after cutting in dz_pnm thick slices
+    #   
         
-#    pnm_domain.tofile(dest_PNM)
+        
+        pnm_domain = sim_domain
+        pnm_domain = np.zeros(sim_domain.shape, dtype = np.uint16)
+        
+        num_segments = int(sim_domain.shape[2]/dz_pnm) + 1
+        ref_color = 0
+        
+        for i in range(num_segments):
+            z_pnm_0 = i*dz_pnm
+            if z_pnm_0 > pnm_domain.shape[2]-1: continue
+        
+            z_pnm_1 = min(z_pnm_0 + dz_pnm, pnm_domain.shape[2])
+            
+            test_volume = sim_domain[:,:,z_pnm_0:z_pnm_1]
+            label = sklabel(test_volume, connectivity = 2)
+            num_pores = label.max()
+            label[np.where(label>0)] = label[np.where(label>0)] + ref_color
+            pnm_domain[:, :, z_pnm_0:z_pnm_1] = label
+            ref_color = ref_color + num_pores
+    
+    bb = ndimage.find_objects(pnm_domain>0)[0]
+    pnm_domain = pnm_domain[bb]
+    pnm_domain.tofile(dest_PNM)
         
         
         

@@ -19,11 +19,12 @@ import robpylib
 from joblib import Parallel, delayed
 import multiprocessing as mp
 
+
 num_cores = mp.cpu_count()
 
 drive = '//152.88.86.87/data118'
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
-processing_version = 'processed_1400_dry_seg_aniso_sep_all_samples'
+processing_version = 'processed_1200_dry_seg_aniso_sep_good_samples'
 
 sourceFolder  = os.path.join(data_path, processing_version)
 plot_folder = r"R:\Scratch\305\_Robert\plots_pore_prop_corr_good_samples_filtered"
@@ -69,7 +70,7 @@ for sample in samples:
     dyn_data = xr.load_dataset(os.path.join(sourceFolder, sample))
     pore_data = xr.load_dataset(os.path.join(sourceFolder, ''.join(['pore_props_', sample[9:]])))
     data = dyn_data.merge(pore_data)
-    data['parameter'] = parameter
+#    data['parameter'] = parameter
 #    data.coords['sig_fit_var'] = ['t0 [s]', 'beta [1_s]', 'alpha [vx]', 'R2']
     variables = list(data['parameter'].data) + list(data['fit_var'].data) + list(data['sig_fit_var'].data) + list(data['property'].data) + ['rel_slope']+ ['max_filling_time [s]'] + ['norm_aspect_ratio']
     
@@ -159,7 +160,7 @@ ylims = {'filling start time step': (0, 360),
          'rel_slope': (0,0.025), #(0,1),
          'onset': (0, 1800), #(0, 5E18),
          't0 [s]': (0, 1750), # (-80000, 50000),
-         'beta [1_s]': (0,12), # (0, 600),
+         'beta [1_s]': (0,4), # (0, 600),
          'alpha [vx]': (0, 350000), #(0, 7E9),
          'R2': (0, 1.05),
          'major_axis': (0, 1800),
@@ -167,35 +168,36 @@ ylims = {'filling start time step': (0, 360),
          'aspect_ratio': (0,50), #(0, 90),
          'median_shape_factor': (0, 0.08),
          'mean_shape_factor': (0, 0.08), #(0, 0.8),
-         'shape_factor_std': (0, 0.05), #(0, 1.6),
+         'shape_factor_std': (0, 0.02), #(0, 1.6),
          'shp_fac_rel_var': (0,1), #(0,3),
          'tilt_axis_state': (-0.05, 1.05),
          'tilt_angle_grad': (0, 30), #(0, 80),
-         'eccentricity_from_vertical_axis': (0, 25),
-         'eccentricity_from_tilt_axis': (0, 16),
+         'eccentricity_from_vertical_axis': (0, 65),
+         'eccentricity_from_tilt_axis': (0, 45),
          'distance_end_to_end': (0, 1500),
          'arc_length': (0, 1750),
-         'tortuosity': (0.95, 1.3), #(0.95, 3),
+         'tortuosity': (0.9, 1.3), #(0.95, 3),
          'volume': (0, 600000),
          'mean_area': (0, 500),# (0, 2750),
          'median_area': (0, 500), #(0,3000),
          'area_std': (0,500), #(0,1750),
          'area_rel_var': (0, 1.25),
          'max_filling_time [s]': (0, 1750),
-         'norm_aspect_ratio': (0,1.25), #(0,15),
+         'norm_aspect_ratio': (0,200),
          'angular_dist': (0,100),#(0,360)
          'final_saturation': (0,1),
-         'final water volume [vx]': (0, 200000)
+         'final water volume [vx]': (0, 200000),
+         'shell_mobility_%': (0, 1.5)
          }
 
 def plotting(i,j, combined_data=combined_data, combined_025=combined_025,
-             combined_100=combined_100, combined_300=combined_300, data_dict=data_dict):
+             combined_100=combined_100, combined_300=combined_300, data_dict=data_dict, ms=2):
 #    FIXME: it is necessary to plot each sample in different colors
 #    plot different tension values in different colors
     
 #    plot all together
         plt.figure()
-        plt.plot(combined_data[:,j], combined_data[:,i], 's', markersize = 1)
+        plt.plot(combined_data[:,j], combined_data[:,i], 's', markersize = ms)
         plt.title(variables[i])
         plt.xlabel(variables[j])
         plt.xlim(ylims[variables[j]])
@@ -206,9 +208,9 @@ def plotting(i,j, combined_data=combined_data, combined_025=combined_025,
         
 #    plot tensions in different colors
         plt.figure()
-        plt.plot(combined_025[:,j], combined_025[:,i], 's', markersize = 1)
-        plt.plot(combined_100[:,j], combined_100[:,i], 's', markersize = 1)
-        plt.plot(combined_300[:,j], combined_300[:,i], 's', markersize = 1)
+        plt.plot(combined_025[:,j], combined_025[:,i], 's', markersize = ms)
+        plt.plot(combined_100[:,j], combined_100[:,i], 's', markersize = ms)
+        plt.plot(combined_300[:,j], combined_300[:,i], 's', markersize = ms)
         plt.title(variables[i])
         plt.xlabel(variables[j])
         plt.xlim(ylims[variables[j]])
@@ -220,7 +222,7 @@ def plotting(i,j, combined_data=combined_data, combined_025=combined_025,
 #    plot samples in different colors
         plt.figure()
         for sample in list(data_dict.keys()):
-            plt.plot(data_dict[sample][:,j], data_dict[sample][:,i], 's', markersize = 1)       
+            plt.plot(data_dict[sample][:,j], data_dict[sample][:,i], 's', markersize = ms)       
         plt.title(variables[i])
         plt.xlabel(variables[j])
         plt.xlim(ylims[variables[j]])

@@ -10,26 +10,23 @@ loads probability maps of x-,y-, and z-slices and rebuilds a segmented image
 
 confidence_value=0.55
 
-confidence_value = 0.7   # for weka on temporal mean (dask enhanced)
-
-import sys
-library=r"R:\Scratch\305\_Robert\Python_Library"
-
-if library not in sys.path:
-    sys.path.append(library)
-
+#confidence_value = 0.7   # for weka on temporal mean (dask enhanced)
 
 import os
 import numpy as np
 from skimage import io
-import RobPyLib
+import robpylib
 
 
 z_low=1414
 z_high=1644
 
-baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
+#baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
+#baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
+baseFolder = 'X:\TOMCAT3_processing_1'
 samples=os.listdir(baseFolder)
+
+repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 
 
 #knots={}
@@ -89,14 +86,16 @@ knots['T4_300_5_III']=[1377,1610]
 stage = '02_pystack_registered'
 
 for sample in samples:
+    if not sample == 'T3_025_9_III': continue
+    if not sample in repeats: continue
     if sample in excluded_samples: continue
     if not sample[1]=='3': continue
 #    if sample == 'T4_025_3_III': continue
     print(sample)
     if sample[1]=='4':
         z_low,z_high=knots[sample]
-#    targetFolder = os.path.join(baseFolder,sample,"01a_weka_segmented_dry")
-    targetFolder = os.path.join(baseFolder,sample,"01b_weka_segmented_mean")
+    targetFolder = os.path.join(baseFolder,sample,"01a_weka_segmented_dry")
+#    targetFolder = os.path.join(baseFolder,sample,"01b_weka_segmented_mean")
     Folder = os.path.join(targetFolder,'temp')
     
     
@@ -150,5 +149,5 @@ for sample in samples:
     binStack=np.zeros(Stack.shape,dtype=np.uint8)
     binStack[np.where(Stack>confidence_value)]=255
     
-    RobPyLib.CommonFunctions.ImportExport.WriteStackNew(os.path.join(targetFolder,'classified'),names,binStack)
+    robpylib.CommonFunctions.ImportExport.WriteStackNew(os.path.join(targetFolder,'classified'),names,binStack)
     

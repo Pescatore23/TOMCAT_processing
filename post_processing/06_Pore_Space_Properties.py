@@ -17,7 +17,7 @@ import multiprocessing as mp
 
 num_cores = mp.cpu_count()
 drive = '//152.88.86.87/data118'
-processing_version = 'processed_1200_dry_seg_aniso_sep'
+processing_version = 'processed_1200_dry_seg_aniso_sep_good_samples'
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', processing_version)
 
 
@@ -105,8 +105,12 @@ def get_pore_props(pore_object, bounding_box, label):
     rho_v, phi_v = cylinder_coords(COM_2D[:,0], COM_2D[:,1], vert_axis[0], vert_axis[1])
     rho_t, phi_t = cylinder_coords(COM_2D[:,0], COM_2D[:,1], x_fun(z), y_fun(z))
     
-    v_ecc = rho_v.std()
-    t_ecc = rho_t.std()
+    
+    v_ecc = rho_v.mean()
+    shell_mob = rho_v.std()/v_ecc     # radius std could be interesting measure for inter-yarn-layer mobility, but get relative 
+#    t_ecc = rho_t.std()
+    
+    t_ecc = rho_t.mean()
     
     dx = np.diff(x)
     dy = np.diff(y)
@@ -141,7 +145,8 @@ def get_pore_props(pore_object, bounding_box, label):
                'median_area': median_area,
                'area_std': area_std,
                'area_rel_var': area_std/mean_area,
-               'angular_dist': delta_phi
+               'angular_dist': delta_phi,
+               'shell_mobility': shell_mob
             }
     
     return label, results

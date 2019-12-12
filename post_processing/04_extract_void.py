@@ -26,11 +26,12 @@ import imageio
 from skimage import morphology as skmorph
 from joblib import Parallel, delayed
 import multiprocessing as mp
+import robpylib
 
-
-#baseFolder = 'T:\TOMCAT3_processing_1'
+#baseFolder = 'X:\TOMCAT3_processing_1'
 #newBaseFolder = 'U:\TOMCAT_3_segmentation'
-baseFolder = r'Z:\Robert_TOMCAT_3_Part_2'
+#baseFolder = r'Z:\Robert_TOMCAT_3_Part_2'
+baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
 newBaseFolder = baseFolder
 
 
@@ -83,21 +84,23 @@ c=0
 for sample in os.listdir(baseFolder):
 #    if not sample == 'T4_300_5_III': continue
     if sample[1] == '4': continue
+#    if not sample == 'T3_025_9_III': continue
+    if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     if sample in excluded_samples:
         c=c+1
         continue
-    fiberFolder=os.path.join(baseFolder,sample,'01b_weka_segmented_mean','classified')
+    fiberFolder=os.path.join(baseFolder,sample,'01a_weka_segmented_dry','classified')
     sourceFolder=os.path.join(baseFolder,sample,'02_pystack_registered')
     waterFolder=os.path.join(sourceFolder,os.listdir(sourceFolder)[-1])
     
     if not newBaseFolder:
         newBaseFolder=baseFolder
     
-    targetFolder=os.path.join(newBaseFolder,sample,'04a_void_space_temp_mean')
+    targetFolder=os.path.join(newBaseFolder,sample,'04a_void_space')
     
-    if os.path.exists(targetFolder):
-        c=c+1
-        continue
+#    if os.path.exists(targetFolder):
+#        c=c+1
+#        continue
     
     if not os.path.exists(os.path.join(newBaseFolder,sample)):
         os.mkdir(os.path.join(newBaseFolder,sample))

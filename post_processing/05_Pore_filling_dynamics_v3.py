@@ -31,6 +31,10 @@ parallel = True
 num_cores = mp.cpu_count()
 #num_cores = 8
 
+time_limit = {'T3_100_10_III': 344,
+              'T3_300_5': 229,
+              'T3_100_7': 206,
+              'T3_100_10': 232}
 
 waterline = 1200
 px=2.75E-6 #m
@@ -45,19 +49,32 @@ rho = 997 #kg/m3  density of water
 #data_path = r"C:\Zwischenlager\Dyn_Data"
 
 drive = '//152.88.86.87/data118'
-baseFolder = os.path.join(drive, 'Robert_TOMCAT_3_Part_2')
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed')
+baseFolder = os.path.join(drive, 'Robert_TOMCAT_3')
+data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_iso_sep')
 
-label_folder = '05b_labels'
+if not os.path.exists(data_path):
+    os.mkdir(data_path)  
+if not os.path.exists(os.path.join(data_path, 'plots')):
+    os.mkdir(os.path.join(data_path, 'plots'))
+if not os.path.exists(os.path.join(data_path, 'plots_label')):
+    os.mkdir(os.path.join(data_path, 'plots_label'))
+
+#label_folder = '05b_labels'
+label_folder = '05b_labels_dry_seg_iso'
+#label_folder = '05b_labels_from_5'
 #label_folder = '05b_labels_dry_seg_iso'
-
-# T3_025_9_III: labels_temp_mean is a copy of labels_dry_seg because of failed weka segmentation (some water in first scan already)
-
 
 transition_folder = '03_gradient_filtered_transitions'
 transition_2_folder = '03_gradient_filtered_transitions2'
 
+#transition_folder = '03_gradient_filtered_transitions_from_5'
+#transition_2_folder = '03_gradient_filtered_transitions2_from_5'
+
+#transition_folder = '03_b_gradient_filtered_transitions_enhanced'
+#transition_2_folder = '03_b_gradient_filtered_transitions2_enhanced5'
+
 good_samples = robpylib.TOMCAT.INFO.good_samples
+#good_samples = robpylib.TOMCAT.INFO.samples_to_repeat
 
 #time_0 = time.time()
 
@@ -135,9 +152,16 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     labels = labels[:,:,:waterline]
     transitions2 = transitions2[:,:,:waterline]
     
+    if sample in robpylib.TOMCAT.INFO.samples_to_repeat:
+        transitions[transitions>0] = transitions[transitions>0]+5
+        transitions2[transitions2>0] = transitions2[transitions2>0]+5
     
+    limit = 400
     
-    transitions[transitions>400]=0       
+    if sample in list(time_limit.keys()):
+        limit = time_limit[sample]
+    
+    transitions[transitions>limit -1 ]=0       
     label_id, label_count = np.unique(labels,return_counts=True)
   
     relevant_pores = np.where(label_count>50)[0][1:]   #remove value 0 from array (= background)
@@ -154,7 +178,11 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     else:
         time_list=np.arange(t_max)*15 #[s]
     step_size = time_list.copy()
-    step_size[1:] = np.diff(time_list) 
+    step_size[1:] = np.diff(time_list)
+    
+#    if sample in robpylib.TOMCAT.INFO.samples_to_repeat:
+#        time_list = time_list[5:]
+#        step_size = step_size[5:]
     
     
     data_filling = np.zeros([number_pores, t_max], dtype=np.uint32)
@@ -283,13 +311,18 @@ def dyn_fit_step2(sample_data):
     time = sample_data['time'].data
     labels = np.uint16(sample_data['label'].data)
     num_pores = len(labels)
-   
+    sample_name = sample_data.attrs['name']
+    t_max = -1
+    
+    if sample_name in list(time_limit.keys()):
+        t_max = time_limit[sample_name]
     
     fits = []
     fits_sig = np.zeros([num_pores,4])
 
     for label in range(num_pores):
         
+        color = labels[label]
         fit_data = sample_data['fit_data'][label, :]
         par_0 = -fit_data[1]*fit_data[0]
         if np.isnan(par_0): par_0 = 0               #reconversion to the adeqaute format of poly1d
@@ -312,11 +345,14 @@ def dyn_fit_step2(sample_data):
         fits_sig[label,:3] = p_sig
         fits_sig[label,3] = R_sig
         
+        
         plt.figure()
-        plt.plot(time, mass_data)
-        plt.plot(time, sigmoid_fun(time, *p_sig))
-        plt.title(label)
-        filename = os.path.join(data_path, 'plots_label', ''.join([sample_data.attrs['name'],'_label_',str(label),'.png']))
+        plt.plot(time[:t_max], mass_data[:t_max], 'k')
+        plt.plot(time[:t_max], sigmoid_fun(time[:t_max], *p_sig), 'r')
+        plt.title(color)
+        plt.xlabel('time [s]')
+        plt.ylabel('volume [vx]')
+        filename = os.path.join(data_path, 'plots_label', ''.join([sample_data.attrs['name'],'_label_',str(color),'.png']))
         plt.savefig(filename, dpi=500, bbox_inches = 'tight')    
     
         
@@ -349,10 +385,10 @@ def dyn_fit_step2(sample_data):
     
 #    
     plt.figure()
-    total_volume.plot()
-    plt.plot(time, fit_volume)
-    plt.plot(time, crude_fit_volume)
-    plt.plot(time, sig_fit_volume)
+    total_volume[:t_max].plot(color='k')
+#    plt.plot(time, fit_volume)
+#    plt.plot(time, crude_fit_volume)
+    plt.plot(time[:t_max], sig_fit_volume[:t_max], 'r')
     plt.title(sample_data.attrs['name'])
     filename = os.path.join(data_path, 'plots', ''.join([sample_data.attrs['name'],'.png']))
 
