@@ -26,13 +26,14 @@ num_cores=mp.cpu_count()
 #baseFolder="R:\\Scratch\\305\\_Robert\\TOMCAT3_yarn"
 #baseFolder=r"T:\Zwischenlager\disk1"
 #baseFolder=r"O:\disk2"
-baseFolder = r'S:\Zwischenlager\disk1'
-
+baseFolder = r'T:\Zwischenlager\disk1'
+# baseFolder = r"F:\Zwischenlager_Robert\TOMCAT_3"
 
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 #newDiskfolder=r'F:\Zwischenlager_Robert\TOMCAT_3'
-newDiskfolder=r'X:\TOMCAT3_processing_1'
-newBaseFolder=r'Y:\TOMCAT_3'
+# newDiskfolder=r'X:\TOMCAT3_processing_1'
+# newBaseFolder=r'Y:\TOMCAT_3'
+newDiskfolder = r"Z:\Robert_TOMCAT_3_part_2"
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition
@@ -118,7 +119,7 @@ for sample in samples:
     c=c+1
     if sample[1]=='4': continue
     if sample in excluded_samples: continue
-    if not sample in repeats: continue
+    # if not sample in repeats: continue
     correctIntensityProfile(sample)            
     if c  == 2:
         print("The water's changed to sand")

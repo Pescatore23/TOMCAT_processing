@@ -20,7 +20,7 @@ parallel=True
 
 number_reference_slices=100
 mount=''
-baseFolder=r'X:\TOMCAT3_processing_1'
+baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
 #baseFolder=r'O:\disk2'
 #baseFolder=r'T:\TOMCAT3_Test'
 #baseFolder = r'S:\Zwischenlager\disk1'
@@ -29,6 +29,7 @@ baseFolder=r'X:\TOMCAT3_processing_1'
 #newBaseFolder=r'X:\TOMCAT3_processing_1'
 #newBaseFolder=r'Y:\TOMCAT_3'
 newBaseFolder = baseFolder
+# newBaseFolder = r"F:\Zwischenlager_Robert\TOMCAT_3"
 
 num_cores = mp.cpu_count()
 
@@ -74,7 +75,8 @@ def test_recalculate(sourceFolder,targetFolder,z,OverWrite=False):
 def get_transformation(Tstack):
 #    Tstack=np.transpose(Tstack,(2,0,1))
     sr = StackReg(StackReg.RIGID_BODY)
-    trans_matrix= sr.register_stack(Tstack, reference='first')
+    # trans_matrix= sr.register_stack(Tstack, reference='first')
+    trans_matrix= sr.register_stack(Tstack, reference='previous')
     outStack = sr.transform_stack(Tstack)
 #    outStack = np.transpose(outStack,(1,2,0))
     outStack=np.uint16(outStack)
@@ -102,17 +104,17 @@ def merge_transformation_matrices(matFolder):
     return res_trans_mat
 
 
-def register_slice(sourceFolder,targetFolder,matFolder,z,regfile,trans_mat_flag=False,trans_mat=False):
+def register_slice(sourceFolder,targetFolder,matFolder,z,regfile, sample=None, trans_mat_flag=False,trans_mat=False):
     breakflag = test_recalculate(sourceFolder,targetFolder,z)
     if not breakflag:
         try:
             Tstack,names,scans=robpylib.CommonFunctions.ImportExport.OpenTimeStack(sourceFolder,z, orient='t_x')
 #        print(names[0])
             
-#            
-            Tstack = Tstack[:,:,4:]
-            names = names[4:]
-            scans = scans[4:]
+            if sample in robpylib.TOMCAT.INFO.samples_to_repeat:
+                Tstack = Tstack[:,:,4:]
+                names = names[4:]
+                scans = scans[4:]
             
             if trans_mat_flag:
                 outStack=apply_transformation(Tstack, trans_mat)
@@ -131,16 +133,16 @@ def register_slice(sourceFolder,targetFolder,matFolder,z,regfile,trans_mat_flag=
 def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw', num_cores=num_cores, waterpos=waterpos, parallel=parallel):
     zmax=2016
     sourceFolder = os.path.join(baseFolder, sample, stage)
-#    targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered')
-#    matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices')
-    targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')
-    matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_from_5')
+    targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_prev_ref')
+    matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_prev_ref')
+    # targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')
+    # matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_from_5')
     
     if newBaseFolder is not False:
-#        targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered')
-#        matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices')
-        targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_from_5')
-        matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_from_5')
+        targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_prev_ref')
+        matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_prev_ref')
+        # targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_from_5')
+        # matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_from_5')
         
         if not os.path.exists(newBaseFolder):
             os.mkdir(newBaseFolder)
@@ -165,14 +167,14 @@ def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw',
     register_slice(sourceFolder,targetFolder,matFolder,slicelist[0],regfile)
     if parallel:
         if sample[1]=='3':          #register every slice separately in the case of single yarns
-            result=Parallel(n_jobs=num_cores)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile) for z in range(zmax))
+            result=Parallel(n_jobs=num_cores)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample ) for z in range(zmax))
         
         else:                       #interlaces seem to be suitable to save computation time by just registering some test slices and then apply transformation onto the rest
-            result=Parallel(n_jobs=num_cores)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile) for z in slicelist[1:])
+            result=Parallel(n_jobs=num_cores)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample = sample) for z in slicelist[1:])
             print('apply trans mat')            
         #            apply transformation on rest
             trans_mat=merge_transformation_matrices(matFolder)
-            result=Parallel(n_jobs=num_cores)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile,trans_mat_flag=True,trans_mat=trans_mat) for z in range(zmax))
+            result=Parallel(n_jobs=num_cores)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample, trans_mat_flag=True,trans_mat=trans_mat) for z in range(zmax))
     else:
         for z in slicelist[1:]:
             register_slice(sourceFolder,targetFolder,matFolder,z)
@@ -180,7 +182,7 @@ def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw',
         print('apply trans mat')
         for z in range(zmax):
             try:
-                register_slice(sourceFolder,targetFolder,matFolder,z,regfile,trans_mat_flag=True,trans_mat=trans_mat)
+                register_slice(sourceFolder,targetFolder,matFolder,z,regfile, sample= sample, trans_mat_flag=True,trans_mat=trans_mat)
             except:
                 print('slice ',z,' of sample ',sample,' failed!')
 #    for z in range(2016):
@@ -200,7 +202,7 @@ print(len(samples),' samples to calculate')
 
 for sample in samples:
     if sample in excluded_samples: continue
-    if not sample in repeats: continue
+    # if not sample in repeats: continue
 #    if sample[1] == '4': continue
 #    if not sample == 'T4_300_5_III': continue
     if sample == 'T4_025_4': continue #recos incomplete

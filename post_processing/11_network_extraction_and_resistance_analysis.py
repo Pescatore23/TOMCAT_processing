@@ -58,13 +58,14 @@ for sample in samples:
     step_size = time.copy()
     step_size[1:] = np.diff(time)
     
-    R_beta = -4*energy_data['Helmholtz_energy'][:,-1].data/data['sig_fit_data'][:,2].data**2/vx**6/data['sig_fit_data'][:,1].data
-    R_energy = -energy_data['diff_F']/step_size[None,1:]/data['filling'][:,:-1]**2/vx**6
+    R_beta_3 = -4*energy_data['Helmholtz_energy'][:,-1].data/data['sig_fit_data'][:,2].data**2/vx**6/data['sig_fit_data'][:,1].data
+    R_energy_3 = (-energy_data['diff_F']/step_size[None,1:]/data['filling'][:,:-1]**2/vx**6).data
     
 #    FIXME: it is necessary to scale filling and diff_F with time step size, check if implemented in 05_(yes) and 10_(no)
     
     plt.figure()
-    plt.plot(data['sig_fit_data'][:,0].data, R_beta,'.')
+    plt.plot(data['sig_fit_data'][:,0].data, R_beta_3,'.')
     plt.xlim(0, data['time'][-1])
+    plt.ylim(0, 1E20)
     
 
