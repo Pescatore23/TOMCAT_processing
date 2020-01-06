@@ -8,13 +8,14 @@ Created on Fri Jan  3 09:14:36 2020
 import robpylib
 import os
 import xarray as xr
-import dask.array
-from dask.distributed import Client
+# import dask.array
+# from dask.distributed import Client
 import joblib
 from joblib import Parallel, delayed
+import numpy as np
 
 workers = 16
-client = Client(processes=False)             # create local cluster
+# client = Client(processes=False)             # create local cluster
 # client = Client("scheduler-address:8786")  # or connect to remote cluster
 
 
@@ -24,9 +25,12 @@ resultFolder = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'reproces
 
 rawbaseFolder = r"W:\disk2"
 
+repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 
-def process_slice(z, sourceFolder, matFolder, fiber_folder):
-    Tstack = robpylib.CommonFunctions.ImportExport.OpenTimeStack(sourceFolder, z)
+def process_slice(z, sourceFolder, matFolder, fiber_folder, repeat=False):
+    Tstack, names, scans = robpylib.CommonFunctions.ImportExport.OpenTimeStack(sourceFolder, z)
+    if repeat:
+        Tstack = Tstack[:,:,4:]
     Tstack = robpylib.TOMCAT.processing.intensity_correction(Tstack)
     Tstack, transmat = robpylib.TOMCAT.processing.register(Tstack, z, matFolder, return_mat = True)
     transitions, transitions2 = robpylib.TOMCAT.processing.segmentation(Tstack, fiber_folder, z)
@@ -36,6 +40,10 @@ def process_slice(z, sourceFolder, matFolder, fiber_folder):
 
 samples = os.listdir(baseFolder)
 for sample in samples:
+    repeat = False
+    if sample in repeats:
+        repeat = True
+        continue
     print(sample)
     if not sample[1] == '3': continue
     
@@ -43,14 +51,14 @@ for sample in samples:
     
     if not os.path.exists(sourceFolder): continue
     print(sample)
-    fiber_folder = os.path.join(baseFolder, sample, '01a_weka_segmented_dry')
+    fiber_folder = os.path.join(baseFolder, sample, '01a_weka_segmented_dry', 'classified')
     
     matFolder = os.path.join(resultFolder, 'registration_matrices')
     if not os.path.exists(matFolder):
         os.mkdir(matFolder)
         
-    with joblib.parallel_backend('dask'):
-        result=Parallel(n_jobs=workers)(delayed(process_slice)(z, sourceFolder, matFolder, fiber_folder) for z in range(2016))
+    # with joblib.parallel_backend('dask'):
+    result=Parallel(n_jobs=workers)(delayed(process_slice)(z, sourceFolder, matFolder, fiber_folder, repeat = repeat) for z in range(2016))
     result = np.array(result)
     
     transitions = result[:, 0, :, :]
