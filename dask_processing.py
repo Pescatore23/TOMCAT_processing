@@ -65,6 +65,7 @@ for sample in samples:
     transitions2 = result[:, 1, :, :]
     transmats = result[:, 2, :, :]
     
+    time = robpylib.TOMCAT.TIME.TIME[sample]
     tension = np.uint16(sample[3:6])
     sample_id = np.uint8(sample[7])
     data = xr.Dataset({'transition_matrix': (['x','y','z'], transitions),
@@ -74,7 +75,8 @@ for sample in samples:
                                 'y': np.arange(transitions.shape[1]),
                                 'z': np.arange(transitions.shape[2]),
                                 'p1': np.arange(transmats.shape[0]),
-                                'p2': np.arange(transmats.shape[0])},
+                                'p2': np.arange(transmats.shape[0]),
+                                'time': time},
                       attrs = {'name': sample,
                                'sample_id': sample_id,
                                'tension': tension,

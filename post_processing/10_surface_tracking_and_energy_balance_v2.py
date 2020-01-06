@@ -78,8 +78,8 @@ def measure_interfaces(label, label_matrix, transition, void, time):
         if (pore_filling == t).any():
             wet = watermask * (pore_filling < t+1)
             n_wet = watermask * (neighbor_water < t+1)
-            wet = skimage.morphology.binary_erosion(wet, selem=ball(1).astype(np.bool))
-            wet = skimage.morphology.binary_dilation(wet, selem=ball(1).astype(np.bool))
+            # wet = skimage.morphology.binary_erosion(wet, selem=ball(1).astype(np.bool))
+            # wet = skimage.morphology.binary_dilation(wet, selem=ball(1).astype(np.bool))
             try:
                 verts, faces, _, _ = measure.marching_cubes_lewiner(wet)
                 A = measure.mesh_surface_area(verts, faces)
@@ -136,7 +136,7 @@ for sample in samples:
     
     # if name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     print(name)
-    filename = os.path.join(sourceFolder, ''.join(['energy_data_v5_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['energy_data_v6_', name, '.nc']))
     
     # if os.path.exists(filename): continue
     
