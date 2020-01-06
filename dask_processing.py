@@ -66,6 +66,8 @@ for sample in samples:
     transmats = result[:, 2, :, :]
     
     time = robpylib.TOMCAT.TIME.TIME[sample]
+    
+    if repeat: time = time[4:]
     tension = np.uint16(sample[3:6])
     sample_id = np.uint8(sample[7])
     data = xr.Dataset({'transition_matrix': (['x','y','z'], transitions),
