@@ -26,11 +26,11 @@ import multiprocessing as mp
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 
 #baseFolder=r'U:\TOMCAT_3_segmentation'
-baseFolder = r'X:\TOMCAT3_processing_1'
-#baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
+baseFolder = r'O:\TOMCAT3_processing_1'
+# baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
 
 OverWrite = True
-#newBaseFolder=False
+# newBaseFolder=False
 newBaseFolder = r'W:\TOMCAT_3_segmentation'
 
 parallel=True
@@ -93,7 +93,16 @@ def masking(Tstack, maskingthreshold=11000):
 #    mask=mask-1
     mask=morphology.binary_fill_holes(mask)
 #    masked=np.uint8(mask)
-    return mask    
+    return mask
+
+def interlace_masking(Stack, maskingthreshold=11000):
+    ref_mean = Stack[:,:,:1000].mean()
+    for z in range(Stack.shape[2]):
+        Stack[:,:,z] = Stack[:,:,z] - (Stack[:,:,z].mean() - ref_mean)
+    Stack[np.where(Stack<0)] = 0
+    Stack[Stack<maskingthreshold]=0
+    Stack[Stack>0]=1
+    return Stack
 
 
 def get_jump_height(currpx,pos,pos2=0,receding=False):
@@ -152,14 +161,17 @@ def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
     return timg, transitions, transitions2
 
 
-def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos):
-    breakFlag=test_recalculate(sourceFolder,targetFolder,z,OverWrite=False)
+def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=None):
+    breakFlag=test_recalculate(sourceFolder,targetFolder,z,OverWrite=True)
     if not breakFlag:
         Tstack, names, scans = robpylib.CommonFunctions.ImportExport.OpenTimeStack(sourceFolder, z)
         fibername=fibernames[z]
         fibermask=np.uint8(io.imread(os.path.join(baseFolder,fibermaskFolder,fibername)))
         fibermask=fibermask/np.max(fibermask)
-        mask=masking(Tstack)
+        
+        if fibername[1]=='3':
+            mask=masking(Tstack)
+            
         poremask=mask*(1-fibermask)
         Tstack=Tstack*poremask[:,:,None]
         binStack, transitions, transitions2 = fft_grad_segmentation(Tstack,poremask,z,waterpos=waterpos)
@@ -173,12 +185,12 @@ def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_trans
 
 def inner_segmentation_function(sample, newBaseFolder=False, tracefits=False, waterpos=waterpos):
     if not newBaseFolder: newBaseFolder = baseFolder
-    sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered')#"02_registered_1300_rigid") 
-    sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')#"02_registered_1300_rigid") 
+    sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered')#"02_registered_1300_rigid")
+    # sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')#"02_registered_1300_rigid") 
     fibermaskFolder = os.path.join(baseFolder, sample, "01a_weka_segmented_dry","classified")   #has to be True for fibers and False for the rest, but not necessarly binary
-    targetFolder = os.path.join(newBaseFolder, sample, "03_gradient_filtered_from_5")
-    targetFolder_transitions = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions_from_5")
-    targetFolder_transitions2 = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions2_from_5")
+    targetFolder = os.path.join(newBaseFolder, sample, "03_gradient_filtered")
+    targetFolder_transitions = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions")
+    targetFolder_transitions2 = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions2")
 #       
     if not os.path.exists(targetFolder):
            os.makedirs(targetFolder) 
@@ -192,15 +204,24 @@ def inner_segmentation_function(sample, newBaseFolder=False, tracefits=False, wa
     fibernames=os.listdir(fibermaskFolder)
     if 'Thumbs.db' in fibernames: fibernames.remove('Thumbs.db')
     fibernames.sort()
-    if sample[1]=='3': waterpos=1600
-    
+    if sample[1]=='3': 
+        waterpos=1600
+    if sample[1]=='4':
+        last_scan = os.path.join(sourceFolder, os.listdir(sourceFolder)[-1])
+        masks, _  = robpylib.CommonFunctions.ImportExport.ReadStackNew(last_scan)
+        masks = interlace_masking(masks)
     if parallel:
         num_cores=mp.cpu_count()
-        core_function(0,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos)
-        Parallel(n_jobs=num_cores)(delayed(core_function)(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos) for z in range(1,zmax))
-    else:
-        for z in range(zmax):
-            core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos)
+       
+        if sample[1] == '4':
+            core_function(0,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=masks[:,:,0])
+            Parallel(n_jobs=num_cores)(delayed(core_function)(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=masks[:,:,z]) for z in range(1,zmax))
+        else:
+            core_function(0,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos)
+            Parallel(n_jobs=num_cores)(delayed(core_function)(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos) for z in range(1,zmax))
+    # else:
+        # for z in range(zmax):
+            # core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos)
     return sample
   
 
@@ -209,7 +230,8 @@ def fft_segmentation(baseFolder=baseFolder, newDiskfolder=False):
     c=1
     for sample in samples:
 #        if not sample == 'T3_025_9_III': continue
-        if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
+        if sample[1] == '3': continue
+        if sample in robpylib.TOMCAT.INFO.interlace_good_samples: continue
         print(sample,'(',c,'/',len(samples),')')
 #        if sample[1]=='4':
 #            c=c+1

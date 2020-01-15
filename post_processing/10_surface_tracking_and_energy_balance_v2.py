@@ -12,9 +12,10 @@ import numpy as np
 from joblib import Parallel, delayed
 import multiprocessing as mp
 from scipy import ndimage
-import skimage.morphology
-from skimage.morphology import cube, ball
+# import skimage.morphology
+from skimage.morphology import cube
 from skimage import measure
+import trimesh
 
 num_cores = mp.cpu_count()
 
@@ -23,8 +24,13 @@ vx = 2.75E-6 #m
 gamma = 72.7E-3 #N/m
 theta = 50 #° plasma treated PET
 
+# smoothing parameters
+k = 0.1
+lamb  = 0.6037
+iterations = 10
+
 drive = '//152.88.86.87/data118'
-drive = r"NAS"
+# drive = r"NAS"
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 processing_version = 'processed_1200_dry_seg_aniso_sep'
 
@@ -35,6 +41,12 @@ sourceFolder = os.path.join(data_path, processing_version)
 
 samples = os.listdir(sourceFolder) 
 
+def surface_smoothing(verts, faces, k=k, lamb=lamb, iterations = iterations):
+    mesh = trimesh.Trimesh(vertices = verts, faces = faces)
+    mesh = trimesh.smoothing.filter_taubin(mesh, lamb=lamb, nu=k, iterations=iterations)
+    verts = mesh.vertices
+    faces = mesh.faces
+    return verts, faces
 
 def helmholtz_energy(A_int, A_wet, per_pore=False, gamma=gamma, theta=theta/180*np.pi, vx=vx):
     if per_pore:
@@ -49,25 +61,31 @@ def kinetic_energy(volume, time, A_mean, vx=vx, rho=rho):
     return E_kin
 
 def interface_extraction(wet, void):
-   wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
    dry = np.bitwise_and(void, ~wet)
+   wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
    dry = ndimage.binary_dilation(input = dry, structure = cube(3).astype(np.bool))
    
    interface = np.bitwise_and(wet, dry)
    interface = np.bitwise_and(interface, void)
-   interface = skimage.morphology.binary_erosion(interface, selem=ball(1).astype(np.bool))
-   interface = skimage.morphology.binary_dilation(interface, selem=ball(1).astype(np.bool))
+   # interface = skimage.morphology.binary_erosion(interface, selem=ball(1).astype(np.bool))
+   # interface = skimage.morphology.binary_dilation(interface, selem=ball(1).astype(np.bool))
    
-   return interface   
+   return interface
 
-
+def water_interface_extraction(wet, nwet, void):
+    wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
+    nwet = ndimage.binary_dilation(input = nwet, structure = cube(3).astype(np.bool))
+    interface = np.bitwise_and(wet, nwet)
+    interface = np.bitwise_and(interface, void)                               
+    return interface
+                               
 def measure_interfaces(label, label_matrix, transition, void, time):
     A_int = np.zeros(len(time))
     A_wet = np.zeros(len(time))
     A_nw = np.zeros(len(time))
     label_obj = label_matrix==label
-    pore_filling = transition*label_obj
     watermask = transition > 0
+    pore_filling = transition*label_obj
     neighbor_water = transition*(~label_obj)
     
 
@@ -80,28 +98,40 @@ def measure_interfaces(label, label_matrix, transition, void, time):
             n_wet = watermask * (neighbor_water < t+1)
             # wet = skimage.morphology.binary_erosion(wet, selem=ball(1).astype(np.bool))
             # wet = skimage.morphology.binary_dilation(wet, selem=ball(1).astype(np.bool))
+            
+            wet_interface = water_interface_extraction(wet, void, void)
+            
             try:
-                verts, faces, _, _ = measure.marching_cubes_lewiner(wet)
-                A = measure.mesh_surface_area(verts, faces)
+                # verts, faces, _, _ = measure.marching_cubes_lewiner(wet)
+                # verts, faces = surface_smoothing(verts, faces)
+                # A = measure.mesh_surface_area(verts, faces)
+                
+                # for version9:
+                verts, faces, _, _ = measure.marching_cubes_lewiner(wet_interface)
+                verts, faces = surface_smoothing(verts, faces)
+                Aw = measure.mesh_surface_area(verts, faces)/2
             except:
-                A = 0
+                # A = 0 # commented out for version 9
+                Aw = 0
             # try:
             interface = interface_extraction(wet, void)
-            w_w_inter = interface_extraction(wet, n_wet)
+            w_w_inter = water_interface_extraction(wet, n_wet, void)
             interface[w_w_inter] = False
             
             try:
                 verts, faces, _, _ = measure.marching_cubes_lewiner(interface)
+                verts, faces = surface_smoothing(verts, faces)
                 A_wa = measure.mesh_surface_area(verts, faces)/2
             except:
                 A_wa = 0
             
             try:
                 verts, faces, _, _ = measure.marching_cubes_lewiner(w_w_inter)
+                verts, faces = surface_smoothing(verts, faces)
                 A_ww = measure.mesh_surface_area(verts, faces)/2
             except:
                 A_ww = 0
-            Aw = A-A_wa-A_ww
+            # Aw = A-A_wa-A_ww   # commented out for version 9
             if Aw < 0: Aw=0
             A_wet[t] = Aw
             A_int[t] = A_wa
@@ -136,7 +166,7 @@ for sample in samples:
     
     # if name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     print(name)
-    filename = os.path.join(sourceFolder, ''.join(['energy_data_v6_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['energy_data_v9_', name, '.nc']))
     
     # if os.path.exists(filename): continue
     
@@ -157,14 +187,6 @@ for sample in samples:
     for (pore, label) in zip(crude_pores, crude_labels):
         if label in labels:
             pores.append(pore)
-    # print('crude pores')
-    # print(len(crude_pores))
-    # print('pores')
-    # print(len(pores))
-    # print('label')
-    # print(len(labels))
-    
-    
     
     crude_pores = None
     
@@ -192,10 +214,12 @@ for sample in samples:
                               'diff_F': (['label', 'time'], dF),
                               'interface_area': (['label', 'time2'], A_int),
                               'wet_area': (['label', 'time2'], A_wet),
-                              'water_water_interface': (['label', 'time2'], A_nw)},
+                              'water_water_interface': (['label', 'time2'], A_nw),
+                              'smoothing': ('parameter', np.array([k, lamb, iterations]))},
                         coords = {'label': labels,
                                   'time': time[1:],
-                                  'time2': time},
+                                  'time2': time,
+                                  'parameter': ['k', 'lambda', 'iterations']},
                         attrs = {'comment': 'surfaces measured as triangulated mesh instead of counting pixels + noise removal'})
     
     energy_data.attrs = sample_data.attrs

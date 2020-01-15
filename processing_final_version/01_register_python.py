@@ -20,7 +20,7 @@ parallel=True
 
 number_reference_slices=100
 mount=''
-baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
+baseFolder=r'Z:\Robert_TOMCAT_3'
 #baseFolder=r'O:\disk2'
 #baseFolder=r'T:\TOMCAT3_Test'
 #baseFolder = r'S:\Zwischenlager\disk1'
@@ -75,8 +75,8 @@ def test_recalculate(sourceFolder,targetFolder,z,OverWrite=False):
 def get_transformation(Tstack):
 #    Tstack=np.transpose(Tstack,(2,0,1))
     sr = StackReg(StackReg.RIGID_BODY)
-    # trans_matrix= sr.register_stack(Tstack, reference='first')
-    trans_matrix= sr.register_stack(Tstack, reference='previous')
+    trans_matrix= sr.register_stack(Tstack, reference='first')
+    # trans_matrix= sr.register_stack(Tstack, reference='previous')
     outStack = sr.transform_stack(Tstack)
 #    outStack = np.transpose(outStack,(1,2,0))
     outStack=np.uint16(outStack)
@@ -112,7 +112,7 @@ def register_slice(sourceFolder,targetFolder,matFolder,z,regfile, sample=None, t
 #        print(names[0])
             
             if sample in robpylib.TOMCAT.INFO.samples_to_repeat:
-                Tstack = Tstack[:,:,4:]
+                Tstack = Tstack[4:,:,:]
                 names = names[4:]
                 scans = scans[4:]
             
@@ -133,16 +133,16 @@ def register_slice(sourceFolder,targetFolder,matFolder,z,regfile, sample=None, t
 def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw', num_cores=num_cores, waterpos=waterpos, parallel=parallel):
     zmax=2016
     sourceFolder = os.path.join(baseFolder, sample, stage)
-    targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_prev_ref')
-    matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_prev_ref')
-    # targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')
-    # matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_from_5')
+    # targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_prev_ref')
+    # matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_prev_ref')
+    targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')
+    matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_from_5')
     
     if newBaseFolder is not False:
-        targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_prev_ref')
-        matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_prev_ref')
-        # targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_from_5')
-        # matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_from_5')
+        # targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_prev_ref')
+        # matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_prev_ref')
+        targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_from_5')
+        matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_from_5')
         
         if not os.path.exists(newBaseFolder):
             os.mkdir(newBaseFolder)
@@ -202,10 +202,10 @@ print(len(samples),' samples to calculate')
 
 for sample in samples:
     if sample in excluded_samples: continue
-    # if not sample in repeats: continue
+    if not sample in repeats: continue
 #    if sample[1] == '4': continue
 #    if not sample == 'T4_300_5_III': continue
-    if sample == 'T4_025_4': continue #recos incomplete
+    # if sample == 'T4_025_4': continue #recos incomplete
     folder=baseFolder
     newFolder=newBaseFolder
     stage='00_raw'   

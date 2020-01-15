@@ -59,11 +59,17 @@ for sample in samples:
         
     # with joblib.parallel_backend('dask'):
     result=Parallel(n_jobs=workers)(delayed(process_slice)(z, sourceFolder, matFolder, fiber_folder, repeat = repeat) for z in range(2016))
+    
     result = np.array(result)
     
-    transitions = result[:, 0, :, :]
-    transitions2 = result[:, 1, :, :]
-    transmats = result[:, 2, :, :]
+    transitions = np.zeros((result[0,0].shape[0],result[0,0].shape[1], result.shape[0]), dtype = np.uint16)
+    transitions2 = transitions.copy()                     
+    transmats = np.zeros((result[0,2].shape[0], result[0,2].shape[1], result[0,2].shape[2],result.shape[0]), dtype=result[0,2].dtype)
+    
+    for z in range(result.shape[0]):
+        transitions[:,:,z] = result[z,0]
+        transitions2[:,:,z] = result[z,1]
+        transmats[:,:,:,z] = result[z,2]
     
     time = robpylib.TOMCAT.TIME.TIME[sample]
     
@@ -72,7 +78,7 @@ for sample in samples:
     sample_id = np.uint8(sample[7])
     data = xr.Dataset({'transition_matrix': (['x','y','z'], transitions),
                        'transition_2_matrix': (['x','y','z'], transitions2),
-                       'tranmat': (['p1','p2','z'], transmats)},
+                       'tranmat': (['time','p1','p2','z'], transmats)},
                       coords = {'x': np.arange(transitions.shape[0]),
                                 'y': np.arange(transitions.shape[1]),
                                 'z': np.arange(transitions.shape[2]),

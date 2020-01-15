@@ -32,12 +32,12 @@ from ij.io import FileSaver
 repeats = ['T3_300_3', 'T3_025_1', 'T3_025_4', 'T3_025_9_III']
 
 #baseFolder=r'F:\Zwischenlager_Robert\TOMCAT_3'
-#baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
+baseFolder=r'Z:\Robert_TOMCAT_3'
 #baseFolder=r'T:\disk2'
 #baseFolder=r'U:\TOMCAT_3_segmentation'
 #baseFolder=r'V:\disk2'
-baseFolder = r'X:\TOMCAT3_processing_1'
-#baseFolder = r'Y:\TOMCAT_3'
+#baseFolder = r'X:\TOMCAT3_processing_1'
+#baseFolder = r'Z:\TOMCAT_3'
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition
