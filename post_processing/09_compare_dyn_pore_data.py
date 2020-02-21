@@ -234,47 +234,47 @@ def plotting(i,j, combined_data=combined_data, combined_025=combined_025,
 
 
 
-for j in range(combined_data.shape[1]): 
-#    normalize histograms and maybe crop high peasks
-#       histogram all
-    plt.figure()
-    hist = np.histogram(combined_data[:,j][combined_data[:,j]<ylims[variables[j]][1]], bins = 50)
-    plt.hist(combined_data[:,j], hist[1], density = True, log = True)
-    plt.title(variables[j])
-    plt.xlabel(variables[j])
-    hist_folder = os.path.join(plot_folder,
-                            'histogram')
-    if not os.path.exists(hist_folder):
-        os.mkdir(hist_folder)
-    filename = os.path.join(hist_folder,''.join([variables[j],'.png']))
-    plt.savefig(filename, dpi=500, bbox_inches = 'tight')
-    plt.close()   
-#       histogram tension
-    plt.figure()
-    hist1 = np.histogram(combined_025[:,j][combined_025[:,j]<ylims[variables[j]][1]], bins =50)
-#    plt.hist(combined_025[:,j], hist1[1])
-#    hist2 = np.histogram(combined_100[:,j][combined_100[:,j]<ylims[variables[j]][1]], bins =50)
-#    plt.hist(combined_100[:,j], hist2[1])
-#    hist3 = np.histogram(combined_300[:,j][combined_300[:,j]<ylims[variables[j]][1]], bins =50)
-#    plt.hist(combined_300[:,j], hist3[1])
-    plt.hist([combined_025[:,j][combined_025[:,j]<ylims[variables[j]][1]],
-              combined_100[:,j][combined_100[:,j]<ylims[variables[j]][1]],
-              combined_300[:,j][combined_300[:,j]<ylims[variables[j]][1]]], hist1[1], density = True, log = True)
+# for j in range(combined_data.shape[1]): 
+# #    normalize histograms and maybe crop high peasks
+# #       histogram all
+#     plt.figure()
+#     hist = np.histogram(combined_data[:,j][combined_data[:,j]<ylims[variables[j]][1]], bins = 50)
+#     plt.hist(combined_data[:,j], hist[1], density = True, log = True)
+#     plt.title(variables[j])
+#     plt.xlabel(variables[j])
+#     hist_folder = os.path.join(plot_folder,
+#                             'histogram')
+#     if not os.path.exists(hist_folder):
+#         os.mkdir(hist_folder)
+#     filename = os.path.join(hist_folder,''.join([variables[j],'.png']))
+#     plt.savefig(filename, dpi=500, bbox_inches = 'tight')
+#     plt.close()   
+# #       histogram tension
+#     plt.figure()
+#     hist1 = np.histogram(combined_025[:,j][combined_025[:,j]<ylims[variables[j]][1]], bins =50)
+# #    plt.hist(combined_025[:,j], hist1[1])
+# #    hist2 = np.histogram(combined_100[:,j][combined_100[:,j]<ylims[variables[j]][1]], bins =50)
+# #    plt.hist(combined_100[:,j], hist2[1])
+# #    hist3 = np.histogram(combined_300[:,j][combined_300[:,j]<ylims[variables[j]][1]], bins =50)
+# #    plt.hist(combined_300[:,j], hist3[1])
+#     plt.hist([combined_025[:,j][combined_025[:,j]<ylims[variables[j]][1]],
+#               combined_100[:,j][combined_100[:,j]<ylims[variables[j]][1]],
+#               combined_300[:,j][combined_300[:,j]<ylims[variables[j]][1]]], hist1[1], density = True, log = True)
     
-    plt.title(variables[j])
-    plt.xlabel(variables[j])
+#     plt.title(variables[j])
+#     plt.xlabel(variables[j])
     
-    hist_ten_folder = os.path.join(plot_folder,
-                            'histogram_tension')
-    if not os.path.exists(hist_ten_folder):
-        os.mkdir(hist_ten_folder)
+#     hist_ten_folder = os.path.join(plot_folder,
+#                             'histogram_tension')
+#     if not os.path.exists(hist_ten_folder):
+#         os.mkdir(hist_ten_folder)
 
-    filename = os.path.join(hist_ten_folder,''.join([variables[j],'.png']))
-    plt.savefig(filename, dpi=500, bbox_inches = 'tight')
-    plt.close()      
+#     filename = os.path.join(hist_ten_folder,''.join([variables[j],'.png']))
+#     plt.savefig(filename, dpi=500, bbox_inches = 'tight')
+#     plt.close()      
 
          
-    Parallel(n_jobs=num_cores)(delayed(plotting)(i,j) for i in range(combined_data.shape[1]))
+#     Parallel(n_jobs=num_cores)(delayed(plotting)(i,j) for i in range(combined_data.shape[1]))
 #    for i in range(combined_data.shape[1]):
 #        plt.figure()
 #        plt.plot(combined_data[:,j], combined_data[:,i], '.')

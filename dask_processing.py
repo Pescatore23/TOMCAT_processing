@@ -10,20 +10,27 @@ import os
 import xarray as xr
 # import dask.array
 # from dask.distributed import Client
-import joblib
+# import joblib
 from joblib import Parallel, delayed
 import numpy as np
+import multiprocessing as mp
 
-workers = 16
+# workers = 40
+workers = mp.cpu_count()
 # client = Client(processes=False)             # create local cluster
-# client = Client("scheduler-address:8786")  # or connect to remote cluster
+# client = Client("152.88.86.182:8786")  # or connect to remote cluster
 
 
 drive = '//152.88.86.87/data118'
-baseFolder = os.path.join(drive, 'Robert_TOMCAT_3')
+baseFolder = os.path.join(drive, 'Robert_TOMCAT_3_Part_2')
 resultFolder = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'reprocessing_previous_frame_as_register_reference')
 
-rawbaseFolder = r"W:\disk2"
+if not os.path.exists(resultFolder):
+    os.path.mkdirs(resultFolder)
+    
+# rawbaseFolder = r"I:\disk2"
+rawbaseFolder = r"J:\Zwischenlager\disk1"
+# rawbaseFolder = r"J:\Zwischenlager\disk2"
 
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 
@@ -40,11 +47,12 @@ def process_slice(z, sourceFolder, matFolder, fiber_folder, repeat=False):
 
 samples = os.listdir(baseFolder)
 for sample in samples:
-    repeat = False
+    repeat_flag = False
     if sample in repeats:
-        repeat = True
-        continue
+        repeat_flag = True
     print(sample)
+    filename = os.path.join(resultFolder, ''.join([sample, '_segmented.nc']))
+    if os.path.exists(filename): continue
     if not sample[1] == '3': continue
     
     sourceFolder = os.path.join(rawbaseFolder, sample, '00_raw')
@@ -58,7 +66,7 @@ for sample in samples:
         os.mkdir(matFolder)
         
     # with joblib.parallel_backend('dask'):
-    result=Parallel(n_jobs=workers)(delayed(process_slice)(z, sourceFolder, matFolder, fiber_folder, repeat = repeat) for z in range(2016))
+    result=Parallel(n_jobs=workers)(delayed(process_slice)(z, sourceFolder, matFolder, fiber_folder, repeat = repeat_flag) for z in range(2016))
     
     result = np.array(result)
     
@@ -73,17 +81,18 @@ for sample in samples:
     
     time = robpylib.TOMCAT.TIME.TIME[sample]
     
-    if repeat: time = time[4:]
+    if repeat_flag: time = time[4:]
     tension = np.uint16(sample[3:6])
     sample_id = np.uint8(sample[7])
+    repeat = sample[-3:]
     data = xr.Dataset({'transition_matrix': (['x','y','z'], transitions),
                        'transition_2_matrix': (['x','y','z'], transitions2),
                        'tranmat': (['time','p1','p2','z'], transmats)},
                       coords = {'x': np.arange(transitions.shape[0]),
                                 'y': np.arange(transitions.shape[1]),
                                 'z': np.arange(transitions.shape[2]),
-                                'p1': np.arange(transmats.shape[0]),
-                                'p2': np.arange(transmats.shape[0]),
+                                'p1': np.arange(transmats.shape[1]),
+                                'p2': np.arange(transmats.shape[2]),
                                 'time': time},
                       attrs = {'name': sample,
                                'sample_id': sample_id,
@@ -95,5 +104,5 @@ for sample in samples:
     data['transition_matrix'].attrs['units'] = 'time step'
     data['transition_2_matrix'].attrs['units'] = 'time step'   
     
-    filename = os.path.join(resultFolder, ''.join([sample, '_segmented.nc']))
+    
     data.to_netcdf(filename)

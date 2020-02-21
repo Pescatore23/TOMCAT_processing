@@ -21,9 +21,9 @@ import robpylib
 z_low=1414
 z_high=1644
 
-#baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
+baseFolder=r'W:\Robert_TOMCAT_3'
 #baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
-baseFolder = 'X:\TOMCAT3_processing_1'
+# baseFolder = 'X:\TOMCAT3_processing_1'
 samples=os.listdir(baseFolder)
 
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
@@ -83,12 +83,12 @@ knots['T4_300_4_III']=[1272,1524]
 knots['T4_300_5_III']=[1377,1610]
 
 
-stage = '02_pystack_registered'
+stage = '02_pystack_registered_from_5'
 
 for sample in samples:
-    if not sample == 'T3_025_9_III': continue
+    # if not sample == 'T3_025_9_III': continue
     if not sample in repeats: continue
-    if sample in excluded_samples: continue
+    # if sample in excluded_samples: continue
     if not sample[1]=='3': continue
 #    if sample == 'T4_025_3_III': continue
     print(sample)

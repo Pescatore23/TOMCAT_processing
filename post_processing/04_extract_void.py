@@ -57,20 +57,22 @@ def yarn_pores(fiberFolder, targetfolder, name):
     pores = skmorph.remove_small_objects(pores, min_size=5, connectivity=1)
     pores = (pores*255).astype(np.uint8)
     imageio.imsave(os.path.join(targetFolder,name), pores)
-    
 
-def interlace_pores(fiberFolder, waterfolder, targetfolder, name):
+def interlace_masking(Stack, maskingthreshold=11000):
+    ref_mean = Stack[:,:,:1000].mean()
+    for z in range(Stack.shape[2]):
+        Stack[:,:,z] = Stack[:,:,z] - (Stack[:,:,z].mean() - ref_mean)
+    Stack[np.where(Stack<0)] = 0
+    Stack[Stack<maskingthreshold]=0
+    Stack[Stack>0]=1
+    return Stack   
+
+def interlace_pores(fiberFolder, watermask, targetfolder, name):
     fiber = imageio.imread(os.path.join(fiberFolder,name))
     fiber = fiber>0
+
     
-    scan = waterfolder[-5:]
-    watername = list(name)
-    watername[-24:-19]=scan
-    watername = ''.join(watername)
-    
-    water = imageio.imread(os.path.join(waterfolder,watername))
-    water = water>11000
-    water = morphology.binary_fill_holes(water)
+    water = watermask
     
     pores = np.bitwise_xor(water,fiber)
     pores = skmorph.remove_small_objects(pores, min_size=5, connectivity=1)
@@ -117,7 +119,10 @@ for sample in os.listdir(baseFolder):
         Parallel(n_jobs=num_cores)(delayed(yarn_pores)(fiberFolder, targetFolder, name) for name in fibernames)
 
     if sample[1]=='4':
-        Parallel(n_jobs=num_cores)(delayed(interlace_pores)(fiberFolder, waterFolder, targetFolder, name) for name in fibernames)    
+        last_scan = os.path.join(sourceFolder, os.listdir(sourceFolder)[-1])
+        masks, _  = robpylib.CommonFunctions.ImportExport.ReadStackNew(last_scan)
+        masks = interlace_masking(masks)
+        Parallel(n_jobs=num_cores)(delayed(interlace_pores)(fiberFolder, masks[:,:,z], targetFolder, fibernames[z]) for z in range(len(fibernames)))
     
 
     

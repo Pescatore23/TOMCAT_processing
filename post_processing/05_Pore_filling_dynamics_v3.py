@@ -50,7 +50,7 @@ rho = 997 #kg/m3  density of water
 
 drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_3')
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_iso_sep')
+data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep')
 
 if not os.path.exists(data_path):
     os.mkdir(data_path)  
@@ -59,16 +59,16 @@ if not os.path.exists(os.path.join(data_path, 'plots')):
 if not os.path.exists(os.path.join(data_path, 'plots_label')):
     os.mkdir(os.path.join(data_path, 'plots_label'))
 
-#label_folder = '05b_labels'
-label_folder = '05b_labels_dry_seg_iso'
-#label_folder = '05b_labels_from_5'
+# label_folder = '05b_labels'
+# label_folder = '05b_labels_dry_seg_iso'
+label_folder = '05b_labels_from_5'
 #label_folder = '05b_labels_dry_seg_iso'
 
-transition_folder = '03_gradient_filtered_transitions'
-transition_2_folder = '03_gradient_filtered_transitions2'
+# transition_folder = '03_gradient_filtered_transitions'
+# transition_2_folder = '03_gradient_filtered_transitions2'
 
-#transition_folder = '03_gradient_filtered_transitions_from_5'
-#transition_2_folder = '03_gradient_filtered_transitions2_from_5'
+transition_folder = '03_gradient_filtered_transitions_from_5'
+transition_2_folder = '03_gradient_filtered_transitions2_from_5'
 
 #transition_folder = '03_b_gradient_filtered_transitions_enhanced'
 #transition_2_folder = '03_b_gradient_filtered_transitions2_enhanced5'
@@ -407,7 +407,7 @@ samples_crude = os.listdir(baseFolder)
 
 samples = []
 for sample in samples_crude:
-    if sample in good_samples:
+    if sample in robpylib.TOMCAT.INFO.samples_to_repeat:
         samples.append(sample)
 
 def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
@@ -420,23 +420,23 @@ def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
             sample_data.to_netcdf(filename)
             return sample_data
 
-if not parallel:  
-    for sample in samples:
-        c= c+1
-    #    if c>1: continue
-    #    if sample[1]=='4': continue
-        if not os.path.exists(os.path.join(baseFolder, sample, label_folder)): continue
-    #    if not sample == '32_200_025H2_cont': continue
-    #    if not sample == 'T3_025_3_III': continue
-        print(sample, ''.join(['(',str(c),'/',str(len(samples)),')']))
-        name = ''.join(['dyn_data_',sample,'.nc'])
-        filename = os.path.join(data_path, name)
-        if os.path.exists(filename):
-            print('already processed, skipping ...')
-            continue
-        sample_data = get_Dyn_Data(sample)
-        sample_data = dyn_fit_step2(sample_data)
-        sample_data.to_netcdf(filename)
+# if not parallel:  
+#     for sample in samples:
+#         c= c+1
+#     #    if c>1: continue
+#     #    if sample[1]=='4': continue
+#         if not os.path.exists(os.path.join(baseFolder, sample, label_folder)): continue
+#     #    if not sample == '32_200_025H2_cont': continue
+#     #    if not sample == 'T3_025_3_III': continue
+#         print(sample, ''.join(['(',str(c),'/',str(len(samples)),')']))
+#         name = ''.join(['dyn_data_',sample,'.nc'])
+#         filename = os.path.join(data_path, name)
+#         if os.path.exists(filename):
+#             print('already processed, skipping ...')
+#             continue
+#         sample_data = get_Dyn_Data(sample)
+#         sample_data = dyn_fit_step2(sample_data)
+#         sample_data.to_netcdf(filename)
     
 if parallel:
     results=Parallel(n_jobs=num_cores)(delayed(mainfunction)(sample) for sample in samples)

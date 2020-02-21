@@ -163,7 +163,7 @@ for sample in samples:
     LOI = sample_data['label'].data
     
     for label in LOI:
-        specific_rendering(sample_data, label, neighbours=True, z_limit=1200)
+        specific_rendering(sample_data, label, neighbours=False, z_limit=1200)
     
     # outfolder = os.path.join(targetfolder, sample_name, 'volume')
     

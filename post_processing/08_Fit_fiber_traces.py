@@ -44,7 +44,7 @@ for sample in samples:
 
     deg = 10
     coeff = np.zeros([2, deg+1, num_fibers], dtype = np.float64)
-    vx = 2.5E-6 #m
+    vx = 2.75E-6 #m
 
 
     #fit first fiber
@@ -94,7 +94,7 @@ for sample in samples:
                                       'fiber': np.arange(1, coeff.shape[2]+1),},
                                       attrs = {'name' : sample,
                                                'comment': 'fit of fiber center coordinates: x,y(z[m]) = vx*(kn*(z/vx)^n + ... k1*(z/vx) + k0)',
-                                               'pixel size (vx)': '2.5 um',
+                                               'pixel size (vx)': '2.75 um',
                                                'waterline': 'reasonable z-range: 0-1300vx'})
     
 #    data_path = r"H:\03_Besprechungen\Simulation_Correspondence\Jianlin Zhao"

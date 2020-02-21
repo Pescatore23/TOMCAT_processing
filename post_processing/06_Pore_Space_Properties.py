@@ -17,7 +17,7 @@ import multiprocessing as mp
 
 num_cores = mp.cpu_count()
 drive = '//152.88.86.87/data118'
-processing_version = 'processed_1200_dry_seg_aniso_sep_good_samples'
+processing_version = 'processed_1200_dry_seg_aniso_sep'
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', processing_version)
 
 
@@ -157,6 +157,8 @@ for filename in os.listdir(data_path):
     file = os.path.join(data_path, filename)
 #    if c>0: continue
     dyn_data = xr.load_dataset(file)
+    new_filename = ''.join(['pore_props_', dyn_data.attrs['name'],'.nc'])
+    if os.path.exists(new_filename): continue
     label_matrix = dyn_data['label_matrix'].data
     labels = dyn_data['label'].data
     
@@ -207,7 +209,7 @@ for filename in os.listdir(data_path):
                                       'dimension': np.arange(max_vec_dim)})
     sample_data.attrs = dyn_data.attrs
     
-    new_filename = ''.join(['pore_props_', sample_data.attrs['name'],'.nc'])
+    
     sample_data.to_netcdf(os.path.join(data_path, new_filename))
     
 #    c=c+1

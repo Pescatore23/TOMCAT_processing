@@ -29,12 +29,12 @@ excluded_samples=[
  ]
 
 baseFolder1 = r"Z:\Robert_TOMCAT_3"
-baseFolder2 = r"Z:\Robert_TOMCAT_3_Part_2"
+# baseFolder2 = r"Z:\Robert_TOMCAT_3_Part_2"
 
 samples1 = os.listdir(baseFolder1)
-samples2 = os.listdir(baseFolder2)
-
-samples = samples1 + samples2
+# samples2 = os.listdir(baseFolder2)
+samples2 = []
+samples = samples1 #+ samples2
 
 data_path = r"H:\11_Essential_Data\03_TOMCAT\08_Macroscopic_Properties"
 
