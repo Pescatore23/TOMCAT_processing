@@ -6,7 +6,7 @@ Created on Wed Jul 18 09:22:17 2018
 """
 
 import matplotlib.pyplot as plt
-plt.ioff()
+# plt.ioff()
 import numpy as np
 from skimage import measure
 from skimage.morphology import ball
@@ -95,37 +95,38 @@ def rendering(t, transitions, time, outfolder, label = False, pore_object = Fals
 def specific_rendering(sample_data, label, neighbours=False, z_limit = 1400, sourcefolder=sourcefolder, targetfolder=targetfolder, num_cores=num_cores):
     # sample_file = ''.join(['dyn_data_',sample,'.nc'])
     # sample_data = xr.load_dataset(os.path.join(sourcefolder, sample_file))
-    label_matrix = sample_data['label_matrix'][:,:,:z_limit]
+    label_matrix = sample_data['label_matrix'][:,:,:z_limit].data
     
-    pore = np.array(label_matrix == label)
+    pore = label_matrix == label
     
-    time = sample_data['time'].data
-    t_max=len(time)
-
-
-    if not os.path.exists(os.path.join(targetfolder, sample)):
-        os.mkdir(os.path.join(targetfolder, sample))
+    if np.any(pore):
+        time = sample_data['time'].data
+        t_max=len(time)
     
-    if not neighbours:
-        bounding_box = ndimage.find_objects(pore)[0]
-        outfolder = os.path.join(targetfolder, sample, ''.join(['label_',str(label)]))
-        transitions = sample_data['transition_matrix'][bounding_box].data * pore[bounding_box]
-        if not os.path.exists(outfolder):
-            os.mkdir(outfolder)
-        Parallel(n_jobs=num_cores)(delayed(rendering)(t, transitions, time, outfolder) for t in range(t_max+1))
     
-    if neighbours:
-        large_mask = np.zeros(label_matrix.shape, dtype=np.bool)
-        mask = ndimage.morphology.binary_dilation(pore, structure = ball(2))
-        labels = np.unique(label_matrix*mask)[1:]
-        for color in labels:
-            large_mask[label_matrix==color]=True
-#        bounding_box = ndimage.find_objects(large_mask)[0]
-        outfolder = os.path.join(targetfolder, sample, ''.join(['label_',str(label),'_neighbours']))
-        transitions = sample_data['transition_matrix'].data * large_mask
-        if not os.path.exists(outfolder):
-            os.mkdir(outfolder)
-        Parallel(n_jobs=num_cores)(delayed(rendering)(t, transitions, time, outfolder, label = label, pore_object = pore) for t in range(t_max+1))
+        if not os.path.exists(os.path.join(targetfolder, sample)):
+            os.mkdir(os.path.join(targetfolder, sample))
+        
+        if not neighbours:
+            bounding_box = ndimage.find_objects(pore)[0]
+            outfolder = os.path.join(targetfolder, sample, ''.join(['label_',str(label)]))
+            transitions = sample_data['transition_matrix'][bounding_box].data * pore[bounding_box]
+            if not os.path.exists(outfolder):
+                os.mkdir(outfolder)
+            Parallel(n_jobs=num_cores)(delayed(rendering)(t, transitions, time, outfolder) for t in range(t_max+1))
+        
+        if neighbours:
+            large_mask = np.zeros(label_matrix.shape, dtype=np.bool)
+            mask = ndimage.morphology.binary_dilation(pore, structure = ball(2))
+            labels = np.unique(label_matrix*mask)[1:]
+            for color in labels:
+                large_mask[label_matrix==color]=True
+    #        bounding_box = ndimage.find_objects(large_mask)[0]
+            outfolder = os.path.join(targetfolder, sample, ''.join(['label_',str(label),'_neighbours']))
+            transitions = sample_data['transition_matrix'].data * large_mask
+            if not os.path.exists(outfolder):
+                os.mkdir(outfolder)
+            Parallel(n_jobs=num_cores)(delayed(rendering)(t, transitions, time, outfolder, label = label, pore_object = pore) for t in range(t_max+1))
         
         
 
@@ -159,9 +160,10 @@ for sample in samples:
 # #     print(sample[9:-3])
     sample_data = xr.load_dataset(os.path.join(sourcefolder, sample))
     sample_name = sample_data.attrs['name']
+    # if sample_name == 'T3_025_9': continue
     # time = sample_data['time'].data
     LOI = sample_data['label'].data
-    
+    print(sample_name)
     for label in LOI:
         specific_rendering(sample_data, label, neighbours=False, z_limit=1200)
     

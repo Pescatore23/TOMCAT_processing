@@ -30,7 +30,7 @@ knots['T4_300_4_III']=[1272,1524]
 knots['T4_300_5_III']=[1377,1610]
 
 
-baseFolder = r"W:\Robert_TOMCAT_3"
+baseFolder = r"Z:\Robert_TOMCAT_4"
 
 processingstage = '04a_void_space'
 topfolder = '04b_split_void'

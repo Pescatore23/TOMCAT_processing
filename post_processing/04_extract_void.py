@@ -20,7 +20,7 @@ if library not in sys.path:
 
 import os
 import numpy as np
-from scipy.ndimage import morphology
+# from scipy.ndimage import morphology
 import imageio
 #import skimage
 from skimage import morphology as skmorph
@@ -31,7 +31,7 @@ import robpylib
 #baseFolder = 'X:\TOMCAT3_processing_1'
 #newBaseFolder = 'U:\TOMCAT_3_segmentation'
 #baseFolder = r'Z:\Robert_TOMCAT_3_Part_2'
-baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
+baseFolder = r'Z:\Robert_TOMCAT_4'
 newBaseFolder = baseFolder
 
 
@@ -85,15 +85,18 @@ c=0
 
 for sample in os.listdir(baseFolder):
 #    if not sample == 'T4_300_5_III': continue
-    if sample[1] == '4': continue
+    if not sample[1] == '4': continue
 #    if not sample == 'T3_025_9_III': continue
-    if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
+    # if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
+    if sample == 'T4_025_2_II': continue
     if sample in excluded_samples:
         c=c+1
         continue
+    print(sample)
     fiberFolder=os.path.join(baseFolder,sample,'01a_weka_segmented_dry','classified')
-    sourceFolder=os.path.join(baseFolder,sample,'02_pystack_registered')
-    waterFolder=os.path.join(sourceFolder,os.listdir(sourceFolder)[-1])
+    # sourceFolder=os.path.join(baseFolder,sample,'02_pystack_registered')
+    waterFolder=os.path.join(baseFolder,sample,'03_gradient_filtered_transitions') #for the T4 samples, use final water configuration
+    # waterFolder=os.path.join(sourceFolder,os.listdir(sourceFolder)[-1])
     
     if not newBaseFolder:
         newBaseFolder=baseFolder
@@ -119,10 +122,9 @@ for sample in os.listdir(baseFolder):
         Parallel(n_jobs=num_cores)(delayed(yarn_pores)(fiberFolder, targetFolder, name) for name in fibernames)
 
     if sample[1]=='4':
-        last_scan = os.path.join(sourceFolder, os.listdir(sourceFolder)[-1])
-        masks, _  = robpylib.CommonFunctions.ImportExport.ReadStackNew(last_scan)
-        masks = interlace_masking(masks)
-        Parallel(n_jobs=num_cores)(delayed(interlace_pores)(fiberFolder, masks[:,:,z], targetFolder, fibernames[z]) for z in range(len(fibernames)))
-    
+        masks, names  = robpylib.CommonFunctions.ImportExport.ReadStackNew(waterFolder)
+        masks = (masks > 0).astype(np.uint8)
+        # Parallel(n_jobs=num_cores)(delayed(interlace_pores)(fiberFolder, masks[:,:,z], targetFolder, fibernames[z]) for z in range(len(fibernames)))
+        robpylib.CommonFunctions.ImportExport.WriteStackNew(targetFolder, names, masks)
 
     
