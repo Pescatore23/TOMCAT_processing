@@ -109,13 +109,15 @@ def interface_per_time_step(wet, void, fibermesh, smooth_decision = smooth_decis
         
         # comment out for v 4
         # try:
-        #     interface = interface_extraction(wet, void)
-        #     verts, faces, _, _ = measure.marching_cubes_lewiner(interface)
-        #     verts, faces = surface_smoothing(verts, faces)
-        #     A_wa = measure.mesh_surface_area(verts, faces)/2
+            # interface = interface_extraction(wet, void)
+            # verts, faces, _, _ = measure.marching_cubes_lewiner(interface)
+            # verts, faces = surface_smoothing(verts, faces)
+            # A_wa = measure.mesh_surface_area(verts, faces)/2
+            
+            
         # except:
-        #     A_wa = -1
-        #     # print(str(t)+' A_wa_failed')
+            # A_wa = -1
+            # print(str(t)+' A_wa_failed')
             
         try:
             wet_interface = solid_interface_extraction(wet, void)
@@ -126,6 +128,8 @@ def interface_per_time_step(wet, void, fibermesh, smooth_decision = smooth_decis
             
             # A_ws = measure.mesh_surface_area(verts, faces)/2
             # A_wa = A_tot-A_ws-A_wv
+            
+
             
             # uncomment for v 4
             # fverts = fibermesh.vertices
@@ -141,7 +145,15 @@ def interface_per_time_step(wet, void, fibermesh, smooth_decision = smooth_decis
             faces_mask = np.all(wet_int_mask[ffaces], axis = 1)
             wet_faces = ffaces[faces_mask]
             A_ws = measure.mesh_surface_area(fverts, wet_faces)
-            A_wa = A_tot-A_ws-A_wv
+            
+            # v7
+            interface = interface_extraction(wet, void)
+            int_mask = interface[fvert_int[:,0], fvert_int[:,1], fvert_int[:,2]]
+            int_faces_mask = np.all(int_mask[ffaces], axis = 1)
+            int_faces = ffaces[int_faces_mask]
+            A_wa = measure.mesh_surface_area(fverts, int_faces)
+            
+            # A_wa = A_tot-A_ws-A_wv
         except:
             A_ws=np.nan
             A_wa=np.nan
@@ -155,7 +167,7 @@ for sample in samples:
     print(sample)
     data = xr.load_dataset(os.path.join(sourceFolder, sample))
     name = data.attrs['name']
-    filename = os.path.join(sourceFolder, ''.join(['total_energy_data_v6_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['total_energy_data_v7_', name, '.nc']))
     if os.path.exists(filename): continue
     if name == 'T3_025_1': continue
     print(name)
