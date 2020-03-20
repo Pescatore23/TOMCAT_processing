@@ -22,14 +22,12 @@ network_location = '//152.88.86.87/data118'
 #baseFolder = r'Y:\TOMCAT_3'
 #baseFolder = r'W:\Robert_TOMCAT_3_Part_2'
 #baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
-baseFolder = os.path.join(network_location, 'Robert_TOMCAT_3')
+baseFolder = os.path.join(network_location, 'Robert_TOMCAT_4')
 
 procFolder="04b_split_void"
 #procFolder = '04a_void_space_from_5'
 #procFolder="04a_void_space_test"
 #procFolder = '04a_void_space_temp_mean'
-
-repeats = ['T3_300_3', 'T3_025_1', 'T3_025_4', 'T3_025_9_III']
 
 outname = 'pores_'
 samples=os.listdir(baseFolder)
@@ -64,6 +62,7 @@ parts = ['part_1', 'part_2', 'part_3']
 for sample in samples:
     step=step+1
     if not sample[1]=='4': continue
+    if sample == 'T4_025_1': continue
     print(sample,' (',step,'/',length,')')
     if not os.path.exists(os.path.join(baseFolder, sample, procFolder)): 
     	print('no void space data available')
