@@ -10,15 +10,15 @@ import os
 import robpylib
 import numpy as np
 from joblib import Parallel, delayed
-import joblib
+# import joblib
 # import multiprocessing as mp
 from scipy import ndimage
 # import skimage.morphology
 from skimage.morphology import cube
 from skimage import measure
 import trimesh
-from dask.distributed import Client
-client = Client(processes=False)             # create local cluster
+# from dask.distributed import Client
+# client = Client(processes=False)             # create local cluster
 
 num_cores = 64#mp.cpu_count()
 
@@ -275,12 +275,12 @@ for sample in samples:
     void = fibers==0
     verts, faces, _, _ = measure.marching_cubes_lewiner(fibers)
     fibers = fibers >0
-    # fibermesh = False
-    print('fibermesh marched')
-    fibermesh = trimesh.Trimesh(vertices = verts, faces=faces)
-    if smooth_decision == 'yes':
-        fibermesh = trimesh.smoothing.filter_taubin(fibermesh, lamb=lamb, nu=k, iterations=iterations)
-        print('fibermesh smoothed')
+    fibermesh = False
+    # print('fibermesh marched')
+    # fibermesh = trimesh.Trimesh(vertices = verts, faces=faces)
+    # if smooth_decision == 'yes':
+        # fibermesh = trimesh.smoothing.filter_taubin(fibermesh, lamb=lamb, nu=k, iterations=iterations)
+        # print('fibermesh smoothed')
     # if name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     
     filename = os.path.join(sourceFolder, ''.join(['energy_data_v16_', name, '.nc']))
@@ -313,8 +313,8 @@ for sample in samples:
         bounding_boxes.append(robpylib.CommonFunctions.pore_network.extend_bounding_box(pore, shape))
     print('start parallel computing')
     # [bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop]
-    with joblib.parallel_backend('dask'):
-        result = Parallel(n_jobs=num_cores)(delayed(measure_interfaces)(label, label_matrix[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], transitions[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], void[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], fibers[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], time, fibermesh, bb) for (label, bb) in zip(labels, bounding_boxes))
+    # with joblib.parallel_backend('dask'):
+    result = Parallel(n_jobs=num_cores)(delayed(measure_interfaces)(label, label_matrix[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], transitions[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], void[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], fibers[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], time, fibermesh, bb) for (label, bb) in zip(labels, bounding_boxes))
     result = np.array(result)
     
     A_wa = result[:, 0, :]
