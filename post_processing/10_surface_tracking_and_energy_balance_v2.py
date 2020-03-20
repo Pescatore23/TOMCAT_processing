@@ -68,16 +68,16 @@ def kinetic_energy(volume, time, A_mean, vx=vx, rho=rho):
     E_kin = rho/4 * (volume[:,:-1] + volume[:,1:])*vx /A_mean[:,None]**2 * ((volume[:,1:] - volume[:,:-1])*vx**3)**2 /(time[1:]-time[:-1])**2
     return E_kin
 
-# def interface_extraction(wet, void):
-#    dry = np.bitwise_and(void, ~wet)
-#    wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
-#    dry = ndimage.binary_dilation(input = dry, structure = cube(3).astype(np.bool))
+def interface_extraction(wet, void):
+    dry = np.bitwise_and(void, ~wet)
+    wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
+    dry = ndimage.binary_dilation(input = dry, structure = cube(3).astype(np.bool))
    
-#    interface = np.bitwise_and(wet, dry)
-#    interface = np.bitwise_and(interface, void)
-#    # interface = skimage.morphology.binary_erosion(interface, selem=ball(1).astype(np.bool))
-#    # interface = skimage.morphology.binary_dilation(interface, selem=ball(1).astype(np.bool))
-#    return interface
+    interface = np.bitwise_and(wet, dry)
+    interface = np.bitwise_and(interface, void)
+    # interface = skimage.morphology.binary_erosion(interface, selem=ball(1).astype(np.bool))
+    # interface = skimage.morphology.binary_dilation(interface, selem=ball(1).astype(np.bool))
+    return interface
 
 def water_interface_extraction(wet, nwet, void):
     wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
@@ -105,9 +105,9 @@ def measure_interfaces(label, label_matrix, transition, void, fibers, time, fibe
     watermask = transition > 0
     pore_filling = transition*label_obj
     neighbor_water = transition*(~label_obj)
-    x0 = bb[0].start
-    y0 = bb[1].start
-    z0 = bb[2].start
+    # x0 = bb[0].start
+    # y0 = bb[1].start
+    # z0 = bb[2].start
     for t in range(1,len(time)):
         A_wa[t] = A_wa[t-1]
         A_ws[t] = A_ws[t-1]
@@ -128,16 +128,28 @@ def measure_interfaces(label, label_matrix, transition, void, fibers, time, fibe
             except:
                 a = False
             
-            # virtual interface at pore boundary
             if a:
+            # water interface
+                try:
+                    interface = interface_extraction(wet, void)
+                    wvert_int = np.int16(wverts)
+                    int_mask = interface[wvert_int[:,0], wvert_int[:,1], wvert_int[:,2]]
+                    ifaces_mask = np.all(int_mask[wfaces], axis=1)
+                    ifaces = wfaces[ifaces_mask]
+                    Awa = measure.mesh_surface_area(wverts, ifaces)
+                    d = True
+            # virtual interface at pore boundary
+                except:
+                    d = False
+                    Awa = 0
                 try:
                     virtual_interface = water_interface_extraction(wet, nwet, void)
                     wvert_int = np.int16(wverts)
                     virtual_mask = virtual_interface[wvert_int[:,0], wvert_int[:,1], wvert_int[:,2]]
                     vfaces_mask = np.all(virtual_mask[wfaces], axis=1)
                     vfaces = wfaces[vfaces_mask]
-                    Aww = measure.mesh_surface_area(wverts, vfaces)/2
-                    b = False
+                    Aww = measure.mesh_surface_area(wverts, vfaces)
+                    b = True
                 except:
                     b = False
                     Aww = 0
@@ -147,35 +159,35 @@ def measure_interfaces(label, label_matrix, transition, void, fibers, time, fibe
                     wet_interface = solid_interface_extraction(wet, fibers)
                     
                     # v12, v15
-                    fverts = fibermesh.vertices
-                    ffaces = fibermesh.faces
+                    # fverts = fibermesh.vertices
+                    # ffaces = fibermesh.faces
                     
                     # v13
-                    # fverts = wverts
-                    # ffaces = wfaces
+                    fverts = wverts
+                    ffaces = wfaces
                     
                     
                     # comment out for v13
                     fvert_int = np.int16(fverts)
                     
-                    fvert_int[:,0] = fvert_int[:,0]-x0
-                    fvert_int[:,1] = fvert_int[:,1]-y0
-                    fvert_int[:,2] = fvert_int[:,2]-z0
+                    # fvert_int[:,0] = fvert_int[:,0]-x0
+                    # fvert_int[:,1] = fvert_int[:,1]-y0
+                    # fvert_int[:,2] = fvert_int[:,2]-z0
                     
-                    x_list = np.zeros(fvert_int.shape[0], dtype=np.bool)
-                    y_list = np.zeros(fvert_int.shape[0], dtype=np.bool)
-                    z_list = np.zeros(fvert_int.shape[0], dtype=np.bool)
+                    # x_list = np.zeros(fvert_int.shape[0], dtype=np.bool)
+                    # y_list = np.zeros(fvert_int.shape[0], dtype=np.bool)
+                    # z_list = np.zeros(fvert_int.shape[0], dtype=np.bool)
                     
-                    x_list[np.where(fvert_int[:,0]>0) and np.where(fvert_int[:,0]<void.shape[0])] = True
-                    y_list[np.where(fvert_int[:,1]>0) and np.where(fvert_int[:,1]<void.shape[1])] = True
-                    z_list[np.where(fvert_int[:,2]>0) and np.where(fvert_int[:,2]<void.shape[2])] = True
+                    # x_list[np.where(fvert_int[:,0]>0) and np.where(fvert_int[:,0]<void.shape[0])] = True
+                    # y_list[np.where(fvert_int[:,1]>0) and np.where(fvert_int[:,1]<void.shape[1])] = True
+                    # z_list[np.where(fvert_int[:,2]>0) and np.where(fvert_int[:,2]<void.shape[2])] = True
                     
-                    coord_list = x_list*y_list*z_list
+                    # coord_list = x_list*y_list*z_list
                     # fvert_int[~coord_list,:] = 0
                       ########
                                
                     wet_mask = wet_interface[fvert_int[:,0], fvert_int[:,1], fvert_int[:,2]]
-                    wet_mask[~coord_list] = False
+                    # wet_mask[~coord_list] = False
                     
                     ffaces_mask = np.all(wet_mask[ffaces], axis = 1)
                     wffaces = ffaces[ffaces_mask]
@@ -190,7 +202,9 @@ def measure_interfaces(label, label_matrix, transition, void, fibers, time, fibe
                     A_ww[t] = Aww
                 if c:
                     A_ws[t] = Aws
-                A_wa[t] = Atot-Aww-Aws
+                # A_wa[t] = Atot-Aww-Aws
+                if d:
+                    A_wa[t] = Awa
                 
             # old version (v11)
             # # try:
@@ -269,7 +283,7 @@ for sample in samples:
         print('fibermesh smoothed')
     # if name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     
-    filename = os.path.join(sourceFolder, ''.join(['energy_data_v15_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['energy_data_v16_', name, '.nc']))
     
     if os.path.exists(filename): continue
     
