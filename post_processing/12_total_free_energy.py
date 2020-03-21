@@ -69,7 +69,7 @@ def surface_smoothing(verts, faces, k=k, lamb=lamb, iterations = iterations):
 
 def interface_extraction(wet, void):
    dry = np.bitwise_and(void, ~wet)
-   wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
+   # wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
    dry = ndimage.binary_dilation(input = dry, structure = cube(3).astype(np.bool))
    
    interface = np.bitwise_and(wet, dry)
@@ -167,7 +167,7 @@ for sample in samples:
     print(sample)
     data = xr.load_dataset(os.path.join(sourceFolder, sample))
     name = data.attrs['name']
-    filename = os.path.join(sourceFolder, ''.join(['total_energy_data_v7_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['total_energy_data_v8_', name, '.nc']))
     if os.path.exists(filename): continue
     if name == 'T3_025_1': continue
     print(name)

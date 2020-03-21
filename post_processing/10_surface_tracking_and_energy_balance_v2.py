@@ -70,7 +70,7 @@ def kinetic_energy(volume, time, A_mean, vx=vx, rho=rho):
 
 def interface_extraction(wet, void):
     dry = np.bitwise_and(void, ~wet)
-    wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
+    # wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
     dry = ndimage.binary_dilation(input = dry, structure = cube(3).astype(np.bool))
    
     interface = np.bitwise_and(wet, dry)
@@ -249,8 +249,11 @@ def measure_interfaces(label, label_matrix, transition, void, fibers, time, fibe
             # if b: A_tot[t] = Atot
             # if c: A_ww[t] = Aww
         
-    return A_ws, A_wa, A_ww, A_tot
-            
+    return A_wa, A_ws, A_ww, A_tot
+    # A_wa = result[:, 0, :]
+    # A_ws = result[:, 1, :]
+    # A_ww = result[:, 2, :]
+    # A_tot = result[:, 3, :]     up to v16, Awa and Aws mixed up!!!
  
 samples.sort()
 for sample in samples:
@@ -283,7 +286,7 @@ for sample in samples:
         # print('fibermesh smoothed')
     # if name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     
-    filename = os.path.join(sourceFolder, ''.join(['energy_data_v16_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['energy_data_v17_', name, '.nc']))
     
     if os.path.exists(filename): continue
     
