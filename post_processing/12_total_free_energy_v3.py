@@ -97,6 +97,7 @@ def interface_per_time_step(wet, void, smooth_decision = smooth_decision):#, wat
     A_wv = 0
     A_ws_label = 0
     A_wa_corr = 0
+    A_wa_corr2 = 0
     if np.any(wet):
         try:
             verts, faces, _, _ = measure.marching_cubes_lewiner(wet)
