@@ -22,12 +22,12 @@ network_location = '//152.88.86.87/data118'
 #baseFolder = r'Y:\TOMCAT_3'
 #baseFolder = r'W:\Robert_TOMCAT_3_Part_2'
 #baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
-baseFolder = os.path.join(network_location, 'Robert_TOMCAT_3')
+baseFolder = os.path.join(network_location, 'Robert_TOMCAT_4')
 
-#procFolder="04a_void_space"
+procFolder="04a_void_space"
 #procFolder = '04a_void_space_from_5'
 #procFolder="04a_void_space_test"
-procFolder = '04a_void_space_temp_mean'
+#procFolder = '04a_void_space_temp_mean'
 
 repeats = ['T3_300_3', 'T3_025_1', 'T3_025_4', 'T3_025_9_III']
 
@@ -52,18 +52,17 @@ time0=time.time()
 length=len(samples)
 step=0
 
-#targetName = "05a_separated"
+targetName = "05a_separated_total_volume"
 #targetName = '05a_separated_from_5'
-targetName = '05a_separated_temp_mean'
 
 #if baseFolder[-1] == '2': targetName = "04a_separated"
 #samples = ['T3_300_3', 'T3_025_1', 'T3_025_4']
 #samples = ['T3_025_9_III']
-samples = reversed(samples)
+#samples = reversed(samples)
 for sample in samples:
     skipFlag=False
     step=step+1
-    if sample[1]=='4': continue
+    if not sample[1]=='4': continue
     if sample in repeats: continue
     if not os.path.exists(os.path.join(baseFolder, sample, procFolder)): 
     	print('no void space data available')
