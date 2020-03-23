@@ -317,7 +317,7 @@ for sample in samples:
                               'water_air_area_by_difference': (['label', 'time'], A_wa_corr),
                               'smoothing': ('parameter', np.array([k, lamb, iterations]))},
                         coords = {'label': labels,
-                                  'time': time[1:],
+                                  'time': time,
                                   'parameter': ['k', 'lambda', 'iterations']},
                         attrs = {'comment': 'surfaces measured as triangulated mesh instead of counting pixels + noise removal',
                                   'pixel_size': '2.75um',
