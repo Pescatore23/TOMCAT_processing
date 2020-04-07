@@ -31,7 +31,7 @@ import robpylib
 #baseFolder = 'X:\TOMCAT3_processing_1'
 #newBaseFolder = 'U:\TOMCAT_3_segmentation'
 #baseFolder = r'Z:\Robert_TOMCAT_3_Part_2'
-baseFolder = r'Z:\Robert_TOMCAT_4'
+baseFolder = r'Z:\Robert_TOMCAT_3'
 newBaseFolder = baseFolder
 
 
@@ -85,23 +85,23 @@ c=0
 
 for sample in os.listdir(baseFolder):
 #    if not sample == 'T4_300_5_III': continue
-    if not sample[1] == '4': continue
+    # if not sample[1] == '4': continue
 #    if not sample == 'T3_025_9_III': continue
-    # if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
+    if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     if sample == 'T4_025_2_II': continue
     if sample in excluded_samples:
         c=c+1
         continue
     print(sample)
     fiberFolder=os.path.join(baseFolder,sample,'01a_weka_segmented_dry','classified')
-    # sourceFolder=os.path.join(baseFolder,sample,'02_pystack_registered')
-    waterFolder=os.path.join(baseFolder,sample,'03_gradient_filtered_transitions') #for the T4 samples, use final water configuration
-    # waterFolder=os.path.join(sourceFolder,os.listdir(sourceFolder)[-1])
+    sourceFolder=os.path.join(baseFolder,sample,'02_pystack_registered_from_5')
+    # waterFolder=os.path.join(baseFolder,sample,'03_gradient_filtered_transitions') #for the T4 samples, use final water configuration
+    waterFolder=os.path.join(sourceFolder,os.listdir(sourceFolder)[-1])
     
     if not newBaseFolder:
         newBaseFolder=baseFolder
     
-    targetFolder=os.path.join(newBaseFolder,sample,'04a_void_space')
+    targetFolder=os.path.join(newBaseFolder,sample,'04a_void_space_from_5')
     
 #    if os.path.exists(targetFolder):
 #        c=c+1
