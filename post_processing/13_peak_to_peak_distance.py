@@ -31,7 +31,7 @@ def peak_diff_calc(file):
     labels = dyn_data['label'].data
     throats, params = robpylib.CommonFunctions.pore_network.extract_throat_list(label_matrix, np.unique(label_matrix)[1:])
     time = dyn_data['time'].data
-    peak_distances = -np.ones([len(dyn_data['label'].data),20])
+    peak_distances = -np.ones([len(dyn_data['label'].data),40])
     heights = peak_distances.copy()
     filling = dyn_data['filling'].data
     pore_peaks = []
@@ -96,7 +96,7 @@ results = Parallel(n_jobs = num_cores)(delayed(peak_diff_calc)(file) for file in
 # for file in files:
 #     results.append(peak_diff_calc(file))
 
-test = np.zeros((1,20))
+test = np.zeros((1,40))
 test2 = np.zeros((1,2))
 
 data = test
