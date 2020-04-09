@@ -69,7 +69,7 @@ files = []
 for file in files_crude:
     if c>1: continue
     if file[:3] == 'dyn': 
-        files.append(file)
+        files.append(os.path.join(data_path, file))
         c=c+1
 
 results = Parallel(n_jobs = num_cores)(delayed(peak_diff_calc)(file) for file in files)
