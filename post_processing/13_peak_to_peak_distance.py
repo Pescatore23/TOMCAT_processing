@@ -72,7 +72,7 @@ for file in files_crude:
         files.append(file)
         c=c+1
 
-results = Parallel(n_jobs = num_cores)(delayed(peak_diff_calc) for file in files)
+results = Parallel(n_jobs = num_cores)(delayed(peak_diff_calc)(file) for file in files)
 
 data = np.array([])
 data_peaks = np.array([])
