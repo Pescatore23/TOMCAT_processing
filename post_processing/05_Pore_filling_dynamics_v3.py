@@ -411,14 +411,15 @@ for sample in samples_crude:
         samples.append(sample)
 
 def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
-    if os.path.exists(os.path.join(baseFolder, sample, label_folder)):
-        name = ''.join(['dyn_data_',sample,'.nc'])
-        filename = os.path.join(data_path, name)
-        if not os.path.exists(filename):
-            sample_data = get_Dyn_Data(sample)
-            sample_data = dyn_fit_step2(sample_data)
-            sample_data.to_netcdf(filename)
-            return sample_data
+    if not sample == 'T3_025_1':
+        if os.path.exists(os.path.join(baseFolder, sample, label_folder)):
+            name = ''.join(['dyn_data_',sample,'.nc'])
+            filename = os.path.join(data_path, name)
+            if not os.path.exists(filename):
+                sample_data = get_Dyn_Data(sample)
+                sample_data = dyn_fit_step2(sample_data)
+                sample_data.to_netcdf(filename)
+                return sample_data
 
 # if not parallel:  
 #     for sample in samples:
