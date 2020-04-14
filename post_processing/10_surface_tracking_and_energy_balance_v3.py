@@ -94,6 +94,7 @@ def measure_interfaces(label, label_matrix, transition, void, time, bb, smooth_d
     label_obj = label_matrix==label
     watermask = transition > 0
     pore_filling = transition*label_obj
+    pore_watermask = watermask*label_obj
     neighbor_water = transition*(~label_obj)
     # x0 = bb[0].start
     # y0 = bb[1].start
@@ -106,7 +107,7 @@ def measure_interfaces(label, label_matrix, transition, void, time, bb, smooth_d
         A_ww[t] = A_ww[t-1]
         A_tot[t] = A_tot[t-1]
         if (pore_filling == t).any():
-            wet = watermask * (pore_filling < t+1)
+            wet = pore_watermask * (pore_filling < t+1)
             nwet = watermask * (neighbor_water < t+1)
             # wet_interface = solid_interface_extraction(wet, void)
             
@@ -265,7 +266,7 @@ for sample in samples:
         # print('fibermesh smoothed')
     # if name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     
-    filename = os.path.join(sourceFolder, ''.join(['energy_data_v3_1_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['energy_data_v3_2_', name, '.nc']))
     
     if os.path.exists(filename): continue
     
