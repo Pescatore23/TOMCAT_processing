@@ -24,12 +24,13 @@ for sample in samples:
     # FIXME load fiber images to get real void geometry
     
     name = sample_data.attrs['name']
+    print(name)
     if name == 'T3_025_1': continue
 
     fiberFolder = os.path.join(r'/Users/firo/NAS/Robert_TOMCAT_3', name, '01a_weka_segmented_dry', 'classified')
     
     if not os.path.exists(fiberFolder): continue
-
+    print('fiber tifs found')
     fibers, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiberFolder)
     
     
