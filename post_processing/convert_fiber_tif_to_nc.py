@@ -10,8 +10,9 @@ import robpylib
 import os
 import numpy as np
 
-baseFolder = r"NAS\Robert_TOMCAT_3_netcdf4_archives\dyn_data_1200_dry_seg_aniso_sep"
-destination = r"NAS\Robert_TOMCAT_3_netcdf4_archives\fiber_data"
+
+baseFolder = r'/Users/firo/NAS/Robert_TOMCAT_3_netcdf4_archives/dyn_data_1200_dry_seg_aniso_sep'
+destination = r'/Users/firo/NASNAS/Robert_TOMCAT_3_netcdf4_archives/fiber_data'
 
 samples = os.listdir(baseFolder)
 
