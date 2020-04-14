@@ -256,7 +256,7 @@ for sample in samples:
 
     
     void = fibers==0
-    verts, faces, _, _ = measure.marching_cubes_lewiner(fibers)
+    # verts, faces, _, _ = measure.marching_cubes_lewiner(fibers)
     fibers = fibers >0
     fibermesh = False
     # print('fibermesh marched')
