@@ -26,7 +26,7 @@ for sample in samples:
     name = sample_data.attrs['name']
     if name == 'T3_025_1': continue
 
-    fiberFolder = os.path.join(r"NAS\Robert_TOMCAT_3", name, '01a_weka_segmented_dry', 'classified')
+    fiberFolder = os.path.join(r'/Users/firo/NAS/Robert_TOMCAT_3', name, '01a_weka_segmented_dry', 'classified')
     
     if not os.path.exists(fiberFolder): continue
 
