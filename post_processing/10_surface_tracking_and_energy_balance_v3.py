@@ -247,10 +247,15 @@ for sample in samples:
     
     name = sample_data.attrs['name']
     if name == 'T3_025_1': continue
-    print(name)
-    fiberpath = os.path.join(folder, name, '01a_weka_segmented_dry', 'classified')
+    # print(name)
+    # fiberpath = os.path.join(folder, name, '01a_weka_segmented_dry', 'classified')
             
-    fibers, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiberpath, track=False)
+    # fibers, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiberpath, track=False)
+    fiber_path = os.path.join(data_path, 'fiber_data', ''.join(['fiber_data_',name,'.nc']))
+    fiber_data = xr.load_dataset(fiber_path)
+
+    fibers = fiber_data['fibers'].data
+    
     transitions = sample_data['transition_matrix'].data
     fibers = fibers[:,:,:transitions.shape[2]]
 
@@ -294,7 +299,7 @@ for sample in samples:
     shape = label_matrix.shape
     for pore in pores:
         bounding_boxes.append(robpylib.CommonFunctions.pore_network.extend_bounding_box(pore, shape))
-    print('start parallel computing')
+    # print('start parallel computing')
     # [bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop]
     # with joblib.parallel_backend('dask'):
     result = Parallel(n_jobs=num_cores)(delayed(measure_interfaces)(label, label_matrix[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], transitions[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], void[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], time, bb) for (label, bb) in zip(labels, bounding_boxes))
