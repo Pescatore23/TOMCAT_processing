@@ -77,7 +77,7 @@ excluded_samples=[
 #                     breakFlag=True
 #     return breakFlag
 
-def test_recalculate(sourceFolder, targetFolder, z, Overwrite = OverWrite):
+def test_recalculate(sourceFolder, targetFolder, z, OverWrite = OverWrite):
     breakFlag = False
     if not OverWrite:
         first_scan=os.listdir(sourceFolder)[0]
