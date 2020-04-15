@@ -20,7 +20,7 @@ import trimesh
 # from dask.distributed import Client
 # client = Client(processes=False)             # create local cluster
 
-num_cores = 50#mp.cpu_count()
+num_cores = 30#mp.cpu_count()
 
 rho = 997 #kg/m3
 vx = 2.75E-6 #m
