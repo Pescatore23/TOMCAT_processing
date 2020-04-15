@@ -121,7 +121,7 @@ def get_jump_height(currpx,pos,pos2=0,receding=False):
 def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
     check=6000
     if z<waterpos: check=9500
-    timg = np.zeros(np.shape(imgs), dtype='uint8')
+    # timg = np.zeros(np.shape(imgs), dtype='uint8')
     transitions = np.zeros([np.shape(imgs)[0],np.shape(imgs)[1]], dtype=np.uint16)
     transitions2 = transitions.copy()
 
@@ -148,18 +148,18 @@ def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
                 jump2 = get_jump_height(currpx,pos,pos2=pos2,receding=True)
                 
                 if jump > jumpmin: # there is a transition; careful, water can also receed!! (can clearly be seen in rare cases)
-                    timg[pX,pY,:pos] = 0
+                    # timg[pX,pY,:pos] = 0
 #                    double check for noise
                     if np.median(currpx[min(pos+10,len(currpx)):min(pos+25,len(currpx))])>check:#7500:#9500:
 #                    if np.median(currpx[min(pos+5,len(currpx)):min(pos+10,len(currpx))])>9500:
-                        timg[pX,pY,pos:] = 255
+                        # timg[pX,pY,pos:] = 255
                         transitions[pX,pY] = pos
-                    else: timg[pX,pY,pos:] = 0
+                    # else: timg[pX,pY,pos:] = 0
                     
                 if jump2 < -2000 and pos2>pos and z<waterpos:
-                    timg[pX,pY,pos2:] = 0
+                    # timg[pX,pY,pos2:] = 0
                     transitions2[pX,pY] = pos2
-    return timg, transitions, transitions2
+    return transitions, transitions2 #, timg 
 
 
 def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=None):
@@ -175,8 +175,9 @@ def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_trans
             
         poremask=mask*(1-fibermask)
         Tstack=Tstack*poremask[:,:,None]
-        binStack, transitions, transitions2 = fft_grad_segmentation(Tstack,poremask,z,waterpos=waterpos)
-        robpylib.CommonFunctions.ImportExport.WriteTimeSeries(targetFolder, binStack, names, scans)
+        # binStack, transitions, transitions2 = fft_grad_segmentation(Tstack,poremask,z,waterpos=waterpos)
+        transitions, transitions2 = fft_grad_segmentation(Tstack,poremask,z,waterpos=waterpos)
+        # robpylib.CommonFunctions.ImportExport.WriteTimeSeries(targetFolder, binStack, names, scans)
         imageio.imwrite(os.path.join(targetFolder_transitions,names[0]),transitions)
         imageio.imwrite(os.path.join(targetFolder_transitions2,names[0]),transitions2)
     return True
