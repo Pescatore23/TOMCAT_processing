@@ -61,20 +61,31 @@ excluded_samples=[
 #                    breakFlag=True
 #    return breakFlag
 
-def test_recalculate(sourceFolder,targetFolder,z,OverWrite=OverWrite):
-    breakFlag=False
-    first_scan=os.listdir(sourceFolder)[0]
-    if os.path.exists(targetFolder):   
-        if len(os.listdir(targetFolder))>0:
-            last_scan=os.listdir(targetFolder)[-1]
-            lst_nr=last_scan[-5:]
-            test_name=os.listdir(os.path.join(sourceFolder,first_scan))[z]
-            test_name=list(test_name)
-            test_name[-24:-19]=lst_nr
-            test_name=''.join(test_name)
-            if not OverWrite:
-                if test_name in os.listdir(os.path.join(targetFolder,last_scan)):
-                    breakFlag=True
+# def test_recalculate(sourceFolder,targetFolder,z,OverWrite=OverWrite):
+#     breakFlag=False
+#     first_scan=os.listdir(sourceFolder)[0]
+#     if os.path.exists(targetFolder):   
+#         if len(os.listdir(targetFolder))>0:
+#             last_scan=os.listdir(targetFolder)[-1]
+#             lst_nr=last_scan[-5:]
+#             test_name=os.listdir(os.path.join(sourceFolder,first_scan))[z]
+#             test_name=list(test_name)
+#             test_name[-24:-19]=lst_nr
+#             test_name=''.join(test_name)
+#             if not OverWrite:
+#                 if test_name in os.listdir(os.path.join(targetFolder,last_scan)):
+#                     breakFlag=True
+#     return breakFlag
+
+def test_recalculate(sourceFolder, targetFolder, z, Overwrite = OverWrite):
+    breakFlag = False
+    if not OverWrite:
+        first_scan=os.listdir(sourceFolder)[0]
+        if os.path.exists(targetFolder):
+            if len(os.listdir(targetFolder))>0:
+                    test_name=os.listdir(os.path.join(sourceFolder,first_scan))[z]
+                    if test_name in os.listdir(targetFolder):
+                        breakFlag = True
     return breakFlag
 
 def makesamplelist(baseFolder, **kwargs):
@@ -163,7 +174,7 @@ def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
 
 
 def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=None):
-    breakFlag=test_recalculate(sourceFolder,targetFolder,z,OverWrite=True)
+    breakFlag=test_recalculate(sourceFolder,targetFolder_transitions,z,OverWrite=OverWrite)
     if not breakFlag:
         Tstack, names, scans = robpylib.CommonFunctions.ImportExport.OpenTimeStack(sourceFolder, z)
         fibername=fibernames[z]
