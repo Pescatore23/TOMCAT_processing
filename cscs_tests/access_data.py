@@ -11,7 +11,7 @@ import os
 sourceFolder = r'/scratch/snx3000/fischer/pescatore'
 sourceFolder = r"W:\Robert_TOMCAT_3_netcdf4_archives"
 
-destination = os.path.join(sourceFolder, 'test')
+destination = os.path.join(sourceFolder, 'test2')
 
 if not os.path.exists(destination):
     os.mkdir(destination)
