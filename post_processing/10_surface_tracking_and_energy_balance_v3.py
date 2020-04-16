@@ -89,6 +89,7 @@ def measure_interfaces(label, label_matrix, transition, void, time, bb, smooth_d
     A_wa_corr = np.zeros(len(time))
     A_ws = np.zeros(len(time))
     A_ws_label = np.zeros(len(time))
+    A_ww_label = np.zeros(len(time))
     A_ww = np.zeros(len(time))
     A_tot = np.zeros(len(time))
     label_obj = label_matrix==label
@@ -104,6 +105,7 @@ def measure_interfaces(label, label_matrix, transition, void, time, bb, smooth_d
         A_wa_corr[t] = A_wa_corr[t-1]
         A_ws[t] = A_ws[t-1]
         A_ws_label[t] = A_ws_label[t-1]
+        A_ww_label[t] = A_ww_label[t-1]
         A_ww[t] = A_ww[t-1]
         A_tot[t] = A_tot[t-1]
         if (pore_filling == t).any():
@@ -149,10 +151,21 @@ def measure_interfaces(label, label_matrix, transition, void, time, bb, smooth_d
                     # vfaces_mask = np.all(virtual_mask[wfaces], axis=1)
                     # vfaces = wfaces[vfaces_mask]
                     Aww = measure.mesh_surface_area(vverts, vfaces)/2
+                    
+                    tverts = wverts
+                    tfaces = wfaces
+                    tvert_int = np.in16(tverts)
+                    virtual_mask = virtual_interface[tvert_int[:,0], tvert_int[:,1], tvert_int[:,2]]
+                    tfaces_mask = np.all(virtual_mask[tfaces], axis =1)
+                    vtfaces = tfaces[tfaces_mask]
+                    Aww_label = measure.mesh_surface_area(tverts, vtfaces)
+                    
+                    
                     b = True
                 except:
                     b = False
                     Aww = 0
+                    Aww_label = 0
                     
             # wet surface
                 try:
@@ -178,6 +191,7 @@ def measure_interfaces(label, label_matrix, transition, void, time, bb, smooth_d
                 A_tot[t] = Atot
                 if b:
                     A_ww[t] = Aww
+                    A_ww_label[t] = Aww_label
                 if c:
                     A_ws[t] = Aws
                     A_ws_label[t] = Aws_label
@@ -229,7 +243,7 @@ def measure_interfaces(label, label_matrix, transition, void, time, bb, smooth_d
             # if b: A_tot[t] = Atot
             # if c: A_ww[t] = Aww
         
-    return A_wa, A_ws, A_ww, A_tot, A_wa_corr, A_ws_label
+    return A_wa, A_ws, A_ww, A_tot, A_wa_corr, A_ws_label, A_ww_label
     # A_wa = result[:, 0, :]
     # A_ws = result[:, 1, :]
     # A_ww = result[:, 2, :]
@@ -271,7 +285,7 @@ for sample in samples:
         # print('fibermesh smoothed')
     # if name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     
-    filename = os.path.join(sourceFolder, ''.join(['energy_data_v3_2_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['energy_data_v3_3_', name, '.nc']))
     
     if os.path.exists(filename): continue
     
@@ -312,6 +326,7 @@ for sample in samples:
     A_tot = result[:, 3, :]
     A_wa_corr = result[:, 4, :]
     A_ws_label = result[:, 5, :]
+    A_ww_label = result[:, 6, :]
     
 
     
@@ -320,6 +335,7 @@ for sample in samples:
                               'water_water_area': (['label', 'time'], A_ww),
                               'total_water_surface': (['label', 'time'], A_tot),
                               'water_solid_area_by_label': (['label', 'time'], A_ws_label),
+                              'water_water_area_by_label': (['label', 'time'], A_ww_label),
                               'water_air_area_by_difference': (['label', 'time'], A_wa_corr),
                               'smoothing': ('parameter', np.array([k, lamb, iterations]))},
                         coords = {'label': labels,
@@ -338,7 +354,10 @@ for sample in samples:
     energy_data['water_air_area'].attrs['units'] = 'px'
     energy_data['water_solid_area'].attrs['units'] = 'px'
     energy_data['water_water_area'].attrs['units'] = 'px'
+    energy_data['water_water_area_by_label'].attrs['units'] = 'px'
+    energy_data['water_solid_area_by_label'].attrs['units'] = 'px'
     energy_data['total_water_surface'].attrs['units'] = 'px'
+    energy_data['water_air_area_by_difference'].attrs['units'] = 'px'
     energy_data.attrs['smoothed'] = smooth_decision
     
     
