@@ -152,6 +152,7 @@ def measure_interfaces(label, label_matrix, transition, void, time, bb, smooth_d
                     # vfaces = wfaces[vfaces_mask]
                     Aww = measure.mesh_surface_area(vverts, vfaces)/2
                     
+                    virtual_interface = water_interface_extraction(nwet, wet, void)
                     tverts = wverts
                     tfaces = wfaces
                     tvert_int = np.in16(tverts)
@@ -285,7 +286,7 @@ for sample in samples:
         # print('fibermesh smoothed')
     # if name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     
-    filename = os.path.join(sourceFolder, ''.join(['energy_data_v3_3_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['energy_data_v3_4_', name, '.nc']))
     
     if os.path.exists(filename): continue
     
