@@ -224,7 +224,8 @@ def inner_segmentation_function(sample, newBaseFolder=False, tracefits=False, wa
         masks, _  = robpylib.CommonFunctions.ImportExport.ReadStackNew(last_scan)
         masks = interlace_masking(masks)
     if parallel:
-        num_cores=mp.cpu_count()
+        # num_cores=mp.cpu_count()
+        num_cores = 30
        
         if sample[1] == '4':
             core_function(0,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=masks[:,:,0])
