@@ -18,7 +18,7 @@ samples = os.listdir(baseFolder)
 
 for sample in samples:
     if not sample[:3] == 'dyn': continue
-    
+    if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     sample_data = xr.load_dataset(os.path.join(baseFolder, sample))
     # pore_data = xr.load_dataset(os.path.join(sourceFolder, ''.join(['pore_props_', sample[9:]])))
     # FIXME load fiber images to get real void geometry
