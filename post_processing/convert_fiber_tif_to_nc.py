@@ -11,7 +11,7 @@ import os
 import numpy as np
 
 
-baseFolder = r'/Users/firo/NAS/Robert_TOMCAT_3_netcdf4_archives/processed_1200_dry_seg_aniso_sep/dyn_data_1200_dry_seg_aniso_sep'
+baseFolder = r'/Users/firo/NAS/Robert_TOMCAT_3_netcdf4_archives/processed_1200_dry_seg_aniso_sep'
 destination = r'/Users/firo/NAS/Robert_TOMCAT_3_netcdf4_archives/fiber_data'
 
 samples = os.listdir(baseFolder)
