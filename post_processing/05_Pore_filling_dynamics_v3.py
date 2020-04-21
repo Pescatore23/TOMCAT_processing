@@ -439,10 +439,10 @@ def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
 #         sample_data = dyn_fit_step2(sample_data)
 #         sample_data.to_netcdf(filename)
     
-# if parallel:
-    # results=Parallel(n_jobs=num_cores)(delayed(mainfunction)(sample) for sample in samples)
-for sample in samples:
-    print(sample)
-    mainfunction(sample)
+if parallel:
+    results=Parallel(n_jobs=num_cores)(delayed(mainfunction)(sample) for sample in samples)
+# for sample in samples:
+#     print(sample)
+#     mainfunction(sample)
     
         
