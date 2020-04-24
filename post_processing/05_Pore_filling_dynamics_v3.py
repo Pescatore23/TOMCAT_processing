@@ -247,7 +247,7 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     parameter = ['filling start time step', 'filling end time step','filling start [s]', 'filling end [s]', 'max filling rate [vx_s]', 'time step of max filling rate', 'median filling rate [vx_s]', 'num filling peaks', 'final water volume [vx]', 'final_saturation']    
     
     
-    sample_data = xr.Dataset({'filling': (['label', 'time'], data_filling),
+    sample_data = xr.Dataset({'filling': (['label', 'time'], filling_scaled),
                               'volume': (['label', 'time'], data_volume),
                               'dynamics': (['label', 'parameter'], dynamics),
                               'transition_matrix': (['x','y','z'], transitions),
@@ -404,11 +404,11 @@ def dyn_fit_step2(sample_data):
 c=0
 samples_crude = os.listdir(baseFolder)
 #samples = ['32_200_025H2_cont']
-
-samples = []
-for sample in samples_crude:
-    if sample in robpylib.TOMCAT.INFO.samples_to_repeat:
-        samples.append(sample)
+samples = os.listdir(baseFolder)
+# samples = []
+# for sample in samples_crude:
+#     if sample in robpylib.TOMCAT.INFO.samples_to_repeat:
+#         samples.append(sample)
 
 def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
     if not sample == 'T3_025_1':
