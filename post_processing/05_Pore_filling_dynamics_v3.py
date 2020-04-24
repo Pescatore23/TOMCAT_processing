@@ -59,16 +59,16 @@ if not os.path.exists(os.path.join(data_path, 'plots')):
 if not os.path.exists(os.path.join(data_path, 'plots_label')):
     os.mkdir(os.path.join(data_path, 'plots_label'))
 
-# label_folder = '05b_labels'
+label_folder = '05b_labels'
 # label_folder = '05b_labels_dry_seg_iso'
-label_folder = '05b_labels_from_5'
+# label_folder = '05b_labels_from_5'
 #label_folder = '05b_labels_dry_seg_iso'
 
-# transition_folder = '03_gradient_filtered_transitions'
-# transition_2_folder = '03_gradient_filtered_transitions2'
+transition_folder = '03_gradient_filtered_transitions'
+transition_2_folder = '03_gradient_filtered_transitions2'
 
-transition_folder = '03_gradient_filtered_transitions_from_5'
-transition_2_folder = '03_gradient_filtered_transitions2_from_5'
+# transition_folder = '03_gradient_filtered_transitions_from_5'
+# transition_2_folder = '03_gradient_filtered_transitions2_from_5'
 
 #transition_folder = '03_b_gradient_filtered_transitions_enhanced'
 #transition_2_folder = '03_b_gradient_filtered_transitions2_enhanced5'
