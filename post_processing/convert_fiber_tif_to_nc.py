@@ -24,7 +24,7 @@ for sample in samples:
     # FIXME load fiber images to get real void geometry
     
     name = sample_data.attrs['name']
-    if not name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
+    # if not name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     print(name)
     if name == 'T3_025_1': continue
 
