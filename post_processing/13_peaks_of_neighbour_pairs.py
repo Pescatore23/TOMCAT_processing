@@ -94,7 +94,7 @@ def __main__(sample):
         name = sample_data.attrs['name']
         tension = sample_data.attrs['tension']
         time = sample_data['time']
-        labels = sample_data['labels'].data
+        labels = sample_data['label'].data
         label_mat = sample_data['label_matrix'].data
         adj_mat = robpylib.CommonFunctions.pore_network.adjacency_matrix(label_mat)
         mask = np.ones(adj_mat.shape[0], np.bool)
@@ -139,7 +139,7 @@ def __main__(sample):
             peak_data_v2[2:len(peak_sorting)+2,c] = peaks[peak_sorting]
                       
             peak_height_data_v2[:2,c] = [p1,p2]
-            peak_height_data_v2[2::len(peak_sorting)+2,c] = peak_heights[peak_sorting]
+            peak_height_data_v2[2:len(peak_sorting)+2,c] = peak_heights[peak_sorting]
             c=c+1
             
         c= 0  
@@ -180,22 +180,40 @@ def __main__(sample):
             
             c=c+1
             
-        data_dict={}
+        # data_dict={}
         
-        data_dict['diffs_v1'] = diff_data_v1
-        data_dict['diffs_v2'] = diff_data_v2
-        data_dict['diffs_v3'] = diff_data_v3
-        data_dict['diffs_v4'] = diff_data_v4
+        # data_dict['diffs_v1'] = diff_data_v1
+        # data_dict['diffs_v2'] = diff_data_v2
+        # data_dict['diffs_v3'] = diff_data_v3
+        # data_dict['diffs_v4'] = diff_data_v4
         
-        data_dict['peaks_v2'] = peak_data_v3
-        data_dict['peaks_v3'] = peak_data_v3
-        data_dict['peaks_v4'] = peak_data_v4
+        # data_dict['peaks_v2'] = peak_data_v3
+        # data_dict['peaks_v3'] = peak_data_v3
+        # data_dict['peaks_v4'] = peak_data_v4
         
-        data_dict['peak_heights_v2'] = peak_height_data_v2
-        data_dict['peak_heights_v3'] = peak_height_data_v3
-        data_dict['peak_heights_v4'] = peak_height_data_v4
+        # data_dict['peak_heights_v2'] = peak_height_data_v2
+        # data_dict['peak_heights_v3'] = peak_height_data_v3
+        # data_dict['peak_heights_v4'] = peak_height_data_v4
         
-        data_dict = xr.Dataset(data_dict)
+        # data_dict = xr.Dataset(data_dict)
+        
+        
+        data_dict = xr.Dataset({'diffs_v1': (['ax_v1_0', 'pair'], diff_data_v1),
+                                'diffs_v2': (['ax_0', 'pair'], diff_data_v2),
+                                'peaks_v2': (['ax_0', 'pair'], peak_data_v2),
+                                'peak_heights_v2': (['ax_0', 'pair'], peak_height_data_v2),
+                                'diffs_v3': (['ax_0', 'label'], diff_data_v3),
+                                'diffs_v4': (['ax_0', 'label'], diff_data_v4),
+                                'peaks_v3': (['ax_0', 'label'], peak_data_v3),
+                                'peaks_v4': (['ax_0', 'label'], peak_data_v4),
+                                'peak_heights_v3': (['ax_0', 'label'], peak_height_data_v3),
+                                'peak_heights_v4': (['ax_0', 'label'], peak_height_data_v4),
+                                },
+                               coords= {'ax_v1_0': np.arange(diff_data_v1.shape[0]),
+                                        'pair': np.arange(diff_data_v1.shape[1]),
+                                        'ax_0': np.arange(diff_data_v2.shape[0]),
+                                        'label': labels})
+                                                          
         
         data_dict.attrs['name'] = name
         data_dict.attrs['tension'] = tension
