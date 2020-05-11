@@ -214,7 +214,7 @@ def __main__(sample):
             
             
         
-result = Parallel(n_jobs= mp.cpu_count())(delayed(__main__)(sample) for sample in samples)      
+result = Parallel(n_jobs= 20)(delayed(__main__)(sample) for sample in samples)      
         
         
         
