@@ -72,7 +72,7 @@ for sample in samples:
     targetFolder=os.path.join(baseFolder,sample, targetName, settings)
     if os.path.exists(targetFolder):
         f1=os.listdir(targetFolder)
-        if len(f1)>2000:
+        if len(f1)>200:
             print(sample, ' skipped (already calculated)')
             skipFlag=True
     if not skipFlag: labelImage(sampleFolder,targetFolder,outname,settings)
