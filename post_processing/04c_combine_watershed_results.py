@@ -22,12 +22,14 @@ for sample in samples:
     if not os.path.exists(destFolder):
         os.mkdir(destFolder)
     
+    maximum = 0
     for part in parts:
         refnames = os.listdir(os.path.join(refFolder, part))
         if 'Thumbs.db' in refnames: refnames.remove('Thumbs.db')
         
         ims, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(sourceFolder, part))
-        
+        ims = ims+maximum
+        maximum = ims.max()
         robpylib.CommonFunctions.ImportExport.WriteStackNew(destFolder, refnames, ims)
         
         
