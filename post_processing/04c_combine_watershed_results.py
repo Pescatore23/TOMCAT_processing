@@ -8,11 +8,11 @@ Created on Tue May 19 08:53:18 2020
 import os
 import robpylib
 
-baseFolder = "Z:\Robert_TOMCAT_4"
+baseFolder = r"Z:\Robert_TOMCAT_4"
 
 samples = os.listdir(baseFolder)
 
-samples = [samples[0]]
+samples = ['T4_025_1_III']
 parts = ['part_1', 'part_2', 'part_3']
 
 for sample in samples:
