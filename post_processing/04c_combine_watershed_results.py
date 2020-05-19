@@ -28,7 +28,9 @@ for sample in samples:
         if 'Thumbs.db' in refnames: refnames.remove('Thumbs.db')
         
         ims, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(sourceFolder, part))
+        mask = ims==0
         ims = ims+maximum
+        ims[mask]=0
         maximum = ims.max()
         robpylib.CommonFunctions.ImportExport.WriteStackNew(destFolder, refnames, ims)
         
