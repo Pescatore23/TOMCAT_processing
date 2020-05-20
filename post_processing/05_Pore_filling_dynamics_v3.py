@@ -29,7 +29,7 @@ import multiprocessing as mp
 parallel = True
 
 num_cores = mp.cpu_count()
-#num_cores = 8
+num_cores = 16
 
 time_limit = {'T3_100_10_III': 344,
               'T3_300_5': 229,
