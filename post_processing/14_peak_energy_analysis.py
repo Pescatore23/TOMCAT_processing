@@ -7,9 +7,11 @@ Created on Mon May 11 15:32:52 2020
 
 import xarray as xr
 import numpy as np
+import scipy as sp
 import os
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
+import scipy.optimize
 
 
 drive = '//152.88.86.87/data118'
@@ -57,6 +59,9 @@ def calc_wet_surface(dataset, axm2=axm2):
     wet_surface = axm2*dataset['water_solid_area']
     return wet_surface
 
+def squared(x, k):
+    y=k*x**2
+    return y
 
 
 pore_scale_data = xr.load_dataset(os.path.join(data_path, pore_sample))
@@ -138,3 +143,14 @@ plt.xlabel('flux [m3/s]')
 filename = r"H:\03_Besprechungen\Group Meetings\May_2020\resistance_error_guess.png"
 # plt.savefig(filename, bbox_inches = 'tight', dpi=600)
 
+
+# p, cov = sp.optimize.curve_fit(squared, dF*flux, flux, maxfev = 50000, p0=[-2300])
+p = [-2550]
+plt.plot(flux, dF*flux, '.')
+plt.xlim(0,5.5E-14)
+plt.ylim( -1E-23,0.1E-23)
+plt.plot(np.arange(0,5.5E-14,0.1E-14), squared(np.arange(0,5.5E-14,0.1E-14), *p))
+plt.xlabel('volume flux [m3/s]')
+plt.ylabel('volume flux*energy flux [Pa m6/s2]')
+filename = r"H:\03_Besprechungen\Group Meetings\May_2020\mean_pressure.png"
+plt.savefig(filename, bbox_inches = 'tight', dpi=600)

@@ -36,7 +36,7 @@ time_limit = {'T3_100_10_III': 344,
               'T3_100_7': 206,
               'T3_100_10': 232}
 
-waterline = 1200
+waterline =-1# 1200
 px=2.75E-6 #m
 rho=997 #kg/m3
 
@@ -49,8 +49,9 @@ rho = 997 #kg/m3  density of water
 #data_path = r"C:\Zwischenlager\Dyn_Data"
 
 drive = '//152.88.86.87/data118'
-baseFolder = os.path.join(drive, 'Robert_TOMCAT_3')
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep')
+baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
+# data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep')
+data_path = os.path.join(drive, 'Robert_TOMCAT_4_nectcdf4')
 
 if not os.path.exists(data_path):
     os.mkdir(data_path)  
@@ -411,7 +412,7 @@ samples = os.listdir(baseFolder)
 #         samples.append(sample)
 
 def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
-    if not sample == 'T3_025_1':
+    if sample == 'T4_025_1_III':
         if os.path.exists(os.path.join(baseFolder, sample, label_folder)):
             name = ''.join(['dyn_data_',sample,'.nc'])
             filename = os.path.join(data_path, name)
