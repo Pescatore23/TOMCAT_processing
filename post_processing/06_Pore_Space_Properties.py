@@ -17,9 +17,9 @@ from joblib import Parallel, delayed
 
 num_cores = 10#mp.cpu_count()
 drive = '//152.88.86.87/data118'
-processing_version = 'processed_1200_dry_seg_aniso_sep'
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', processing_version)
-
+# processing_version = 'processed_1200_dry_seg_aniso_sep'
+# data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', processing_version)
+data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 
 def cylinder_coords(x, y, x0=0, y0=0):
     r = np.sqrt( (x-x0)**2 + (y-y0)**2)
