@@ -51,7 +51,7 @@ rho = 997 #kg/m3  density of water
 drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep')
-data_path = os.path.join(drive, 'Robert_TOMCAT_4_nectcdf4')
+data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 
 if not os.path.exists(data_path):
     os.mkdir(data_path)  
