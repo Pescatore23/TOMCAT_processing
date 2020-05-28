@@ -176,7 +176,7 @@ def __main__(sample):
             
             peak_height_data_v4[0,c] = label
             peak_height_data_v4[1,c] = k
-            peak_height_data_v4[2:len(peak_sorting)+2,c]
+            peak_height_data_v4[2:len(peak_sorting)+2,c] = peak_heights[peak_sorting]
             
             c=c+1
             
