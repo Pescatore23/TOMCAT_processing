@@ -23,6 +23,10 @@ samples = os.listdir(data_path)
 total_sample = 'total_energy_data_v3_1_T3_025_3_III.nc'
 pore_sample = 'energy_data_v3_4_T3_025_3_III.nc'
 dyn_sample = 'dyn_data_T3_025_3_III.nc'
+# pore_sample = 'energy_data_v3_4_T3_100_7_III.nc'
+# dyn_sample = 'dyn_data_T3_100_7_III.nc'
+# pore_sample = 'energy_data_v3_4_T3_300_8_III.nc'
+# dyn_sample = 'dyn_data_T3_300_8_III.nc'
 
 pxm = 2.75E-6
 axm2 = pxm**2
@@ -153,4 +157,7 @@ plt.plot(np.arange(0,5.5E-14,0.1E-14), squared(np.arange(0,5.5E-14,0.1E-14), *p)
 plt.xlabel('volume flux [m3/s]')
 plt.ylabel('volume flux*energy flux [Pa m6/s2]')
 filename = r"H:\03_Besprechungen\Group Meetings\May_2020\mean_pressure.png"
-plt.savefig(filename, bbox_inches = 'tight', dpi=600)
+# plt.savefig(filename, bbox_inches = 'tight', dpi=600)
+
+
+
