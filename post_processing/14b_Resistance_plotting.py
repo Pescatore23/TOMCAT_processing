@@ -7,10 +7,10 @@ Created on Tue Jun  9 09:28:56 2020
 
 dest_folder = r"C:\Zwischenlager\Paper\02_throat_physics\Latex\XMT_data\Resistance_fits"
 
-R=R[R>-5E18]
-R=R[R<5E18]
+R=R[R>-2E18]
+R=R[R<2E18]
 
-hist = np.histogram(R, bins=500)
+hist = np.histogram(R, bins=200)
 
 R_hist_y = hist[0]
 R_hist_x = hist[1][:-1]
