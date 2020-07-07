@@ -62,6 +62,7 @@ new_data = xr.Dataset({'label_matrix': (['x','y','z'], new_label)},
                                 'z': np.arange(new_label.shape[2]),
                                 'label': np.unique(new_label)[1:]})
 new_data.attrs = data.attrs
+new_data.attrs['name'] = name
 new_data.attrs['size_factor'] = size
 new_data.attrs['COM'] = COM
 new_data.attrs['a'] = a
