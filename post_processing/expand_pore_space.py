@@ -23,7 +23,7 @@ samples = os.listdir(sourceFolder)
 sample = 'dyn_data_T3_025_3_III.nc'
 
 data = xr.load_dataset(os.path.join(sourceFolder, sample))
-name = data.attrs['name']
+
 label_matrix = data['label_matrix'].data
 
 
@@ -37,7 +37,7 @@ y0 = int(np.round(COM[1]))
 a = 45
 size = 10
 flag = False
-
+name = ''.join([data.attrs['name'],'_size_',str(size)])
 new_label = label_matrix[x0-a:x0+a,y0-a:y0+a,:]
 
 for i in range(size):
