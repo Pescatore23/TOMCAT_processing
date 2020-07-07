@@ -32,7 +32,7 @@ def cylinder_coords(x, y, x0=0, y0=0):
 def reduced_pore_object(labels, label):
     pore = labels == label
     
-    pore = np.uint8(pore)
+    # pore = np.uint8(pore)
 
 #    time_0 = time.time()w
     
