@@ -11,8 +11,8 @@ import os
 import scipy as sp
 import scipy.ndimage
 
-sourceFolder = r"W:\Robert_TOMCAT_3_netcdf4_archives\processed_1200_dry_seg_aniso_sep"
-destinationFolder = r"W:\Robert_TOMCAT_3_netcdf4_archives\expandedlabels"
+sourceFolder = r"Z:\Robert_TOMCAT_3_netcdf4_archives\processed_1200_dry_seg_aniso_sep"
+destinationFolder = r"Z:\Robert_TOMCAT_3_netcdf4_archives\expandedlabels"
 if not os.path.exists(destinationFolder):
     os.mkdir(destinationFolder)
 samples = os.listdir(sourceFolder)
@@ -35,7 +35,7 @@ y0 = int(np.round(COM[1]))
 
 
 a = 45
-size = 4
+size = 10
 flag = False
 
 new_label = label_matrix[x0-a:x0+a,y0-a:y0+a,:]
@@ -59,7 +59,8 @@ for i in range(size):
 new_data = xr.Dataset({'label_matrix': (['x','y','z'], new_label)},
                       coords = {'x': np.arange(new_label.shape[0]),
                                 'y': np.arange(new_label.shape[1]),
-                                'z': np.arange(new_label.shape[2])})
+                                'z': np.arange(new_label.shape[2]),
+                                'label': np.unique(new_label)[1:]})
 new_data.attrs = data.attrs
 new_data.attrs['size_factor'] = size
 new_data.attrs['COM'] = COM
