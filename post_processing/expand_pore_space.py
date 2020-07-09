@@ -73,7 +73,7 @@ data['label_matrix'] = None
 data['x'] = np.arange(new_label.shape[0])
 data['y'] = np.arange(new_label.shape[1])
 data['z'] = np.arange(new_label.shape[2])
-data['label_matrix'] = new_label
+data['label_matrix'] = (['x','y','z'], new_label)
 
 data.attrs['size_factor'] = size
 data.attrs['COM'] = COM
