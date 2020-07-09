@@ -35,7 +35,7 @@ y0 = int(np.round(COM[1]))
 
 
 a = 45
-size = 10
+size = 1
 flag = False
 name = ''.join([data.attrs['name'],'_size_',str(size)])
 new_label = label_matrix[x0-a:x0+a,y0-a:y0+a,:]
@@ -56,17 +56,26 @@ for i in range(size):
         flag = True        
 
 
-new_data = xr.Dataset({'label_matrix': (['x','y','z'], new_label)},
-                      coords = {'x': np.arange(new_label.shape[0]),
-                                'y': np.arange(new_label.shape[1]),
-                                'z': np.arange(new_label.shape[2]),
-                                'label': np.unique(new_label)[1:]})
-new_data.attrs = data.attrs
-new_data.attrs['name'] = name
-new_data.attrs['size_factor'] = size
-new_data.attrs['COM'] = COM
-new_data.attrs['a'] = a
+# new_data = xr.Dataset({'label_matrix': (['x','y','z'], new_label)},
+#                       coords = {'x': np.arange(new_label.shape[0]),
+#                                 'y': np.arange(new_label.shape[1]),
+#                                 'z': np.arange(new_label.shape[2]),
+#                                 'label': np.unique(new_label)[1:]})
+# new_data.attrs = data.attrs
+# new_data.attrs['name'] = name
+# new_data.attrs['size_factor'] = size
+# new_data.attrs['COM'] = COM
+# new_data.attrs['a'] = a
+
+data['x'] = np.arange(new_label.shape[0])
+data['y'] = np.arange(new_label.shape[1])
+data['z'] = np.arange(new_label.shape[2])
+data['label_matrix'] = new_label
+
+data.attrs['size_factor'] = size
+data.attrs['COM'] = COM
+data.attrs['a'] = a
 
 filename = ''.join(['dyn_',name,'_size_',str(size),'_a_',str(a),'.nc'])
 
-new_data.to_netcdf(os.path.join(destinationFolder, filename))
+data.to_netcdf(os.path.join(destinationFolder, filename))
