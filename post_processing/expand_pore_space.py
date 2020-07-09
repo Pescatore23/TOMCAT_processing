@@ -69,6 +69,7 @@ for i in range(size):
 
 data['transition_matrix'] = None
 data['transition_2_matrix'] = None
+data['label_matrix'] = None
 data['x'] = np.arange(new_label.shape[0])
 data['y'] = np.arange(new_label.shape[1])
 data['z'] = np.arange(new_label.shape[2])
