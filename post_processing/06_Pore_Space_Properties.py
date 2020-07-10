@@ -164,6 +164,9 @@ for filename in os.listdir(data_path):
     label_matrix = dyn_data['label_matrix'].data
     labels = dyn_data['label'].data
     
+    # for artificial data only:
+    labels = np.unique(label_matrix)[1:]
+    
     pore_objects = []
     for label in labels:
         pore_objects.append(reduced_pore_object(label_matrix, label))
