@@ -165,10 +165,18 @@ for filename in os.listdir(data_path):
     labels = dyn_data['label'].data
     
     pore_objects = []
-    for label in labels:
-        pore_objects.append(reduced_pore_object(label_matrix, label))
+    # for label in labels:
+        # pore_objects.append(reduced_pore_object(label_matrix, label))
+        
+    pores = []   
+    crude_pores =  ndimage.find_objects(label_matrix)
+    new_labels = []
+    for (pore, label) in zip(crude_pores,labels):
+        if pore is not None:
+            pores.append(pore)
+            new_labels.append(label)
     
-    pore_props = Parallel(n_jobs=num_cores)(delayed(get_pore_props)(*pore_object) for pore_object in pore_objects)
+    pore_props = Parallel(n_jobs=num_cores)(delayed(get_pore_props)((label_matrix[pore_object]==label), pore_object, label) for (pore_object, label) in zip(pore_objects, new_labels))
     
     properties_val = []
     properties_vect = []
