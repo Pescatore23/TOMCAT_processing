@@ -50,10 +50,7 @@ def get_pore_props(pore_object, bounding_box, label):
     COM = COM + np.array([bounding_box[0].start, bounding_box[1].start, bounding_box[2].start])         
            
     inertia_tensor = measure._moments.inertia_tensor(pore_object)
-    try:
-        in_tens_eig = np.linalg.eigvalsh(inertia_tensor)
-    except:
-        in_tens_eig = [0,0,0]
+    in_tens_eig = np.linalg.eigvalsh(inertia_tensor)
     volume = np.array(np.count_nonzero(pore_object))
     
     major_axis = 4*np.sqrt(in_tens_eig[-1])
@@ -167,19 +164,11 @@ for filename in os.listdir(data_path):
     label_matrix = dyn_data['label_matrix'].data
     labels = dyn_data['label'].data
     
-    # pore_objects = []
-    # for label in labels:
-        # pore_objects.append(reduced_pore_object(label_matrix, label))
-        
-    pores = []   
-    crude_pores =  ndimage.find_objects(label_matrix)
-    new_labels = []
-    for (pore, label) in zip(crude_pores,labels):
-        if pore is not None:
-            pores.append(pore)
-            new_labels.append(label)
-    # print(new_labels)
-    pore_props = Parallel(n_jobs=num_cores)(delayed(get_pore_props)((label_matrix[pore]==label), pore, label) for (pore, label) in zip(pores, new_labels))
+    pore_objects = []
+    for label in labels:
+        pore_objects.append(reduced_pore_object(label_matrix, label))
+    
+    pore_props = Parallel(n_jobs=num_cores)(delayed(get_pore_props)(*pore_object) for pore_object in pore_objects)
     
     properties_val = []
     properties_vect = []
