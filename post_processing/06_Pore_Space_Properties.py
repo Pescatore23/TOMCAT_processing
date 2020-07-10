@@ -50,7 +50,10 @@ def get_pore_props(pore_object, bounding_box, label):
     COM = COM + np.array([bounding_box[0].start, bounding_box[1].start, bounding_box[2].start])         
            
     inertia_tensor = measure._moments.inertia_tensor(pore_object)
-    in_tens_eig = np.linalg.eigvalsh(inertia_tensor)
+    try:
+        in_tens_eig = np.linalg.eigvalsh(inertia_tensor)
+    else:
+        in_tens_eig = [0,0,0]
     volume = np.array(np.count_nonzero(pore_object))
     
     major_axis = 4*np.sqrt(in_tens_eig[-1])
