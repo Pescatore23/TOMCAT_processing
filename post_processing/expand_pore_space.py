@@ -35,7 +35,7 @@ y0 = int(np.round(COM[1]))
 
 
 a = 45
-size = 2
+size = 3
 flag = False
 name = ''.join([data.attrs['name'],'_size_',str(size)])
 new_label = label_matrix[x0-a:x0+a,y0-a:y0+a,:]
