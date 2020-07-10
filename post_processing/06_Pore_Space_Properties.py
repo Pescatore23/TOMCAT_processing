@@ -175,7 +175,7 @@ for filename in os.listdir(data_path):
         if pore is not None:
             pores.append(pore)
             new_labels.append(label)
-    
+    print(new_labels)
     pore_props = Parallel(n_jobs=num_cores)(delayed(get_pore_props)((label_matrix[pore_object]==label), pore_object, label) for (pore_object, label) in zip(pore_objects, new_labels))
     
     properties_val = []
