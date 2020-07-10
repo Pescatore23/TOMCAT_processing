@@ -52,7 +52,7 @@ def get_pore_props(pore_object, bounding_box, label):
     inertia_tensor = measure._moments.inertia_tensor(pore_object)
     try:
         in_tens_eig = np.linalg.eigvalsh(inertia_tensor)
-    else:
+    except:
         in_tens_eig = [0,0,0]
     volume = np.array(np.count_nonzero(pore_object))
     
