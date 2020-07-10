@@ -20,7 +20,7 @@ drive = '//152.88.86.87/data118'
 processing_version = 'processed_1200_dry_seg_aniso_sep'
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', processing_version)
 # data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
-data_path = r"Z:\Robert_TOMCAT_3_netcdf4_archives\expandedlabels"
+data_path = r"W:\Robert_TOMCAT_3_netcdf4_archives\expandedlabels"
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'expandedlabels')
 
 def cylinder_coords(x, y, x0=0, y0=0):
@@ -164,7 +164,7 @@ for filename in os.listdir(data_path):
     label_matrix = dyn_data['label_matrix'].data
     labels = dyn_data['label'].data
     
-    pore_objects = []
+    # pore_objects = []
     # for label in labels:
         # pore_objects.append(reduced_pore_object(label_matrix, label))
         
@@ -175,8 +175,8 @@ for filename in os.listdir(data_path):
         if pore is not None:
             pores.append(pore)
             new_labels.append(label)
-    print(new_labels)
-    pore_props = Parallel(n_jobs=num_cores)(delayed(get_pore_props)((label_matrix[pore_object]==label), pore_object, label) for (pore_object, label) in zip(pore_objects, new_labels))
+    # print(new_labels)
+    pore_props = Parallel(n_jobs=num_cores)(delayed(get_pore_props)((label_matrix[pore]==label), pore, label) for (pore, label) in zip(pores, new_labels))
     
     properties_val = []
     properties_vect = []
