@@ -79,6 +79,6 @@ data.attrs['size_factor'] = size
 data.attrs['COM'] = COM
 data.attrs['a'] = a
 
-filename = ''.join(['dyn_',name,'_size_',str(size),'_a_',str(a),'.nc'])
+filename = ''.join(['dyn_',name,'_a_',str(a),'.nc'])
 
 data.to_netcdf(os.path.join(destinationFolder, filename))
