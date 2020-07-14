@@ -22,7 +22,7 @@ pc = False
 #  Part 1:
 if host == 'ddm05307':
     pc = True
-    num_cores = 8
+    num_cores = 5
 
 #  Part2:
 if host == 'DDM04060':
@@ -35,7 +35,7 @@ if host == 'DDM04672':
     
 if host == 'DDM06609':
     pc = True
-    num_cores = 32
+    num_cores = 14
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
