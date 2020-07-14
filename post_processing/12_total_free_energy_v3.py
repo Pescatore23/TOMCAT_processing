@@ -32,6 +32,10 @@ if host == 'DDM04060':
 if host == 'DDM04672':
     pc = True
     num_cores = 12
+    
+if host == 'DDM06609':
+    pc = True
+    num_cores = 12
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
@@ -50,11 +54,13 @@ drive = r'\\152.88.86.87\data118'
 if host=='xerus.local': 
     drive = r"NAS"
     num_cores = 7
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
-processing_version = 'processed_1200_dry_seg_aniso_sep'
-folder1 = os.path.join(drive, 'Robert_TOMCAT_3')
+# data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
+# processing_version = 'processed_1200_dry_seg_aniso_sep'
+# folder1 = os.path.join(drive, 'Robert_TOMCAT_3')
+folder1 = os.path.join(drive, 'Robert_TOMCAT_4')
 
-sourceFolder = os.path.join(data_path, processing_version)
+# sourceFolder = os.path.join(data_path, processing_version)
+sourceFolder = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 
 samples = os.listdir(sourceFolder) 
 
