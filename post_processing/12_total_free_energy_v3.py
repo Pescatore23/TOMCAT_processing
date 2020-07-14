@@ -22,7 +22,7 @@ pc = False
 #  Part 1:
 if host == 'ddm05307':
     pc = True
-    num_cores = 12
+    num_cores = 8
 
 #  Part2:
 if host == 'DDM04060':
@@ -35,7 +35,7 @@ if host == 'DDM04672':
     
 if host == 'DDM06609':
     pc = True
-    num_cores = 12
+    num_cores = 32
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
@@ -149,7 +149,8 @@ for sample in samples:
     print(sample)
     data = xr.load_dataset(os.path.join(sourceFolder, sample))
     name = data.attrs['name']
-    filename = os.path.join(sourceFolder, ''.join(['total_energy_data_v3_1_', name, '.nc']))
+    # filename = os.path.join(sourceFolder, ''.join(['total_energy_data_v3_1_', name, '.nc']))
+    filename = os.path.join( r'R:\Scratch\305\_Robert',''.join(['total_energy_data_v3_1_', name, '.nc']))
     if os.path.exists(filename): continue
     if name == 'T3_025_1': continue
     print(name)
