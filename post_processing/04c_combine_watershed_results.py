@@ -11,6 +11,7 @@ import robpylib
 baseFolder = r"Z:\Robert_TOMCAT_4"
 
 samples = os.listdir(baseFolder)
+samples.sort()
 
 # samples = ['T4_025_1_III']
 parts = ['part_1', 'part_2', 'part_3']
