@@ -16,9 +16,11 @@ samples = os.listdir(baseFolder)
 parts = ['part_1', 'part_2', 'part_3']
 
 for sample in samples:
+    print(sample)
     sourceFolder = os.path.join(baseFolder, sample, '05a_separated', 'disconnection=0.7 xsize=1.5 ysize=1.5 zsize=1 sigma=[] holes=0 particles=0 entire evaluation=[3D volumetric processing]')
     refFolder = os.path.join(baseFolder, sample, '04b_split_void')
     destFolder = os.path.join(sourceFolder, 'combined')
+    print(destFolder)
     if not os.path.exists(destFolder):
         os.mkdir(destFolder)
     
