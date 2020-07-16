@@ -18,6 +18,7 @@ import robpylib
 from skimage.morphology import cube
 
 num_cores = 16
+temp_folder = None
 pc = False
 #  Part 1:
 if host == 'ddm05307':
@@ -36,6 +37,7 @@ if host == 'DDM04672':
 if host == 'DDM06609':
     pc = True
     num_cores = 14
+    temp_folder = r"T:\users\firo\joblib_tmp"
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
@@ -161,7 +163,7 @@ for sample in samples:
     void = void[:,:,:transition.shape[2]]
     time = data['time'].data
     watermask = transition>0
-    result = Parallel(n_jobs=num_cores)(delayed(interface_per_time_step)((transition<t+1)*watermask, void) for t in range(1,time.shape[0]))
+    result = Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(interface_per_time_step)((transition<t+1)*watermask, void) for t in range(1,time.shape[0]))
     result = np.array(result)
     
     area_data = xr.Dataset({'interfaces': (['time', 'area'], result)},
