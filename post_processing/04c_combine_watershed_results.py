@@ -22,7 +22,7 @@ for sample in samples:
     if sample in ['T4_025_1_III', 'T4_025_4', 'T4_100_2_III', 'T4_100_3', 'T4_300_1', 'T4_025_3', 'T4_100_5' ]: continue
 
 #   some error
-    if sample in ['T4_025_2_II', 'T4_100_4', 'T4_300_2_III']: continue
+    if sample in ['T4_025_2_II', 'T4_100_4', 'T4_300_2_II']: continue
 
 #  not segmented
     if sample in ['T4_300_4_III', 'T4_300_5']: continue
