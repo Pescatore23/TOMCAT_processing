@@ -17,7 +17,7 @@ samples.sort()
 parts = ['part_1', 'part_2', 'part_3']
 
 for sample in samples:
-    
+    if sample == '.DS_Store': continue
     # already worked
     if sample in ['T4_025_1_III', 'T4_025_4', 'T4_100_2_III', 'T4_100_3', 'T4_300_1' ]: continue
 
