@@ -412,7 +412,7 @@ samples = os.listdir(baseFolder)
 #         samples.append(sample)
 
 def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
-    if sample == 'T4_025_1_III':
+    # if sample == 'T4_025_1_III':
         if os.path.exists(os.path.join(baseFolder, sample, label_folder)):
             name = ''.join(['dyn_data_',sample,'.nc'])
             filename = os.path.join(data_path, name)
