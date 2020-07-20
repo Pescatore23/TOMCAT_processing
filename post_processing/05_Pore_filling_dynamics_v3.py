@@ -347,14 +347,14 @@ def dyn_fit_step2(sample_data):
         fits_sig[label,3] = R_sig
         
         
-        plt.figure()
-        plt.plot(time[:t_max], mass_data[:t_max], 'k')
-        plt.plot(time[:t_max], sigmoid_fun(time[:t_max], *p_sig), 'r')
-        plt.title(color)
-        plt.xlabel('time [s]')
-        plt.ylabel('volume [vx]')
-        filename = os.path.join(data_path, 'plots_label', ''.join([sample_data.attrs['name'],'_label_',str(color),'.png']))
-        plt.savefig(filename, dpi=500, bbox_inches = 'tight')    
+        # plt.figure()
+        # plt.plot(time[:t_max], mass_data[:t_max], 'k')
+        # plt.plot(time[:t_max], sigmoid_fun(time[:t_max], *p_sig), 'r')
+        # plt.title(color)
+        # plt.xlabel('time [s]')
+        # plt.ylabel('volume [vx]')
+        # filename = os.path.join(data_path, 'plots_label', ''.join([sample_data.attrs['name'],'_label_',str(color),'.png']))
+        # plt.savefig(filename, dpi=500, bbox_inches = 'tight')    
     
         
     fit_volume = np.zeros(len(time))
@@ -385,15 +385,15 @@ def dyn_fit_step2(sample_data):
         sig_fit_volume[ts] = val3
     
 #    
-    plt.figure()
-    total_volume[:t_max].plot(color='k')
+    # plt.figure()
+    # total_volume[:t_max].plot(color='k')
 #    plt.plot(time, fit_volume)
 #    plt.plot(time, crude_fit_volume)
-    plt.plot(time[:t_max], sig_fit_volume[:t_max], 'r')
-    plt.title(sample_data.attrs['name'])
-    filename = os.path.join(data_path, 'plots', ''.join([sample_data.attrs['name'],'.png']))
+    # plt.plot(time[:t_max], sig_fit_volume[:t_max], 'r')
+    # plt.title(sample_data.attrs['name'])
+    # filename = os.path.join(data_path, 'plots', ''.join([sample_data.attrs['name'],'.png']))
 
-    plt.savefig(filename, dpi=500, bbox_inches = 'tight')
+    # plt.savefig(filename, dpi=500, bbox_inches = 'tight')
     fits_sig = np.array(fits_sig)
     
     sample_data.coords['sig_fit_var'] = ['t0 [s]', 'beta [1_s]', 'alpha [vx]', 'R2']
