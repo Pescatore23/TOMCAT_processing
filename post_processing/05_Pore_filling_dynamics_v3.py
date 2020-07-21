@@ -30,7 +30,7 @@ parallel = True
 
 num_cores = mp.cpu_count()
 num_cores = 16
-
+temp_folder = r"Z:\users\firo\joblib_tmp"
 time_limit = {'T3_100_10_III': 344,
               'T3_300_5': 229,
               'T3_100_7': 206,
@@ -441,7 +441,7 @@ def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
 #         sample_data.to_netcdf(filename)
     
 if parallel:
-    results=Parallel(n_jobs=num_cores)(delayed(mainfunction)(sample) for sample in samples)
+    results=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(mainfunction)(sample) for sample in samples)
 # for sample in samples:
 #     print(sample)
 #     mainfunction(sample)
