@@ -30,7 +30,7 @@ knots['T4_300_4_III']=[1272,1524]
 knots['T4_300_5_III']=[1377,1610]
 
 
-baseFolder = r"Z:\Robert_TOMCAT_4"
+baseFolder = r"A:\Robert_TOMCAT_4"
 
 processingstage = '04a_void_space'
 topfolder = '04b_split_void'
@@ -41,6 +41,7 @@ samples = os.listdir(baseFolder)
 
 for sample in samples:
     if not sample[1]=='4': continue
+    if not sample == 'T4_300_5': continue
     
     if not os.path.exists(os.path.join(baseFolder, sample, topfolder)):
         os.mkdir(os.path.join(baseFolder, sample, topfolder))

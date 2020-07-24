@@ -52,7 +52,7 @@ time0=time.time()
 length=len(samples)
 step=0
 
-targetName = "05a_separated_total_volume"
+targetName = "05a_separated"
 #targetName = '05a_separated_from_5'
 
 #if baseFolder[-1] == '2': targetName = "04a_separated"
@@ -62,7 +62,8 @@ targetName = "05a_separated_total_volume"
 for sample in samples:
     skipFlag=False
     step=step+1
-    if not sample[1]=='4': continue
+    if sample[1]=='4': continue
+    #if sample == 'T4_100_2_III': continue
     if sample in repeats: continue
     if not os.path.exists(os.path.join(baseFolder, sample, procFolder)): 
     	print('no void space data available')

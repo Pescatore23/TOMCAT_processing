@@ -26,7 +26,7 @@ import scipy.optimize
 from joblib import Parallel, delayed
 import multiprocessing as mp
 
-parallel = True
+parallel = False
 
 num_cores = mp.cpu_count()
 num_cores = 16
@@ -442,8 +442,8 @@ def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
     
 if parallel:
     results=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(mainfunction)(sample) for sample in samples)
-# for sample in samples:
-#     print(sample)
-#     mainfunction(sample)
+for sample in samples:
+    print(sample)
+    mainfunction(sample)
     
         

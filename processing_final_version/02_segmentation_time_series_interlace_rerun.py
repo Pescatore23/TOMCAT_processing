@@ -42,7 +42,8 @@ if host == 'ddm05307':
 
 #  Part2:
 if host == 'DDM04060':
-    baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
+    # baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
+    baseFolder = r'I:\disk1'
     newBaseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
     pc = True
 
@@ -256,17 +257,18 @@ def fft_segmentation(baseFolder=baseFolder, newDiskfolder=False):
     c=1
     for sample in samples:
 #        if not sample == 'T3_025_9_III': continue
-        if sample in excluded_samples: continue
+        # if sample in excluded_samples: continue
         if sample[1] == '3': continue
-        if sample in robpylib.TOMCAT.INFO.interlace_good_samples: continue
-        if sample == 'T4_300_1': continue
-        if sample == 'T4_100_3': continue
-        if sample == 'T4_025_4': continue
+        # if sample in robpylib.TOMCAT.INFO.interlace_good_samples: continue
+        # if sample == 'T4_300_1': continue
+        # if sample == 'T4_100_3': continue
+        # if sample == 'T4_025_4': continue
+        if not sample == 'T4_025_2_II': continue
         print(sample,'(',c,'/',len(samples),')')
 #        if sample[1]=='4':
 #            c=c+1
 #            continue
-        inner_segmentation_function(sample, newBaseFolder=newBaseFolder)
+        inner_segmentation_function(sample, newBaseFolder=baseFolder)
 
         if c==1:
             print("Harvest the fields of time")

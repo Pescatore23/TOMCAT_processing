@@ -36,16 +36,16 @@ smooth_decision = 'yes'
 drive = r'\\152.88.86.87\data118'
 # drive = r"NAS"
 # drive =  r'Z:\'
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
+data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 # data_path = r'Z:\Robert_TOMCAT_3_netcdf4_archives'
-processing_version = 'processed_1200_dry_seg_aniso_sep'
+# processing_version = 'processed_1200_dry_seg_aniso_sep'
 
-folder = os.path.join(drive, 'Robert_TOMCAT_3')
+folder = os.path.join(drive, 'Robert_TOMCAT_4')
 # folder = r'Z:\Robert_TOMCAT_3'
 
-sourceFolder = os.path.join(data_path, processing_version)
+# sourceFolder = os.path.join(data_path, processing_version)
 # sourceFolder = os.path.join(drive,  'Robert_TOMCAT_3_netcdf4_archives', processing_version)
-
+sourceFolder = data_path
 samples = os.listdir(sourceFolder) 
 
 
@@ -283,13 +283,13 @@ for sample in samples:
     name = sample_data.attrs['name']
     if name == 'T3_025_1': continue
     print(name)
-    # fiberpath = os.path.join(folder, name, '01a_weka_segmented_dry', 'classified')
+    fiberpath = os.path.join(folder, name, '01a_weka_segmented_dry', 'classified')
             
-    # fibers, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiberpath, track=False)
-    fiber_path = os.path.join(data_path, 'fiber_data', ''.join(['fiber_data_',name,'.nc']))
-    fiber_data = xr.load_dataset(fiber_path)
+    fibers, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiberpath, track=False)
+    # fiber_path = os.path.join(data_path, 'fiber_data', ''.join(['fiber_data_',name,'.nc']))
+    # fiber_data = xr.load_dataset(fiber_path)
 
-    fibers = fiber_data['fibers'].data
+    # fibers = fiber_data['fibers'].data
     
     transitions = sample_data['transition_matrix'].data
     fibers = fibers[:,:,:transitions.shape[2]]
@@ -323,10 +323,19 @@ for sample in samples:
     crude_labels = np.unique(label_matrix)[1:]
     crude_pores = ndimage.find_objects(label_matrix)
     
+    pre_pores = []
+    for pore in crude_pores:
+        if pore is not None:
+            pre_pores.append(pore)
+            # labels.append(label)
+            
     pores = []
-    for (pore, label) in zip(crude_pores, crude_labels):
+    
+    for (pore, label) in zip(pre_pores, crude_labels):
         if label in labels:
             pores.append(pore)
+            
+    
     
     crude_pores = None
     

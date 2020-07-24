@@ -62,9 +62,9 @@ parts = ['part_1', 'part_2', 'part_3']
 for sample in samples:
     step=step+1
     if not sample[1]=='4': continue
-    if sample == 'T4_025_1': continue
-    if sample == 'T4_025_2_II': continue
-    if sample == 'T4_100_4': continue
+    #if sample == 'T4_025_1': continue
+    #if sample == 'T4_025_2_II': continue
+    #if sample == 'T4_100_4': continue
     print(sample,' (',step,'/',length,')')
     if not os.path.exists(os.path.join(baseFolder, sample, procFolder)): 
     	print('no void space data available')
@@ -76,6 +76,7 @@ for sample in samples:
     	skipFlag=False
     	sampleFolder = os.path.join(sourceFolder, part)
     	subFolder = os.path.join(targetFolder, part)
+    	print(sampleFolder)
     	if os.path.exists(subFolder):
 	        f1=os.listdir(subFolder)
 	        if len(f1)>100:
