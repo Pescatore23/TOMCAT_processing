@@ -27,6 +27,7 @@ from skimage import morphology as skmorph
 from joblib import Parallel, delayed
 import multiprocessing as mp
 import robpylib
+import scipy.ndimage
 
 #baseFolder = 'X:\TOMCAT3_processing_1'
 #newBaseFolder = 'U:\TOMCAT_3_segmentation'
@@ -95,14 +96,14 @@ for sample in os.listdir(baseFolder):
         continue
     print(sample)
     fiberFolder=os.path.join(baseFolder,sample,'01a_weka_segmented_dry','classified')
-    sourceFolder=os.path.join(baseFolder,sample,'02_pystack_registered_from_5')
+    sourceFolder=os.path.join(baseFolder,sample,'02_pystack_registered')
     # waterFolder=os.path.join(baseFolder,sample,'03_gradient_filtered_transitions') #for the T4 samples, use final water configuration
     waterFolder=os.path.join(sourceFolder,os.listdir(sourceFolder)[-1])
     
     if not newBaseFolder:
         newBaseFolder=baseFolder
     
-    targetFolder=os.path.join(newBaseFolder,sample,'04a_void_space_from_5')
+    targetFolder=os.path.join(newBaseFolder,sample,'04a_void_space_v2')
     
 #    if os.path.exists(targetFolder):
 #        c=c+1
@@ -124,7 +125,10 @@ for sample in os.listdir(baseFolder):
 
     if sample[1]=='4':
         masks, names  = robpylib.CommonFunctions.ImportExport.ReadStackNew(waterFolder)
-        masks = (masks > 0).astype(np.uint8)
+        fibers, fnames = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiberFolder)
+        masks = (masks > 0) + (fibers>0)
+        masks = scipy.ndimage.binary_fill_holes(masks)
+        masks = (masks*(fibers==0)).astype(np.uint8)
         # Parallel(n_jobs=num_cores)(delayed(interlace_pores)(fiberFolder, masks[:,:,z], targetFolder, fibernames[z]) for z in range(len(fibernames)))
         robpylib.CommonFunctions.ImportExport.WriteStackNew(targetFolder, names, masks)
 
