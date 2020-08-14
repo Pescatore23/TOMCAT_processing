@@ -97,8 +97,8 @@ for sample in os.listdir(baseFolder):
     print(sample)
     fiberFolder=os.path.join(baseFolder,sample,'01a_weka_segmented_dry','classified')
     sourceFolder=os.path.join(baseFolder,sample,'02_pystack_registered')
-    # waterFolder=os.path.join(baseFolder,sample,'03_gradient_filtered_transitions') #for the T4 samples, use final water configuration
-    waterFolder=os.path.join(sourceFolder,os.listdir(sourceFolder)[-1])
+    waterFolder=os.path.join(baseFolder,sample,'03_gradient_filtered_transitions') #for the T4 samples, use final water configuration
+    # waterFolder=os.path.join(sourceFolder,os.listdir(sourceFolder)[-1])
     
     if not newBaseFolder:
         newBaseFolder=baseFolder
