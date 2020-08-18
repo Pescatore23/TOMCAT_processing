@@ -22,7 +22,8 @@ drive = r'\\152.88.86.87\data118'
 # drive =  r'Z:\'
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 # data_path = r'Z:\Robert_TOMCAT_3_netcdf4_archives'
-processing_version = 'processed_1200_dry_seg_aniso_sep'
+# processing_version = 'processed_1200_dry_seg_aniso_sep'
+processing_version = 'for_PNM'
 # folder = r'Z:\Robert_TOMCAT_3'
 
 sourceFolder = os.path.join(data_path, processing_version)
