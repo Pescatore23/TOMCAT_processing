@@ -43,7 +43,7 @@ if host == 'ddm05307':
 #  Part2:
 if host == 'DDM04060':
     # baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
-    baseFolder = r'I:\disk1'
+    baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
     newBaseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
     pc = True
 
@@ -256,6 +256,7 @@ def fft_segmentation(baseFolder=baseFolder, newDiskfolder=False):
     samples=makesamplelist(baseFolder)
     c=1
     for sample in samples:
+        # if not sample == 'T4_025_2_II': continue
 #        if not sample == 'T3_025_9_III': continue
         # if sample in excluded_samples: continue
         if sample[1] == '3': continue

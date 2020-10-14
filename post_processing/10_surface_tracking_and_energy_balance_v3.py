@@ -33,6 +33,8 @@ lamb  = 0.6037
 iterations = 10
 smooth_decision = 'yes'
 
+temp_folder = r"Z:\users\firo\joblib_tmp"
+
 drive = r'\\152.88.86.87\data118'
 # drive = r"NAS"
 # drive =  r'Z:\'
@@ -346,7 +348,7 @@ for sample in samples:
     print('start parallel computing')
     # [bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop]
     # with joblib.parallel_backend('dask'):
-    result = Parallel(n_jobs=num_cores)(delayed(measure_interfaces)(label, label_matrix[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], transitions[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], void[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], time, bb) for (label, bb) in zip(labels, bounding_boxes))
+    result = Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(measure_interfaces)(label, label_matrix[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], transitions[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], void[bb[0].start:bb[0].stop, bb[1].start:bb[1].stop, bb[2].start:bb[2].stop], time, bb) for (label, bb) in zip(labels, bounding_boxes))
     result = np.array(result)
     
    # return A_wa, A_ws, A_ww, A_tot, A_wa_corr, A_ws_label
