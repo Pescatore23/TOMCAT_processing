@@ -17,8 +17,8 @@ from joblib import Parallel, delayed
 
 num_cores = 8#mp.cpu_count()
 drive = '//152.88.86.87/data118'
-# processing_version = 'processed_1200_dry_seg_aniso_sep'
-processing_version = 'for_PNM'
+processing_version = 'processed_1200_dry_seg_aniso_sep'
+# processing_version = 'for_PNM'
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', processing_version)
 # data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 # data_path = r"Z:\Robert_TOMCAT_3_netcdf4_archives\expandedlabels"

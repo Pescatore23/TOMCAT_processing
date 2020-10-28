@@ -25,8 +25,12 @@ for sample in os.listdir(sourceFolder):
         print(name)
         th=10000
         
+        last = -1
+        if name not in robpylib.TOMCAT.INFO.time_limit.keys(): continue
+        if name in robpylib.TOMCAT.INFO.time_limit.keys():
+            last = robpylib.TOMCAT.INFO.time_limit[name]
         sampleFolder = os.path.join(baseFolder, name, '02_pystack_registered')
-        scan = os.listdir(sampleFolder)[-1]
+        scan = os.listdir(sampleFolder)[last]
         
         Stack, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(sampleFolder, scan))        
         
