@@ -36,7 +36,7 @@ for sample in os.listdir(sourceFolder):
         
         # mask = Stack[:,:,:data['label_matrix'].shape[2]]>th
         # mask = ndimage.binary_fill_holes(mask).astype(np.uint8)
-        mask = (~data['transition_matrix']>0).astype(np.uint8)
+        mask = (data['transition_matrix']>0).astype(np.uint8)
         
         data['label_matrix']=data['label_matrix']*mask
         filename = os.path.join(destFolder, sample)
