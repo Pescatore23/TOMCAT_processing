@@ -62,7 +62,7 @@ def surface_smoothing(verts, faces, k=k, lamb=lamb, iterations = iterations):
 def interface_extraction(wet, void):
     dry = np.bitwise_and(void, ~wet)
     # wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
-    dry = ndimage.binary_dilation(input = dry, structure = cube(3).astype(np.bool))
+    dry = ndimage.binary_dilation(input = dry, structure = cube(4).astype(np.bool))
    
     interface = np.bitwise_and(wet, dry)
     interface = np.bitwise_and(interface, void)
@@ -72,14 +72,14 @@ def interface_extraction(wet, void):
 
 def water_interface_extraction(wet, nwet, void):
     # wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
-    nwet = ndimage.binary_dilation(input = nwet, structure = cube(3).astype(np.bool))
+    nwet = ndimage.binary_dilation(input = nwet, structure = cube(4).astype(np.bool))
     interface = np.bitwise_and(wet, nwet)
     interface = np.bitwise_and(interface, void)                               
     return interface
 
 def water_interface_extraction2(wet, nwet, void):
-    wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
-    nwet = ndimage.binary_dilation(input = nwet, structure = cube(3).astype(np.bool))
+    wet = ndimage.binary_dilation(input = wet, structure = cube(4).astype(np.bool))
+    nwet = ndimage.binary_dilation(input = nwet, structure = cube(4).astype(np.bool))
     interface = np.bitwise_and(wet, nwet)
     interface = np.bitwise_and(interface, void)                               
     return interface
@@ -88,7 +88,7 @@ def water_interface_extraction2(wet, nwet, void):
 def solid_interface_extraction(wet, solid):
     # swap dilation for v13b
     # wet = ndimage.binary_dilation(input = wet, structure = cube(3).astype(np.bool))
-    solid = ndimage.binary_dilation(input = solid, structure = cube(3).astype(np.bool))
+    solid = ndimage.binary_dilation(input = solid, structure = cube(4).astype(np.bool))
     interface = np.bitwise_and(wet, solid)
     # interface = np.bitwise_and(interface, void)                               
     return interface
@@ -308,7 +308,7 @@ for sample in samples:
         # print('fibermesh smoothed')
     # if name in robpylib.TOMCAT.INFO.samples_to_repeat: continue
     
-    filename = os.path.join(sourceFolder, ''.join(['energy_data_v3_4_', name, '.nc']))
+    filename = os.path.join(sourceFolder, ''.join(['energy_data_v3_5_', name, '.nc']))
     
     if os.path.exists(filename): continue
     
