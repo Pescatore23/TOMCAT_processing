@@ -50,7 +50,7 @@ rho = 997 #kg/m3  density of water
 
 drive = '//152.88.86.87/data118'
 # baseFolder = os.path.join(drive, 'Robert_TOMCAT_3_for_PNM')
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep')
+data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep_2')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'for_PNM')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 
@@ -268,7 +268,7 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
                                                'repeat': repeat,
                                                'voxel_size': '2.75 um',
                                                'voxel': 2.75E-6, #m
-                                               'comment': 'units in voxel, seconds or voxel/second; time steps in transition matrix',
+                                               'comment': 'units in voxel, seconds or voxel/second; time steps in transition matrix; no filtering of pores samller than 50 pixel',
                                                'label folder': label_folder,
                                                'transition_folder': transition_folder,
                                                'transition_2_folder': transition_2_folder,

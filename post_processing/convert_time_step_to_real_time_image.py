@@ -9,9 +9,9 @@ import robpylib
 import os
 import numpy as np
 
-sample = 'T3_025_3_III'
-transition_folder = os.path.join(r'Z:\Robert_TOMCAT_3',sample,'03_gradient_filtered_transitions')
-time_folder = os.path.join(r'Z:\Robert_TOMCAT_3',sample,'03c_gradient_filtered_real_time')
+sample = 'T3_300_8_III'
+transition_folder = os.path.join(r'A:\Robert_TOMCAT_3',sample,'03_gradient_filtered_transitions')
+time_folder = os.path.join(r'A:\Robert_TOMCAT_3',sample,'03c_gradient_filtered_real_time')
 
 Stack, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(transition_folder)
 
