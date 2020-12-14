@@ -151,7 +151,7 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     transitions[transitions>limit -1 ]=0       
     label_id, label_count = np.unique(labels,return_counts=True)
   
-    relevant_pores = np.where(label_count>50)[0][1:]   #remove value 0 from array (= background)
+    relevant_pores = np.where(label_count>10)[0][1:]   #remove value 0 from array (= background)
     number_pores = len(relevant_pores)
     relevant_labels = label_id[relevant_pores]
 
