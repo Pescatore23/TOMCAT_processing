@@ -20,13 +20,15 @@ from scipy.interpolate import interp1d
 drive = r'\\152.88.86.87\data118'
 # drive = r"NAS"
 # drive =  r'Z:\'
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
+# data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
+data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 # data_path = r'Z:\Robert_TOMCAT_3_netcdf4_archives'
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
-processing_version = 'for_PNM'
+# processing_version = 'for_PNM'
 # folder = r'Z:\Robert_TOMCAT_3'
 
-sourceFolder = os.path.join(data_path, processing_version)
+# sourceFolder = os.path.join(data_path, processing_version)
+sourceFolder = data_path
 
 heigth_crit = 150 #vx/s
 dist_crit = 7 #s
