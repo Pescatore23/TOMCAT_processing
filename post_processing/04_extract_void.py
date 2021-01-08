@@ -49,7 +49,7 @@ excluded_samples=[
 
 #excluded_samples=[]
 
-def yarn_pores(fiberFolder, targetfolder, name):
+def yarn_pores(fiberFolder, targetFolder, name):
     fiber = imageio.imread(os.path.join(fiberFolder,name))
     fiber = fiber>0
 
