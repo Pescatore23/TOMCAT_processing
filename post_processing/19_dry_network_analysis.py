@@ -138,7 +138,7 @@ for i in range(len(samples)):
         Parallel(n_jobs=32)(delayed(yarn_pores)(fiber_path, void_path, name) for name in fibernames)
     
     # second run: extract network and save to nc
-    label_path = os.path.join(sample_path, '05_labels')
+    label_path = os.path.join(sample_path, '05b_labels')
     if os.path.exists(label_path):
         network_file = os.path.join(sample_path, ''.join([sample,'_network.nc']))
         if not os.path.exists(network_file):
