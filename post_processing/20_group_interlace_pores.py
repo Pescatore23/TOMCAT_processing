@@ -118,6 +118,8 @@ pore_assigned = np.array(pore_assigned)
 # explanation pore_assigned: [label, 1, yarn1{0;1}, yarn2{0;1}, interlace{0,1}]
 # some (32) pores don't touch any fiber and 78 at interface -> revise
 
+# TO DO: label pore according to their affiliation and display in Avizo
+
 
 
 
