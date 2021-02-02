@@ -103,7 +103,7 @@ for pore in crude_pores:
         
 def assign_pore(pore_object, fiber_object, label):
     mask = pore_object == label
-    mask = ndimage.binary_dilation(input = mask, structure = cube(4))
+    mask = ndimage.binary_dilation(input = mask, structure = cube(5))
     fiber_contacts = np.unique(fiber_object[mask])
     result = np.zeros(5, dtype=np.uint16)
     result[fiber_contacts+1] = 1
@@ -115,7 +115,7 @@ pore_assigned = Parallel(n_jobs=32, temp_folder = temp_folder)(delayed(assign_po
     
 pore_assigned = np.array(pore_assigned)
 
-
+# explanation pore_assigned: [label, 1, yarn1{0;1}, yarn2{0;1}, interlace{0,1}]
 # some (32) pores don't touch any fiber and 78 at interface -> revise
 
 
