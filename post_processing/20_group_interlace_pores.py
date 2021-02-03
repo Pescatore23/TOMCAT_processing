@@ -120,20 +120,21 @@ pore_assigned = np.array(pore_assigned)
 
 # TO DO: label pore according to their affiliation and display in Avizo
 
-new_label_im = np.zeros(label_im.shape, dtype=np.uint8)
+# new_label_im = np.zeros(label_im.shape, dtype=np.uint8)
 
-for label in pore_assigned[:,0]:
-    if pore_assigned[label,2] > 0:
-        new_label_im[np.where(label_im==label)] = 2
-    if pore_assigned[label,3] > 0:
-        new_label_im[np.where(label_im==label)] = 3
-    if pore_assigned[label,4] > 0:
-        new_label_im[np.where(label_im==label)] = 4  
-    else:
-        new_label_im[np.where(label_im==label)] = 1 
+# for label in pore_assigned[:,0]:
+#     color = labels[label]
+#     if pore_assigned[label,2] > 0:
+#         new_label_im[np.where(label_im==label)] = 2
+#     if pore_assigned[label,3] > 0:
+#         new_label_im[np.where(label_im==label)] = 3
+#     if pore_assigned[label,4] > 0:
+#         new_label_im[np.where(label_im==label)] = 4  
+#     else:
+#         new_label_im[np.where(label_im==label)] = 1 
         
 
-robpylib.CommonFunctions.ImportExport.WriteStackNew(r"R:\Scratch\305\_Robert\interlace_label_test", label_names, new_label_im)
+# robpylib.CommonFunctions.ImportExport.WriteStackNew(r"R:\Scratch\305\_Robert\interlace_label_test", label_names, new_label_im)
 
 
 
