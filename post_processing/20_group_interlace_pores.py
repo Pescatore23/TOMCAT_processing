@@ -18,6 +18,7 @@ import os
 
 drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
+destination = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 
 temp_folder= r"Z:\users\firo\joblib_tmp"
 
@@ -94,7 +95,7 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
     bottom_points = ','.join(segments['Point IDs'][bottom_yarn])
     bottom_points = np.array([int(i) for i in bottom_points.split(',')])
     
-    fibers, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiber_path)
+    fibers, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiber_path, track=False)
     fibers = fibers>0
     shp = fibers.shape
     
@@ -102,7 +103,7 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
     
     labeled_fibers = np.bitwise_and(fibers, yarns[0]) + 2*np.bitwise_and(fibers, yarns[1])         
     
-    label_im, label_names =  robpylib.CommonFunctions.ImportExport.ReadStackNew(label_path)
+    label_im, label_names =  robpylib.CommonFunctions.ImportExport.ReadStackNew(label_path, track=False)
     labels = np.unique(label_im)[1:]
     crude_pores = ndimage.find_objects(label_im)
     
@@ -149,7 +150,22 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
     pore_affiliation[np.where(pore_assigned[:,3]>0)] = 2
     pore_affiliation[np.where(pore_assigned[:,4]>0)] = 3
     
-    return pore_affiliation
+    return pore_affiliation, labels
 
-
-
+def sample_function(sample, baseFolder=baseFolder, destination=destination):
+    metadata = xr.load_dataset(os.path.join(destination, ''.join(['pore_props_',sample,'.nc'])))
+    
+    pore_affiliation, labels = track_pore_affiliation(sample, baseFolder)
+    
+    data = xr.Dataset({'pore_affiliation': ('label', pore_affiliation)},
+                      coords= {'label': labels})
+                      # attrs={'explanation': '1 - top yarn, 2 - bottom yarn, 3 - interlace, 0 - not in contact'})
+    data.attrs = metadata.attrs
+    data.attrs['explanation'] = '1 - top yarn, 2 - bottom yarn, 3 - interlace, 0 - not in contact'
+    
+    filename = ''.join(['pore_affiliation_', sample,'.nc'])
+    path = os.path.join(destination, filename)
+    
+    data.to_netcdf(path)
+    
+    
