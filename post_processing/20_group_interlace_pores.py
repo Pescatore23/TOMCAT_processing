@@ -117,7 +117,7 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
             bounding_boxes.append(bb)
         
     
-    pore_assigned = Parallel(n_jobs=32, temp_folder = temp_folder)(delayed(assign_pore)\
+    pore_assigned = Parallel(n_jobs=16, temp_folder = temp_folder)(delayed(assign_pore)\
         (label_im[bb], labeled_fibers[bb], label) for (bb, label) in zip(bounding_boxes, labels))
         
     pore_assigned = np.array(pore_assigned)
@@ -126,23 +126,6 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
     # some (32) pores don't touch any fiber and 78 at interface -> revise
     
     # TO DO: label pore according to their affiliation and display in Avizo
-    
-    # new_label_im = np.zeros(label_im.shape, dtype=np.uint8)
-    
-    # for label in pore_assigned[:,0]:
-    #     color = labels[label]
-    #     if pore_assigned[label,2] > 0:
-    #         new_label_im[np.where(label_im==label)] = 2
-    #     if pore_assigned[label,3] > 0:
-    #         new_label_im[np.where(label_im==label)] = 3
-    #     if pore_assigned[label,4] > 0:
-    #         new_label_im[np.where(label_im==label)] = 4  
-    #     else:
-    #         new_label_im[np.where(label_im==label)] = 1 
-            
-    
-    # robpylib.CommonFunctions.ImportExport.WriteStackNew(r"R:\Scratch\305\_Robert\interlace_label_test", label_names, new_label_im)
-    
     pore_affiliation = np.zeros(pore_assigned.shape[0], dtype=np.uint8)
     
     # populate vector: 1 -yarn1; 2-yarn2, 3-interlace
@@ -150,6 +133,32 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
     pore_affiliation[np.where(pore_assigned[:,3]>0)] = 2
     pore_affiliation[np.where(pore_assigned[:,4]>0)] = 3
     
+    # top_pores = pore_assigned[pore_affiliation==1,0]
+    # bottom_pores = pore_assigned[pore_affiliation==2,0]
+    # interlace_pores = pore_assigned[pore_affiliation==3,0]
+    # other_pores = pore_assigned[pore_affiliation==0,0]
+    
+    # new_label_im = np.zeros(label_im.shape, dtype=np.uint8)
+    
+    # for x in range(label_im.shape[0]):
+    #     for y in range(label_im.shape[1]):
+    #         for z in range(label_im.shape[2]):
+    #             val = label_im[x,y,z]
+    #             if val == 0: continue
+    #             # check if top pore
+    #             if val in other_pores:
+    #                 new_label_im[x,y,z] = 4
+    #             elif val in interlace_pores:
+    #                 new_label_im[x,y,z] = 3              
+    #             elif val in top_pores:
+    #                 new_label_im[x,y,z] = 1
+    #             elif val in bottom_pores:
+    #                 new_label_im[x,y,z] = 2
+
+            
+    
+    # robpylib.CommonFunctions.ImportExport.WriteStackNew(r"R:\Scratch\305\_Robert\interlace_label_test", label_names, new_label_im)
+        
     return pore_affiliation, labels
 
 def sample_function(sample, baseFolder=baseFolder, destination=destination):
