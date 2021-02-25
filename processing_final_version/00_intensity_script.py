@@ -21,6 +21,8 @@ from joblib import Parallel, delayed
 import multiprocessing as mp
 
 num_cores=mp.cpu_count()
+num_cores = 32
+temp_folder = r"Z:\users\firo\joblib_tmp"
 #baseFolder="T:\\DATA\\2018_07_12_Test_Image_Processing_Tomcat"
 #baseFolder="T:\\Samples_with_Water_inside"
 #baseFolder="R:\\Scratch\\305\\_Robert\\TOMCAT3_yarn"
@@ -28,12 +30,13 @@ num_cores=mp.cpu_count()
 #baseFolder=r"O:\disk2"
 baseFolder = r"Z:\Robert_TOMCAT_3"
 # baseFolder = r"F:\Zwischenlager_Robert\TOMCAT_3"
+baseFolder = "E:\Robert_TOMCAT_3b"
 
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 #newDiskfolder=r'F:\Zwischenlager_Robert\TOMCAT_3'
 # newDiskfolder=r'X:\TOMCAT3_processing_1'
 # newBaseFolder=r'Y:\TOMCAT_3'
-newDiskfolder = r"Z:\Robert_TOMCAT_3"
+newDiskfolder = "E:\Robert_TOMCAT_3b"
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition
@@ -102,7 +105,7 @@ def correctIntensityProfile(sample, newDiskfolder=newDiskfolder, parallel=parall
             
     elif parallel:
         corefunction(0,sourceFolder,targetFolder_med)
-        result=Parallel(n_jobs=num_cores)(delayed(corefunction)(i,sourceFolder,targetFolder_med) for i in range(1,2016))
+        result=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(corefunction)(i,sourceFolder,targetFolder_med) for i in range(1,2016))
     
        
         
