@@ -133,31 +133,31 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
     pore_affiliation[np.where(pore_assigned[:,3]>0)] = 2
     pore_affiliation[np.where(pore_assigned[:,4]>0)] = 3
     
-    # top_pores = pore_assigned[pore_affiliation==1,0]
-    # bottom_pores = pore_assigned[pore_affiliation==2,0]
-    # interlace_pores = pore_assigned[pore_affiliation==3,0]
-    # other_pores = pore_assigned[pore_affiliation==0,0]
+    top_pores = pore_assigned[pore_affiliation==1,0]
+    bottom_pores = pore_assigned[pore_affiliation==2,0]
+    interlace_pores = pore_assigned[pore_affiliation==3,0]
+    other_pores = pore_assigned[pore_affiliation==0,0]
     
-    # new_label_im = np.zeros(label_im.shape, dtype=np.uint8)
+    new_label_im = np.zeros(label_im.shape, dtype=np.uint8)
     
-    # for x in range(label_im.shape[0]):
-    #     for y in range(label_im.shape[1]):
-    #         for z in range(label_im.shape[2]):
-    #             val = label_im[x,y,z]
-    #             if val == 0: continue
-    #             # check if top pore
-    #             if val in other_pores:
-    #                 new_label_im[x,y,z] = 4
-    #             elif val in interlace_pores:
-    #                 new_label_im[x,y,z] = 3              
-    #             elif val in top_pores:
-    #                 new_label_im[x,y,z] = 1
-    #             elif val in bottom_pores:
-    #                 new_label_im[x,y,z] = 2
+    for x in range(label_im.shape[0]):
+        for y in range(label_im.shape[1]):
+            for z in range(label_im.shape[2]):
+                val = label_im[x,y,z]
+                if val == 0: continue
+                # check if top pore
+                if val in other_pores:
+                    new_label_im[x,y,z] = 4
+                elif val in interlace_pores:
+                    new_label_im[x,y,z] = 3              
+                elif val in top_pores:
+                    new_label_im[x,y,z] = 1
+                elif val in bottom_pores:
+                    new_label_im[x,y,z] = 2
 
             
     
-    # robpylib.CommonFunctions.ImportExport.WriteStackNew(r"R:\Scratch\305\_Robert\interlace_label_test", label_names, new_label_im)
+    robpylib.CommonFunctions.ImportExport.WriteStackNew(r"R:\Scratch\305\_Robert\interlace_label_test_total_volume", label_names, new_label_im)
         
     return pore_affiliation, labels
 
