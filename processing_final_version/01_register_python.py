@@ -11,9 +11,10 @@ from pystackreg import StackReg
 from skimage import transform as tf
 import random
 from joblib import Parallel, delayed
-import multiprocessing as mp
+# import multiprocessing as mp
 
-
+num_cores = 32
+temp_folder = r"Z:\users\firo\joblib_tmp"
 waterpos=2000
 
 parallel=True
@@ -26,14 +27,12 @@ baseFolder = r'I:\disk1'
 #baseFolder=r'T:\TOMCAT3_Test'
 #baseFolder = r'S:\Zwischenlager\disk1'
 #baseFolder=r'Y:\TOMCAT_3'
+baseFolder = "E:\Robert_TOMCAT_3b"
 
 #newBaseFolder=r'X:\TOMCAT3_processing_1'
 #newBaseFolder=r'Y:\TOMCAT_3'
 newBaseFolder = baseFolder
-# newBaseFolder = r"F:\Zwischenlager_Robert\TOMCAT_3"
-baseFolder = r'I:\disk1'
-newBaseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
-num_cores = mp.cpu_count()
+
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition
@@ -169,14 +168,14 @@ def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw',
     register_slice(sourceFolder,targetFolder,matFolder,slicelist[0],regfile)
     if parallel:
         if sample[1]=='3':          #register every slice separately in the case of single yarns
-            result=Parallel(n_jobs=num_cores)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample ) for z in range(zmax))
+            result=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample ) for z in range(zmax))
         
         else:                       #interlaces seem to be suitable to save computation time by just registering some test slices and then apply transformation onto the rest
-            result=Parallel(n_jobs=num_cores)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample = sample) for z in slicelist[1:])
+            result=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample = sample) for z in slicelist[1:])
             print('apply trans mat')            
         #            apply transformation on rest
             trans_mat=merge_transformation_matrices(matFolder)
-            result=Parallel(n_jobs=num_cores)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample, trans_mat_flag=True,trans_mat=trans_mat) for z in range(zmax))
+            result=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample, trans_mat_flag=True,trans_mat=trans_mat) for z in range(zmax))
     else:
         for z in slicelist[1:]:
             register_slice(sourceFolder,targetFolder,matFolder,z)
