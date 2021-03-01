@@ -203,7 +203,7 @@ print(len(samples),' samples to calculate')
 
 for sample in samples:
     if sample in excluded_samples: continue
-    if not sample == 'T4_025_2_II': continue
+    # if not sample == 'T4_025_2_II': continue
     # if not sample in repeats: continue
 #    if sample[1] == '4': continue
 #    if not sample == 'T4_300_5_III': continue
