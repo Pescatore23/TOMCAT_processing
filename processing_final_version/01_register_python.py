@@ -215,8 +215,8 @@ for sample in samples:
     if sample[1]=='3':
 #        continue
         stage='01_intcorrect_med'
-        folder=newBaseFolder
-        newFolder=False
+        # folder=newBaseFolder
+        # newFolder=False
         
     if sample[0]=='Y': continue
 
