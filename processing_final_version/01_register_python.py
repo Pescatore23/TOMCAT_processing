@@ -22,7 +22,7 @@ parallel=True
 number_reference_slices=100
 mount=''
 # baseFolder=r'Z:\Robert_TOMCAT_3'
-baseFolder = r'I:\disk1'
+# baseFolder = r'I:\disk1'
 #baseFolder=r'O:\disk2'
 #baseFolder=r'T:\TOMCAT3_Test'
 #baseFolder = r'S:\Zwischenlager\disk1'
@@ -76,8 +76,8 @@ def test_recalculate(sourceFolder,targetFolder,z,OverWrite=False):
 def get_transformation(Tstack):
 #    Tstack=np.transpose(Tstack,(2,0,1))
     sr = StackReg(StackReg.RIGID_BODY)
-    # trans_matrix= sr.register_stack(Tstack, reference='first')
-    trans_matrix= sr.register_stack(Tstack, reference='previous')
+    trans_matrix= sr.register_stack(Tstack, reference='first')
+    # trans_matrix= sr.register_stack(Tstack, reference='previous')
     outStack = sr.transform_stack(Tstack)   
 #    outStack = np.transpose(outStack,(1,2,0))
     outStack=np.uint16(outStack)
@@ -134,16 +134,16 @@ def register_slice(sourceFolder,targetFolder,matFolder,z,regfile, sample=None, t
 def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw', num_cores=num_cores, waterpos=waterpos, parallel=parallel):
     zmax=2016
     sourceFolder = os.path.join(baseFolder, sample, stage)
-    targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_prev_ref')
-    matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_prev_ref')
-    # targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')
-    # matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_from_5')
+    # targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered_prev_ref')
+    # matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices_prev_ref')
+    targetFolder = os.path.join(baseFolder, sample, '02_pystack_registered')
+    matFolder = os.path.join(baseFolder, sample,'02_pystack_matrices')
     
     if newBaseFolder is not False:
-        targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_prev_ref')
-        matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_prev_ref')
-        # targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_from_5')
-        # matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_from_5')
+        # targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered_prev_ref')
+        # matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices_prev_ref')
+        targetFolder = os.path.join(newBaseFolder, sample, '02_pystack_registered')
+        matFolder = os.path.join(newBaseFolder, sample,'02_pystack_matrices')
         
     if not os.path.exists(newBaseFolder):
         os.mkdir(newBaseFolder)
