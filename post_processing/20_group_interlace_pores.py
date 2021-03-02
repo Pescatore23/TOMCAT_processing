@@ -162,20 +162,25 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
     return pore_affiliation, labels
 
 def sample_function(sample, baseFolder=baseFolder, destination=destination):
-    metadata = xr.load_dataset(os.path.join(destination, ''.join(['pore_props_',sample,'.nc'])))
-    
-    pore_affiliation, labels = track_pore_affiliation(sample, baseFolder)
-    
-    data = xr.Dataset({'pore_affiliation': ('label', pore_affiliation)},
-                      coords= {'label': labels})
-                      # attrs={'explanation': '1 - top yarn, 2 - bottom yarn, 3 - interlace, 0 - not in contact'})
-    data.attrs = metadata.attrs
-    data.attrs['explanation'] = '1 - top yarn, 2 - bottom yarn, 3 - interlace, 0 - not in contact'
-    
-    filename = ''.join(['pore_affiliation_', sample,'.nc'])
-    path = os.path.join(destination, filename)
-    
-    data.to_netcdf(path)
+    try:
+        metadata = xr.load_dataset(os.path.join(destination, ''.join(['pore_props_',sample,'.nc'])))
+        
+        pore_affiliation, labels = track_pore_affiliation(sample, baseFolder)
+        
+        data = xr.Dataset({'pore_affiliation': ('label', pore_affiliation)},
+                          coords= {'label': labels})
+                          # attrs={'explanation': '1 - top yarn, 2 - bottom yarn, 3 - interlace, 0 - not in contact'})
+        data.attrs = metadata.attrs
+        data.attrs['explanation'] = '1 - top yarn, 2 - bottom yarn, 3 - interlace, 0 - not in contact'
+        
+        filename = ''.join(['pore_affiliation_', sample,'.nc'])
+        path = os.path.join(destination, filename)
+        
+        data.to_netcdf(path)
+        return 'completed'
+    except Exception as e:
+        return e
+        
     
 samples = os.listdir(baseFolder)
 
@@ -184,3 +189,6 @@ if '.DS_Store' in samples:
 
 num_jobs = 8
 results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(sample_function)(sample) for sample in samples)
+
+for state in zip(samples, results):
+    print(state)
