@@ -32,12 +32,13 @@ from ij.io import FileSaver
 repeats = ['T3_300_3', 'T3_025_1', 'T3_025_4', 'T3_025_9_III']
 
 #baseFolder=r'F:\Zwischenlager_Robert\TOMCAT_3'
-baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
+#baseFolder=r'Z:\Robert_TOMCAT_3_Part_2'
 #baseFolder=r'T:\disk2'
 #baseFolder=r'U:\TOMCAT_3_segmentation'
 #baseFolder=r'V:\disk2'
 #baseFolder = r'X:\TOMCAT3_processing_1'
 #baseFolder = r'Z:\TOMCAT_3'
+baseFolder = r'E:\Robert_TOMCAT_3b'
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition
@@ -61,9 +62,9 @@ samples=makesamplelist(baseFolder)
 
 
 time00=time.time()
-#sourceFolder = '02_pystack_registered'
+sourceFolder = '02_pystack_registered'
 #sourceFolder = '00_raw'
-sourceFolder = '02_pystack_registered_from_5'
+#sourceFolder = '02_pystack_registered_from_5'
 
 Features = [
 			[1   ,   'Gaussian_blur'],
@@ -101,7 +102,7 @@ i=1
 
 
 for sample in samples:
-	if not sample in repeats: continue
+	if sample in repeats: continue
 	print(sample, "(",i,"/",len(samples),")")
 	i=i+1
 	if sample[1] == '4': continue

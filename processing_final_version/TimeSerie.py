@@ -12,7 +12,7 @@ from ij import IJ
 import myFunctions as mf
 
 slice_number=220
-sample="T3_025_3_III"
+sample="T4_300_5"
 
 processing_stage='02_pystack_registered'
 #processing_stage='03_gradient_filtered'
@@ -20,7 +20,7 @@ processing_stage='02_pystack_registered'
 #baseFolder = "V:\\TOMCAT_II_1"
 #baseFolder = "U:\\disk1"
 #baseFolder= r"W:\TOMCAT_3_segmentation"
-baseFolder = r'W:\\Robert_TOMCAT_3'
+baseFolder = r'A:\\Robert_TOMCAT_4'
 #baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
 
 samples = os.listdir(baseFolder)

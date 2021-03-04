@@ -166,7 +166,7 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination):
     path = os.path.join(destination, filename)
     
     if not os.path.exists(path):
-        try:
+        # try:
             metadata = xr.load_dataset(os.path.join(destination, ''.join(['pore_props_',sample,'.nc'])))
             
             pore_affiliation, labels = track_pore_affiliation(sample, baseFolder)
@@ -182,8 +182,8 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination):
             
             data.to_netcdf(path)
             return 'completed'
-        except Exception as e:
-            return e
+        # except Exception as e:
+            # return e
     else:
         return 'already done'
         
