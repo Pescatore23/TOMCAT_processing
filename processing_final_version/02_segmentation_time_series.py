@@ -22,6 +22,8 @@ from scipy.ndimage import morphology
 from skimage import io
 from joblib import Parallel, delayed
 import multiprocessing as mp
+from skimage.morphology import square
+from skimage.morphology import convex_hull_image
 
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 
@@ -94,7 +96,7 @@ def makesamplelist(baseFolder, **kwargs):
 #    samples=["32_200_025H2_cont"]
     return samples
 
-def masking(Tstack, maskingthreshold=11000):
+def masking(Tstack, maskingthreshold=26000):  #26000 for 3b, 110000 for 3
 #    zero outside yarn, one inside
     shp=np.shape(Tstack)
     fake=np.zeros([shp[0],shp[1]],dtype=np.uint16)
@@ -104,6 +106,7 @@ def masking(Tstack, maskingthreshold=11000):
     mask[mask>0]=1
 #    mask=mask-1
     mask=morphology.binary_fill_holes(mask)
+    
 #    masked=np.uint8(mask)
     return mask
 
@@ -180,11 +183,12 @@ def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_trans
         fibername=fibernames[z]
         fibermask=np.uint8(io.imread(os.path.join(baseFolder,fibermaskFolder,fibername)))
         fibermask=fibermask/np.max(fibermask)
+        hullmask = convex_hull_image(fibermask).astype(np.uint8) #hullmask introduced for 3b
         
         if fibername[1]=='3':
             mask=masking(Tstack)
             
-        poremask=mask*(1-fibermask)
+        poremask=hullmask*mask*(1-fibermask)
         Tstack=Tstack*poremask[:,:,None]
         # binStack, transitions, transitions2 = fft_grad_segmentation(Tstack,poremask,z,waterpos=waterpos)
         transitions, transitions2 = fft_grad_segmentation(Tstack,poremask,z,waterpos=waterpos)
