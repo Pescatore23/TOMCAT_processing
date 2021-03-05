@@ -21,8 +21,8 @@ import numpy as np
 from scipy.ndimage import morphology
 from skimage import io
 from joblib import Parallel, delayed
-import multiprocessing as mp
-from skimage.morphology import square
+# import multiprocessing as mp
+# from skimage.morphology import square
 from skimage.morphology import convex_hull_image
 
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
@@ -30,7 +30,7 @@ repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 #baseFolder=r'U:\TOMCAT_3_segmentation'
 # baseFolder = r'O:\TOMCAT3_processing_1'
 # baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
-baseFolder = r'Z:\Robert_TOMCAT_3'
+baseFolder = r'E:\Robert_TOMCAT_3b'
 
 OverWrite = False
 newBaseFolder=False
@@ -133,8 +133,10 @@ def get_jump_height(currpx,pos,pos2=0,receding=False):
 
 
 def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
-    check=6000
-    if z<waterpos: check=9500
+    # check=6000
+    check = 20000
+    # if z<waterpos: check=9500
+    if z<waterpos: check=25000
     # timg = np.zeros(np.shape(imgs), dtype='uint8')
     transitions = np.zeros([np.shape(imgs)[0],np.shape(imgs)[1]], dtype=np.uint16)
     transitions2 = transitions.copy()
@@ -202,15 +204,15 @@ def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_trans
 
 def inner_segmentation_function(sample, newBaseFolder=False, tracefits=False, waterpos=waterpos):
     if not newBaseFolder: newBaseFolder = baseFolder
-    # sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered')#"02_registered_1300_rigid")
-    sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')#"02_registered_1300_rigid") 
+    sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered')#"02_registered_1300_rigid")
+    # sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered_from_5')#"02_registered_1300_rigid") 
     fibermaskFolder = os.path.join(baseFolder, sample, "01a_weka_segmented_dry","classified")   #has to be True for fibers and False for the rest, but not necessarly binary
     targetFolder = os.path.join(newBaseFolder, sample, "03_gradient_filtered")
     targetFolder_transitions = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions")
     targetFolder_transitions2 = os.path.join(newBaseFolder, sample, "03_gradient_filtered_transitions2")
 #       
-    if not os.path.exists(targetFolder):
-           os.makedirs(targetFolder) 
+    # if not os.path.exists(targetFolder):
+           # os.makedirs(targetFolder) 
     if not os.path.exists(targetFolder_transitions):
            os.makedirs(targetFolder_transitions)
     if not os.path.exists(targetFolder_transitions2):
@@ -248,7 +250,7 @@ def fft_segmentation(baseFolder=baseFolder, newDiskfolder=False):
     c=1
     for sample in samples:
 #        if not sample == 'T3_025_9_III': continue
-        if not sample in repeats: continue
+        # if not sample in repeats: continue
         # if sample[1] == '4': continue
         if sample == 'T3_025_1': continue
         # if sample in robpylib.TOMCAT.INFO.interlace_good_samples: continue
