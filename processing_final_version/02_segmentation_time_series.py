@@ -96,7 +96,7 @@ def makesamplelist(baseFolder, **kwargs):
 #    samples=["32_200_025H2_cont"]
     return samples
 
-def masking(Tstack, maskingthreshold=26000):  #26000 for 3b, 110000 for 3
+def masking(Tstack, maskingthreshold=25000):  #26000 for 3b, 110000 for 3
 #    zero outside yarn, one inside
     shp=np.shape(Tstack)
     fake=np.zeros([shp[0],shp[1]],dtype=np.uint16)
@@ -134,7 +134,7 @@ def get_jump_height(currpx,pos,pos2=0,receding=False):
 
 def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
     # check=6000
-    check = 20000
+    check = 15000
     # if z<waterpos: check=9500
     if z<waterpos: check=25000
     # timg = np.zeros(np.shape(imgs), dtype='uint8')
@@ -185,13 +185,15 @@ def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_trans
         fibername=fibernames[z]
         fibermask=np.uint8(io.imread(os.path.join(baseFolder,fibermaskFolder,fibername)))
         fibermask=fibermask/np.max(fibermask)
-        hullmask = convex_hull_image(fibermask>0).astype(np.uint8) #hullmask introduced for 3b
+        hullmask = convex_hull_image(fibermask>0).astype(np.uint8) #hullmask introduced for TOMCAT_3b
         
         # if fibername[1]=='3':
-        mask=masking(Tstack)
+        # mask=masking(Tstack)
             
-        poremask=hullmask*mask*(1-fibermask)
-        Tstack=Tstack*poremask[:,:,None]
+        # poremask=hullmask*mask*(1-fibermask)
+        poremask=hullmask*(1-fibermask) #
+        Tstack=Tstack*poremask[:,:,None] #hullmask might be more computational effort, but seems more reliable
+        
         # binStack, transitions, transitions2 = fft_grad_segmentation(Tstack,poremask,z,waterpos=waterpos)
         transitions, transitions2 = fft_grad_segmentation(Tstack,poremask,z,waterpos=waterpos)
         # robpylib.CommonFunctions.ImportExport.WriteTimeSeries(targetFolder, binStack, names, scans)
