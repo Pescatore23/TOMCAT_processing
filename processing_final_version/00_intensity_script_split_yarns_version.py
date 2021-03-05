@@ -105,7 +105,7 @@ def corefunction(z,sourceFolder,targetFolder_med_1, targetFolder_med_2, sample):
                 Tstack1[:,:,j]=Tstack1[:,:,j]-(np.median(Tstack1[:,:,j])-refmed)
             Tstack1[Tstack1<0]=0
             Tstack1 = np.uint16(Tstack1)
-            robpylib.CommonFunctions.ImportExport.WriteStackNew(targetFolder_med_1,Tstack1,names, scans)
+            robpylib.CommonFunctions.ImportExport.WriteTimeSeries(targetFolder_med_1,Tstack1,names, scans)
         coord2 = coordinates[sample]['yarn2']
         if not breakFlag2:
             Tstack2 = Tstack[coord2[2]:coord2[3],coord2[0]:coord2[1],:]
@@ -114,7 +114,7 @@ def corefunction(z,sourceFolder,targetFolder_med_1, targetFolder_med_2, sample):
                 Tstack2[:,:,j]=Tstack2[:,:,j]-(np.median(Tstack2[:,:,j])-refmed)
             Tstack2[Tstack2<0]=0
             Tstack2 = np.uint16(Tstack2)
-            robpylib.CommonFunctions.ImportExport.WriteStackNew(targetFolder_med_2,Tstack2,names, scans)
+            robpylib.CommonFunctions.ImportExport.WriteTimeSeries(targetFolder_med_2,Tstack2,names, scans)
                            
         # Tstackmed=Tstack
         # refmed=np.median(Tstack[:,:,0])
