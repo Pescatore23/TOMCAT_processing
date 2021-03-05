@@ -185,7 +185,7 @@ def core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_trans
         fibername=fibernames[z]
         fibermask=np.uint8(io.imread(os.path.join(baseFolder,fibermaskFolder,fibername)))
         fibermask=fibermask/np.max(fibermask)
-        hullmask = convex_hull_image(fibermask).astype(np.uint8) #hullmask introduced for 3b
+        hullmask = convex_hull_image(fibermask>0).astype(np.uint8) #hullmask introduced for 3b
         
         if fibername[1]=='3':
             mask=masking(Tstack)
