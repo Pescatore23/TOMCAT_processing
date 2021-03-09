@@ -89,7 +89,7 @@ for sample in os.listdir(baseFolder):
     # if not sample[1] == '4': continue
 #    if not sample == 'T3_025_9_III': continue
     # if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
-    if sample == 'T4_025_2_II': continue
+    if not sample == 'T4_025_2_II': continue
     if sample == 'T3_025_1': continue
     if sample in excluded_samples:
         c=c+1
