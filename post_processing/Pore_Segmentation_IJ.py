@@ -22,7 +22,8 @@ network_location = '//152.88.86.87/data118'
 #baseFolder = r'Y:\TOMCAT_3'
 #baseFolder = r'W:\Robert_TOMCAT_3_Part_2'
 #baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
-baseFolder = os.path.join(network_location, 'Robert_TOMCAT_4')
+#baseFolder = os.path.join(network_location, 'Robert_TOMCAT_3b')
+baseFolder = r"E:\Robert_TOMCAT_3b"
 
 procFolder="04a_void_space"
 #procFolder = '04a_void_space_from_5'
@@ -34,9 +35,10 @@ repeats = ['T3_300_3', 'T3_025_1', 'T3_025_4', 'T3_025_9_III']
 outname = 'pores_'
 samples=os.listdir(baseFolder)
 
-settings="disconnection=0.7 xsize=1.5 ysize=1.5 zsize=1 sigma=[] holes=0 particles=0 entire evaluation=[3D volumetric processing]"
+#settings="disconnection=0.7 xsize=1.5 ysize=1.5 zsize=1 sigma=[] holes=0 particles=0 entire evaluation=[3D volumetric processing]"
 #settings="disconnection=0.7 xsize=1 ysize=1 zsize=1 sigma=[] holes=0 particles=0 entire evaluation=[3D volumetric processing]"
-
+#adapted to new version of Beat's xlib plugin
+settings = "disconnection=0.7000 xsize=1.5000 ysize=1.5000 zsize=1.0000 algorithm=[old algorithm] euler=26 sigma=1,1,1 distance=0.5000 holes,=0.0000 particles,=0.0000 separate entire evaluation=[3D volumetric processing]"
 
 def labelImage(procfolder,targetFolder,outname,settings):
     if not os.path.exists(targetFolder):

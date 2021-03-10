@@ -32,7 +32,7 @@ import scipy.ndimage
 #baseFolder = 'X:\TOMCAT3_processing_1'
 #newBaseFolder = 'U:\TOMCAT_3_segmentation'
 #baseFolder = r'Z:\Robert_TOMCAT_3_Part_2'
-baseFolder = r'A:\Robert_TOMCAT_4'
+baseFolder = r'A:\Robert_TOMCAT_3b'
 newBaseFolder = baseFolder
 
 
@@ -89,8 +89,8 @@ for sample in os.listdir(baseFolder):
     # if not sample[1] == '4': continue
 #    if not sample == 'T3_025_9_III': continue
     # if not sample in robpylib.TOMCAT.INFO.samples_to_repeat: continue
-    if not sample == 'T4_025_2_II': continue
-    if sample == 'T3_025_1': continue
+    # if not sample == 'T4_025_2_II': continue
+    # if sample == 'T3_025_1': continue
     if sample in excluded_samples:
         c=c+1
         continue
@@ -103,8 +103,8 @@ for sample in os.listdir(baseFolder):
     if not newBaseFolder:
         newBaseFolder=baseFolder
     
-    targetFolder=os.path.join(newBaseFolder,sample,'04a_void_space_v2')
-    
+    # targetFolder=os.path.join(newBaseFolder,sample,'04a_void_space_v2')
+    targetFolder=os.path.join(newBaseFolder,sample,'04a_void_space')  #for the yarns
 #    if os.path.exists(targetFolder):
 #        c=c+1
 #        continue
@@ -118,7 +118,7 @@ for sample in os.listdir(baseFolder):
     fibernames = os.listdir(fiberFolder)
     if 'Thumbs.db' in fibernames: fibernames.remove('Thumbs.db')
     
-    num_cores=mp.cpu_count()
+    num_cores=32#mp.cpu_count()
     
     if sample[1]=='3':
         Parallel(n_jobs=num_cores)(delayed(yarn_pores)(fiberFolder, targetFolder, name) for name in fibernames)
