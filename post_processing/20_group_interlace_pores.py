@@ -191,13 +191,13 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination, over
         return 'already done'
         
     
-samples = os.listdir(baseFolder)
+# samples = os.listdir(baseFolder)
 
-if '.DS_Store' in samples:
-    samples.remove('.DS_Store')
+# if '.DS_Store' in samples:
+#     samples.remove('.DS_Store')
 
-num_jobs = 8
-results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(sample_function)(sample, overWrite=overWrite) for sample in samples)
+# num_jobs = 8
+# results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(sample_function)(sample, overWrite=overWrite) for sample in samples)
 
-for state in zip(samples, results):
-    print(state)
+# for state in zip(samples, results):
+#     print(state)
