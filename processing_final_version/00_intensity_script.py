@@ -23,20 +23,22 @@ import multiprocessing as mp
 num_cores=mp.cpu_count()
 num_cores = 32
 temp_folder = r"Z:\users\firo\joblib_tmp"
+temp_folder = None
 #baseFolder="T:\\DATA\\2018_07_12_Test_Image_Processing_Tomcat"
 #baseFolder="T:\\Samples_with_Water_inside"
 #baseFolder="R:\\Scratch\\305\\_Robert\\TOMCAT3_yarn"
 #baseFolder=r"T:\Zwischenlager\disk1"
 #baseFolder=r"O:\disk2"
-baseFolder = r"Z:\Robert_TOMCAT_3"
-# baseFolder = r"F:\Zwischenlager_Robert\TOMCAT_3"
-baseFolder = "E:\Robert_TOMCAT_3b"
+# baseFolder = r"Z:\Robert_TOMCAT_3"
+baseFolder = r"E:\Robert\Robert_TOMCAT_2"
+# baseFolder = "E:\Robert_TOMCAT_3b"
 
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 #newDiskfolder=r'F:\Zwischenlager_Robert\TOMCAT_3'
 # newDiskfolder=r'X:\TOMCAT3_processing_1'
 # newBaseFolder=r'Y:\TOMCAT_3'
-newDiskfolder = "E:\Robert_TOMCAT_3b"
+# newDiskfolder = "E:\Robert_TOMCAT_3b"
+newDiskfolder = baseFolder
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition
