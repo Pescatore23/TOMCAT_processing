@@ -21,7 +21,7 @@ from joblib import Parallel, delayed
 import multiprocessing as mp
 
 num_cores=mp.cpu_count()
-num_cores = 32
+num_cores = 8
 temp_folder = r"Z:\users\firo\joblib_tmp"
 temp_folder = None
 #baseFolder="T:\\DATA\\2018_07_12_Test_Image_Processing_Tomcat"
