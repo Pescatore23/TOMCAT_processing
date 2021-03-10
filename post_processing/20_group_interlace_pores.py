@@ -19,7 +19,7 @@ import os
 drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 destination = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
-overWrite = True
+overWrite = False
 temp_folder= r"Z:\users\firo\joblib_tmp"
 
 def extend_bounding_box(s, shape, pad=3):
