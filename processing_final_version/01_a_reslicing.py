@@ -8,15 +8,10 @@ creates substacks of x and y slices at interlace for improved ML segmentation
 
 @author: firo
 """
-import sys
-library=r"R:\Scratch\305\_Robert\Python_Library"
-
-if library not in sys.path:
-    sys.path.append(library)
 
 import os
 import numpy as np
-import RobPyLib
+import robpylib
 
 
 def makeindex(indexmax):
@@ -26,7 +21,7 @@ def makeindex(indexmax):
     index=[''.join([str(item).zfill(4),'.tif']) for item in index]
     return index
 
-baseFolder=r'U:\TOMCAT_3_rearguard'
+baseFolder = r"E:\Robert\Robert_TOMCAT_2"
 
 samples=os.listdir(baseFolder)
 
@@ -42,8 +37,8 @@ excluded_samples=[
  'T4_025_5_III',    #wet from start
  ]
 
-sourceFolder = '00_raw'
-#sourceFolder = '02_pystack_registered'
+# sourceFolder = '00_raw'
+sourceFolder = '02_pystack_registered'
 
 z_low=1414
 z_high=1644
@@ -67,6 +62,7 @@ knots['T4_025_5_III']=[1280,1573]    #wet from start
 knots['T4_300_2_II']=[157,460]
 knots['T4_300_4_III']=[1272,1524]
 knots['T4_300_5_III']=[1377,1610]
+knots['R_m8_50_200_1_II'] = [866,1009]
 
 
 
@@ -96,7 +92,7 @@ for sample in samples:
     
 #    z_low,z_high=interlace_bounds[sample]
     
-    substack,names=RobPyLib.CommonFunctions.ImportExport.ReadStackNew(folder)
+    substack,names=robpylib.CommonFunctions.ImportExport.ReadStackNew(folder)
     substack=substack[:,:,z_low:z_high]
     names=names[z_low:z_high]
     
@@ -107,8 +103,8 @@ for sample in samples:
     x_names=makeindex(x_stack.shape[2])
     y_names=makeindex(y_stack.shape[2])
     
-    RobPyLib.CommonFunctions.ImportExport.WriteStackNew(x_folder, x_names, x_stack)
-    RobPyLib.CommonFunctions.ImportExport.WriteStackNew(y_folder, y_names, y_stack)
+    robpylib.CommonFunctions.ImportExport.WriteStackNew(x_folder, x_names, x_stack)
+    robpylib.CommonFunctions.ImportExport.WriteStackNew(y_folder, y_names, y_stack)
     
     
     
