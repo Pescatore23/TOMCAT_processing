@@ -133,34 +133,34 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
     pore_affiliation[np.where(pore_assigned[:,3]>0)] = 2
     pore_affiliation[np.where(pore_assigned[:,4]>0)] = 3
     
-    top_pores = pore_assigned[pore_affiliation==1,0]
-    bottom_pores = pore_assigned[pore_affiliation==2,0]
-    interlace_pores = pore_assigned[pore_affiliation==3,0]
-    other_pores = pore_assigned[pore_affiliation==0,0]
+    # top_pores = pore_assigned[pore_affiliation==1,0]
+    # bottom_pores = pore_assigned[pore_affiliation==2,0]
+    # interlace_pores = pore_assigned[pore_affiliation==3,0]
+    # other_pores = pore_assigned[pore_affiliation==0,0]
     
-    new_label_im = np.zeros(label_im.shape, dtype=np.uint8)
+    # new_label_im = np.zeros(label_im.shape, dtype=np.uint8)
     
-    for x in range(label_im.shape[0]):
-        for y in range(label_im.shape[1]):
-            for z in range(label_im.shape[2]):
-                val = label_im[x,y,z]
-                if val == 0: continue
-                # check if top pore
-                if val in other_pores:
-                    new_label_im[x,y,z] = 4
-                elif val in interlace_pores:
-                    new_label_im[x,y,z] = 3              
-                elif val in top_pores:
-                    new_label_im[x,y,z] = 1
-                elif val in bottom_pores:
-                    new_label_im[x,y,z] = 2
+    # for x in range(label_im.shape[0]):
+    #     for y in range(label_im.shape[1]):
+    #         for z in range(label_im.shape[2]):
+    #             val = label_im[x,y,z]
+    #             if val == 0: continue
+    #             # check if top pore
+    #             if val in other_pores:
+    #                 new_label_im[x,y,z] = 4
+    #             elif val in interlace_pores:
+    #                 new_label_im[x,y,z] = 3              
+    #             elif val in top_pores:
+    #                 new_label_im[x,y,z] = 1
+    #             elif val in bottom_pores:
+    #                 new_label_im[x,y,z] = 2
     
-    path = os.path.join(baseFolder, sample, '07_pores_affiliated')
-    if not os.path.exists(path):
-        os.mkdir(path)
+    # path = os.path.join(baseFolder, sample, '07_pores_affiliated')
+    # if not os.path.exists(path):
+    #     os.mkdir(path)
         
     
-    robpylib.CommonFunctions.ImportExport.WriteStackNew(path, label_names, new_label_im)
+    # robpylib.CommonFunctions.ImportExport.WriteStackNew(path, label_names, new_label_im)
         
     return pore_affiliation, labels
 
@@ -180,8 +180,8 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination, over
             data.attrs = metadata.attrs
             data.attrs['explanation'] = '1 - top yarn, 2 - bottom yarn, 3 - interlace, 0 - not in contact'
             
-            # filename = ''.join(['pore_affiliation_', sample,'.nc'])
-            # path = os.path.join(destination, filename)
+            filename = ''.join(['pore_affiliation_', sample,'.nc'])
+            path = os.path.join(destination, filename)
             
             data.to_netcdf(path)
             return 'completed'
@@ -191,13 +191,13 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination, over
         return 'already done'
         
     
-# samples = os.listdir(baseFolder)
+samples = os.listdir(baseFolder)
 
-# if '.DS_Store' in samples:
-#     samples.remove('.DS_Store')
+if '.DS_Store' in samples:
+    samples.remove('.DS_Store')
 
-# num_jobs = 8
-# results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(sample_function)(sample, overWrite=overWrite) for sample in samples)
+num_jobs = 8
+results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(sample_function)(sample, overWrite=overWrite) for sample in samples)
 
-# for state in zip(samples, results):
-#     print(state)
+for state in zip(samples, results):
+    print(state)
