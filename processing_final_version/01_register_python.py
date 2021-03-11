@@ -12,9 +12,14 @@ from skimage import transform as tf
 import random
 from joblib import Parallel, delayed
 # import multiprocessing as mp
+import socket
+host = socket.gethostname()
 
 num_cores = 32
 temp_folder = r"Z:\users\firo\joblib_tmp"
+if host == 'ddm05307':
+    num_cores = 8
+    temp_folder = None
 waterpos=2000
 
 parallel=True

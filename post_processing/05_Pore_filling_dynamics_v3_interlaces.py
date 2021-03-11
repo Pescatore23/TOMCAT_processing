@@ -25,11 +25,14 @@ import xarray as xr
 import scipy.optimize
 from joblib import Parallel, delayed
 import multiprocessing as mp
+import socket
+host = socket.gethostname()
 
 parallel = True
 
-num_cores = mp.cpu_count()
-num_cores = 8
+num_cores = 32
+if host == 'ddm05307':
+    num_cores = 8
 temp_folder = r"Z:\users\firo\joblib_tmp"
 time_limit = {'T3_100_10_III': 344,
               'T3_300_5': 229,
