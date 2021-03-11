@@ -223,6 +223,9 @@ for sample in samples:
         stage='01_intcorrect_med'
         # folder=newBaseFolder
         # newFolder=False
+    if sample[1]=='_':
+#        continue
+        stage='01_intcorrect_med'
     if sample[1]=='5':
 #        continue
         stage='01_intcorrect_med'
