@@ -144,7 +144,8 @@ def __main__(sample):
             peak_height_data_v2[:2,c] = [p1,p2]
             peak_height_data_v2[2:len(peak_sorting)+2,c] = peak_heights[peak_sorting]
             c=c+1
-            
+        
+        conn_list = np.array(conn_list)
         c= 0  
         for label in labels:
             # v3
@@ -211,11 +212,13 @@ def __main__(sample):
                                 'peaks_v4': (['ax_0', 'label'], peak_data_v4),
                                 'peak_heights_v3': (['ax_0', 'label'], peak_height_data_v3),
                                 'peak_heights_v4': (['ax_0', 'label'], peak_height_data_v4),
+                                'pairs': (['pair', 'connection'], conn_list)
                                 },
                                coords= {'ax_v1_0': np.arange(diff_data_v1.shape[0]),
                                         'pair': np.arange(diff_data_v1.shape[1]),
                                         'ax_0': np.arange(diff_data_v2.shape[0]),
-                                        'label': labels})
+                                        'label': labels,
+                                        'connection': np.array([0,1])})
                                                           
         
         data_dict.attrs['name'] = name
