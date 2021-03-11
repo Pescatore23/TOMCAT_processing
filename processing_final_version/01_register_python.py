@@ -27,7 +27,8 @@ mount=''
 #baseFolder=r'T:\TOMCAT3_Test'
 #baseFolder = r'S:\Zwischenlager\disk1'
 #baseFolder=r'Y:\TOMCAT_3'
-baseFolder = r"E:\Robert_TOMCAT_5_split"
+# baseFolder = r"E:\Robert_TOMCAT_5_split"
+baseFolder = r"E:\Robert\Robert_TOMCAT_2"
 
 #newBaseFolder=r'X:\TOMCAT3_processing_1'
 #newBaseFolder=r'Y:\TOMCAT_3'
