@@ -35,10 +35,12 @@ repeats = ['T3_300_3', 'T3_025_1', 'T3_025_4', 'T3_025_9_III']
 outname = 'pores_'
 samples=os.listdir(baseFolder)
 
-#settings="disconnection=0.7 xsize=1.5 ysize=1.5 zsize=1 sigma=[] holes=0 particles=0 entire evaluation=[3D volumetric processing]"
+settings="disconnection=0.7 xsize=1.5 ysize=1.5 zsize=1 sigma=[] holes=0 particles=0 entire evaluation=[3D volumetric processing]"
 #settings="disconnection=0.7 xsize=1 ysize=1 zsize=1 sigma=[] holes=0 particles=0 entire evaluation=[3D volumetric processing]"
 #adapted to new version of Beat's xlib plugin
-settings = "disconnection=0.7000 xsize=1.5000 ysize=1.5000 zsize=1.0000 algorithm=[old algorithm] euler=26 sigma=1,1,1 distance=0.5000 holes,=0.0000 particles,=0.0000 separate entire evaluation=[3D volumetric processing]"
+#settings = "disconnection=0.7000 xsize=1.5000 ysize=1.5000 zsize=1.0000 algorithm=[old algorithm] euler=26 sigma=1,1,1 distance=0.5000 holes,=0.0000 particles,=0.0000 separate entire evaluation=[3D volumetric processing]"
+# use the old xlib version!
+
 
 def labelImage(procfolder,targetFolder,outname,settings):
     if not os.path.exists(targetFolder):
