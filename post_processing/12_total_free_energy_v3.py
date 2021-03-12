@@ -36,7 +36,7 @@ if host == 'DDM04672':
     
 if host == 'DDM06609':
     pc = True
-    num_cores = 20
+    num_cores = 8
     temp_folder = r"Z:\users\firo\joblib_tmp"
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
