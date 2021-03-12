@@ -99,7 +99,7 @@ def __main__(sample):
         time = sample_data['time']
         labels = sample_data['label'].data
         label_mat = sample_data['label_matrix'].data
-        adj_mat = robpylib.CommonFunctions.pore_network.adjacency_matrix(label_mat)
+        adj_mat = robpylib.CommonFunctions.pore_network.adjacency_matrix(label_mat, num_cores=8)
         mask = np.ones(adj_mat.shape[0], np.bool)
         mask[labels] = False
         adj_mat[mask,:] = False
@@ -238,7 +238,7 @@ def __main__(sample):
             
             
         
-result = Parallel(n_jobs= 16)(delayed(__main__)(sample) for sample in samples)      
+result = Parallel(n_jobs= 4)(delayed(__main__)(sample) for sample in samples)      
         
 # do a separate script or add for energy difference before peaks
 # problem: you need energy after first peak and before second peak
