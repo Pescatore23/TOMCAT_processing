@@ -62,7 +62,7 @@ targetName = "05a_separated"
 #if baseFolder[-1] == '2': targetName = "04a_separated"
 #samples = ['T3_300_3', 'T3_025_1', 'T3_025_4']
 #samples = ['T3_025_9_III']
-#samples = reversed(samples)
+samples = reversed(samples)
 for sample in samples:
     skipFlag=False
     step=step+1
