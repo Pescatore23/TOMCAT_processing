@@ -30,8 +30,10 @@ data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 # sourceFolder = os.path.join(data_path, processing_version)
 sourceFolder = data_path
 
+# TODO: revise peak heights for TOMCAT4
+
 heigth_crit = 150 #vx/s
-dist_crit = 7 #s
+dist_crit = 1#s 7 #s 1s for TOMCAT_4 and 7s for TOMCAT 6
 prom_crit = 75 #vx/s
 
 samples = os.listdir(sourceFolder)
