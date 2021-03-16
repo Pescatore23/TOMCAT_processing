@@ -25,14 +25,15 @@ import imageio
 #import skimage
 from skimage import morphology as skmorph
 from joblib import Parallel, delayed
-import multiprocessing as mp
+# import multiprocessing as mp
 import robpylib
 import scipy.ndimage
 
 #baseFolder = 'X:\TOMCAT3_processing_1'
 #newBaseFolder = 'U:\TOMCAT_3_segmentation'
 #baseFolder = r'Z:\Robert_TOMCAT_3_Part_2'
-baseFolder = r'E:\Robert_TOMCAT_3b'
+# baseFolder = r'E:\Robert_TOMCAT_3b'
+baseFolder = r"E:\Robert\Robert_TOMCAT_2"
 newBaseFolder = baseFolder
 
 
@@ -123,7 +124,7 @@ for sample in os.listdir(baseFolder):
     if sample[1]=='3':
         Parallel(n_jobs=num_cores)(delayed(yarn_pores)(fiberFolder, targetFolder, name) for name in fibernames)
 
-    if sample[1]=='4':
+    if sample[1]=='4' or sample[1]=='_':
         masks, names  = robpylib.CommonFunctions.ImportExport.ReadStackNew(waterFolder)
         fibers, fnames = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiberFolder)
         masks = (masks > 0) + (fibers>0)
