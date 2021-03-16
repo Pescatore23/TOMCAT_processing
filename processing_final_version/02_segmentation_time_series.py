@@ -24,18 +24,25 @@ from joblib import Parallel, delayed
 # import multiprocessing as mp
 # from skimage.morphology import square
 from skimage.morphology import convex_hull_image
-
+import socket
+host = socket.gethostname()
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 
 #baseFolder=r'U:\TOMCAT_3_segmentation'
 # baseFolder = r'O:\TOMCAT3_processing_1'
 # baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
-baseFolder = r'E:\Robert_TOMCAT_3b'
+# baseFolder = r'E:\Robert_TOMCAT_3b'
+baseFolder = r"E:\Robert\Robert_TOMCAT_2"
 
 OverWrite = False
 newBaseFolder=False
 # newBaseFolder = r'W:\TOMCAT_3_segmentation'
-
+num_cores = 32
+temp_folder= r"Z:\users\firo\joblib_tmp"
+if host == 'ddm05307':
+    pc = True
+    num_cores = 16
+    temp_folder = None
 parallel=True
 waterpos=2016
 
@@ -227,20 +234,19 @@ def inner_segmentation_function(sample, newBaseFolder=False, tracefits=False, wa
     fibernames.sort()
     if sample[1]=='3': 
         waterpos=1600
-    if sample[1]=='4':
+    if sample[1]=='4' or sample[1]=='_':
         last_scan = os.path.join(sourceFolder, os.listdir(sourceFolder)[-1])
         masks, _  = robpylib.CommonFunctions.ImportExport.ReadStackNew(last_scan)
         masks = interlace_masking(masks)
     if parallel:
         # num_cores=mp.cpu_count()
-        num_cores = 30
        
         if sample[1] == '4':
             core_function(0,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=masks[:,:,0])
-            Parallel(n_jobs=num_cores)(delayed(core_function)(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=masks[:,:,z]) for z in range(1,zmax))
+            Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(core_function)(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=masks[:,:,z]) for z in range(1,zmax))
         else:
             core_function(0,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos)
-            Parallel(n_jobs=num_cores)(delayed(core_function)(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos) for z in range(1,zmax))
+            Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(core_function)(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos) for z in range(1,zmax))
     # else:
         # for z in range(zmax):
             # core_function(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos)
