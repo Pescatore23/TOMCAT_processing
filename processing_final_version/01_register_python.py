@@ -173,7 +173,7 @@ def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw',
 
     register_slice(sourceFolder,targetFolder,matFolder,slicelist[0],regfile)
     if parallel:
-        if sample[1]=='3':          #register every slice separately in the case of single yarns
+        if sample[1]=='3' or sample[1]=='_':          #register every slice separately in the case of single yarns
             Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample ) for z in range(zmax))
         
         else:                       #interlaces seem to be suitable to save computation time by just registering some test slices and then apply transformation onto the rest
