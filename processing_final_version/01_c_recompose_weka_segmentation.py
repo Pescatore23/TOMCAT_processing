@@ -87,9 +87,9 @@ stage = '02_pystack_registered'
 
 for sample in samples:
     # if not sample == 'T3_025_9_III': continue
-    if not sample in repeats: continue
+    # if not sample in repeats: continue
     # if sample in excluded_samples: continue
-    if not sample[1]=='3': continue
+    # if not sample[1]=='3': continue
 #    if sample == 'T4_025_3_III': continue
     print(sample)
     if sample[1]=='4':
@@ -128,7 +128,7 @@ for sample in samples:
     Stack = Stack[:,1,:,:]
     Stack = np.transpose(Stack, (1,2,0))
     
-    if sample[1]=='4':
+    if sample[1]=='4' or sample[1] == '_':
         
 #        z_low,z_high=knot_boundary(sample)
         x_Folder=os.path.join(Folder,'x_set')
