@@ -59,33 +59,6 @@ excluded_samples=[
  ]
 
 
-#def test_recalculate(sourceFolder,targetFolder,z,OverWrite=False):
-#    breakFlag=False
-#    first_scan=os.listdir(sourceFolder)[0]
-#    if os.path.exists(targetFolder):
-#        if len(os.listdir(targetFolder))>0:
-#            last_scan=os.listdir(targetFolder)[0]
-#            if not OverWrite:
-#                if os.listdir(os.path.join(sourceFolder,first_scan))[z] in os.listdir(os.path.join(targetFolder,last_scan)):
-#                    breakFlag=True
-#    return breakFlag
-
-# def test_recalculate(sourceFolder,targetFolder,z,OverWrite=OverWrite):
-#     breakFlag=False
-#     first_scan=os.listdir(sourceFolder)[0]
-#     if os.path.exists(targetFolder):   
-#         if len(os.listdir(targetFolder))>0:
-#             last_scan=os.listdir(targetFolder)[-1]
-#             lst_nr=last_scan[-5:]
-#             test_name=os.listdir(os.path.join(sourceFolder,first_scan))[z]
-#             test_name=list(test_name)
-#             test_name[-24:-19]=lst_nr
-#             test_name=''.join(test_name)
-#             if not OverWrite:
-#                 if test_name in os.listdir(os.path.join(targetFolder,last_scan)):
-#                     breakFlag=True
-#     return breakFlag
-
 def test_recalculate(sourceFolder, targetFolder, z, OverWrite = OverWrite):
     breakFlag = False
     if not OverWrite:
@@ -140,8 +113,9 @@ def get_jump_height(currpx,pos,pos2=0,receding=False):
 
 
 def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
-    # check=6000
-    check = 15000
+    # check=6000 #T3,T4
+    # check = 15000 #T5
+    check = 20000 #T2
     # if z<waterpos: check=9500
     if z<waterpos: check=25000
     # timg = np.zeros(np.shape(imgs), dtype='uint8')
@@ -234,14 +208,18 @@ def inner_segmentation_function(sample, newBaseFolder=False, tracefits=False, wa
     fibernames.sort()
     if sample[1]=='3': 
         waterpos=1600
-    if sample[1]=='4' or sample[1]=='_':
+    if sample[1]=='4':
         last_scan = os.path.join(sourceFolder, os.listdir(sourceFolder)[-1])
         masks, _  = robpylib.CommonFunctions.ImportExport.ReadStackNew(last_scan)
         masks = interlace_masking(masks)
+    if sample[1]=='_':
+        last_scan = os.path.join(sourceFolder, os.listdir(sourceFolder)[-1])
+        masks, _  = robpylib.CommonFunctions.ImportExport.ReadStackNew(last_scan)
+        masks = interlace_masking(masks, maskingthreshold=25000)  
     if parallel:
         # num_cores=mp.cpu_count()
        
-        if sample[1] == '4':
+        if sample[1] == '4' or sample[1]=='_':
             core_function(0,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=masks[:,:,0])
             Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(core_function)(z,fibermaskFolder,sourceFolder,targetFolder,targetFolder_transitions,targetFolder_transitions2,fibernames,waterpos=waterpos, mask=masks[:,:,z]) for z in range(1,zmax))
         else:
