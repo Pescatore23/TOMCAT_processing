@@ -97,150 +97,152 @@ def __main__(sample):
     if sample[:3] == 'dyn':
         sample_data = xr.load_dataset(os.path.join(sourceFolder, sample))
         name = sample_data.attrs['name']
-        tension = sample_data.attrs['tension']
-        time = sample_data['time']
-        labels = sample_data['label'].data
-        label_mat = sample_data['label_matrix'].data
-        adj_mat = robpylib.CommonFunctions.pore_network.adjacency_matrix(label_mat, num_cores=8)
-        mask = np.ones(adj_mat.shape[0], np.bool)
-        mask[labels] = False
-        adj_mat[mask,:] = False
-        adj_mat[:,mask] = False 
-        adj_sparse = sp.sparse.coo_matrix(adj_mat)
-        conn_list = zip(adj_sparse.row, adj_sparse.col)
-        conn_list = list(conn_list)
-        
-        diff_data_v1 = np.zeros((3,len(conn_list)))-1
-        
-        diff_data_v2 = np.zeros((30, len(conn_list)))-1
-        peak_data_v2 = diff_data_v2.copy()
-        peak_height_data_v2 = diff_data_v2.copy()
-        
-        diff_data_v3 = np.zeros((30, len(labels)))-1
-        diff_data_v4 = diff_data_v3.copy()
-        
-        peak_data_v3 = diff_data_v4.copy()
-        peak_data_v4 =  diff_data_v4.copy()
-        
-        peak_height_data_v3 = diff_data_v4.copy()
-        peak_height_data_v4 = diff_data_v4.copy()
-        
-        
-        c=0
-        for conn in conn_list:
-            p1,p2, dt = diffs_v1(conn, sample_data)
-            diff_data_v1[:,c] = [p1,p2,dt]
-            
-            p1, p2, dt, peaks, peak_heights = diffs_v2(conn, sample_data, time)
-            peak_sorting = np.argsort(peak_heights)[-28:]
-            diff_sorting = np.argsort(dt)[-28:]
-            
-            diff_data_v2[0,c] = p1
-            diff_data_v2[1,c] = p2
-            diff_data_v2[2:len(diff_sorting)+2,c] = dt[diff_sorting]
-            
-            peak_data_v2[0,c] = p1
-            peak_data_v2[1,c] = p2
-            peak_data_v2[2:len(peak_sorting)+2,c] = peaks[peak_sorting]
-                      
-            peak_height_data_v2[:2,c] = [p1,p2]
-            peak_height_data_v2[2:len(peak_sorting)+2,c] = peak_heights[peak_sorting]
-            c=c+1
-        
-        conn_list = np.array(conn_list)
-        c= 0  
-        for label in labels:
-            # v3
-            _, k, dt, peaks, peak_heights = diffs_v3(label, adj_mat, sample_data, time)
-            peak_sorting = np.argsort(peak_heights)[-29:]
-            diff_sorting = np.argsort(dt)[-29:]   
-            
-            diff_data_v3[0,c] = label
-            diff_data_v3[1,c] = k
-            diff_data_v3[2:len(diff_sorting)+2, c] =dt[diff_sorting]
-            
-            peak_data_v3[0,c] = label
-            peak_data_v3[1,c] = k
-            peak_data_v3[2:len(peak_sorting)+2, c] = peaks[peak_sorting]
-            
-            peak_height_data_v3[0,c] = label
-            peak_height_data_v3[1,c] = k
-            peak_height_data_v3[2:len(peak_sorting)+2, c] = peak_heights[peak_sorting]
-            
-            # v4
-            _, dt, peaks, peak_heights = diffs_v4(label, sample_data, time)
-            
-            peak_sorting = np.argsort(peak_heights)[-29:]
-            diff_sorting = np.argsort(dt)[-29:]
-            diff_data_v4[0,c] = label
-            diff_data_v4[1,c] = k
-            diff_data_v4[2:len(diff_sorting)+2, c] = dt[diff_sorting]
-            
-            peak_data_v4[0,c] = label
-            peak_data_v4[1,c] = k
-            peak_data_v4[2:len(peak_sorting)+2, c] = peaks[peak_sorting]
-            
-            peak_height_data_v4[0,c] = label
-            peak_height_data_v4[1,c] = k
-            peak_height_data_v4[2:len(peak_sorting)+2,c] = peak_heights[peak_sorting]
-            
-            c=c+1
-            
-        # data_dict={}
-        
-        # data_dict['diffs_v1'] = diff_data_v1
-        # data_dict['diffs_v2'] = diff_data_v2
-        # data_dict['diffs_v3'] = diff_data_v3
-        # data_dict['diffs_v4'] = diff_data_v4
-        
-        # data_dict['peaks_v2'] = peak_data_v3
-        # data_dict['peaks_v3'] = peak_data_v3
-        # data_dict['peaks_v4'] = peak_data_v4
-        
-        # data_dict['peak_heights_v2'] = peak_height_data_v2
-        # data_dict['peak_heights_v3'] = peak_height_data_v3
-        # data_dict['peak_heights_v4'] = peak_height_data_v4
-        
-        # data_dict = xr.Dataset(data_dict)
-        
-        
-        data_dict = xr.Dataset({'diffs_v1': (['ax_v1_0', 'pair'], diff_data_v1),
-                                'diffs_v2': (['ax_0', 'pair'], diff_data_v2),
-                                'peaks_v2': (['ax_0', 'pair'], peak_data_v2),
-                                'peak_heights_v2': (['ax_0', 'pair'], peak_height_data_v2),
-                                'diffs_v3': (['ax_0', 'label'], diff_data_v3),
-                                'diffs_v4': (['ax_0', 'label'], diff_data_v4),
-                                'peaks_v3': (['ax_0', 'label'], peak_data_v3),
-                                'peaks_v4': (['ax_0', 'label'], peak_data_v4),
-                                'peak_heights_v3': (['ax_0', 'label'], peak_height_data_v3),
-                                'peak_heights_v4': (['ax_0', 'label'], peak_height_data_v4),
-                                'pairs': (['pair', 'connection'], conn_list)
-                                },
-                               coords= {'ax_v1_0': np.arange(diff_data_v1.shape[0]),
-                                        'pair': np.arange(diff_data_v1.shape[1]),
-                                        'ax_0': np.arange(diff_data_v2.shape[0]),
-                                        'label': labels,
-                                        'connection': np.array([0,1])})
-                                                          
-        
-        data_dict.attrs['name'] = name
-        data_dict.attrs['tension'] = tension
-        data_dict.attrs['comment'] = 'comparison of different waiting time and filling peaks extraction methods'
-        
-        data_dict.attrs['v1'] = 'difference of sigmoid fit t0 of neighbor pores'
-        data_dict.attrs['v2'] = 'peaks obtained from combined filling curve of neighbor pairs'
-        data_dict.attrs['v3'] = 'peaks obtained from combined filling curve of one pore and all its neighbors'
-        data_dict.attrs['v4'] = 'peaks obtained from filling curve of one pore as reference'
-        data_dict.attrs['v1_v2_data_structure'] = '0: pore 1, 1: pore 2, rest: data'
-        data_dict.attrs['v3_v4_data_structure'] = '0: pore, 1: degree/# neighbors, rest: data'
-        
         filename = os.path.join(sourceFolder, ''.join(['peak_diff_data_', name,'.nc']))
-        data_dict.to_netcdf(filename)
+        if not os.path.exists(filename):
+            tension = sample_data.attrs['tension']
+            time = sample_data['time']
+            labels = sample_data['label'].data
+            label_mat = sample_data['label_matrix'].data
+            adj_mat = robpylib.CommonFunctions.pore_network.adjacency_matrix(label_mat, num_cores=8)
+            mask = np.ones(adj_mat.shape[0], np.bool)
+            mask[labels] = False
+            adj_mat[mask,:] = False
+            adj_mat[:,mask] = False 
+            adj_sparse = sp.sparse.coo_matrix(adj_mat)
+            conn_list = zip(adj_sparse.row, adj_sparse.col)
+            conn_list = list(conn_list)
+            
+            diff_data_v1 = np.zeros((3,len(conn_list)))-1
+            
+            diff_data_v2 = np.zeros((30, len(conn_list)))-1
+            peak_data_v2 = diff_data_v2.copy()
+            peak_height_data_v2 = diff_data_v2.copy()
+            
+            diff_data_v3 = np.zeros((30, len(labels)))-1
+            diff_data_v4 = diff_data_v3.copy()
+            
+            peak_data_v3 = diff_data_v4.copy()
+            peak_data_v4 =  diff_data_v4.copy()
+            
+            peak_height_data_v3 = diff_data_v4.copy()
+            peak_height_data_v4 = diff_data_v4.copy()
+            
+            
+            c=0
+            for conn in conn_list:
+                p1,p2, dt = diffs_v1(conn, sample_data)
+                diff_data_v1[:,c] = [p1,p2,dt]
+                
+                p1, p2, dt, peaks, peak_heights = diffs_v2(conn, sample_data, time)
+                peak_sorting = np.argsort(peak_heights)[-28:]
+                diff_sorting = np.argsort(dt)[-28:]
+                
+                diff_data_v2[0,c] = p1
+                diff_data_v2[1,c] = p2
+                diff_data_v2[2:len(diff_sorting)+2,c] = dt[diff_sorting]
+                
+                peak_data_v2[0,c] = p1
+                peak_data_v2[1,c] = p2
+                peak_data_v2[2:len(peak_sorting)+2,c] = peaks[peak_sorting]
+                          
+                peak_height_data_v2[:2,c] = [p1,p2]
+                peak_height_data_v2[2:len(peak_sorting)+2,c] = peak_heights[peak_sorting]
+                c=c+1
+            
+            conn_list = np.array(conn_list)
+            c= 0  
+            for label in labels:
+                # v3
+                _, k, dt, peaks, peak_heights = diffs_v3(label, adj_mat, sample_data, time)
+                peak_sorting = np.argsort(peak_heights)[-29:]
+                diff_sorting = np.argsort(dt)[-29:]   
+                
+                diff_data_v3[0,c] = label
+                diff_data_v3[1,c] = k
+                diff_data_v3[2:len(diff_sorting)+2, c] =dt[diff_sorting]
+                
+                peak_data_v3[0,c] = label
+                peak_data_v3[1,c] = k
+                peak_data_v3[2:len(peak_sorting)+2, c] = peaks[peak_sorting]
+                
+                peak_height_data_v3[0,c] = label
+                peak_height_data_v3[1,c] = k
+                peak_height_data_v3[2:len(peak_sorting)+2, c] = peak_heights[peak_sorting]
+                
+                # v4
+                _, dt, peaks, peak_heights = diffs_v4(label, sample_data, time)
+                
+                peak_sorting = np.argsort(peak_heights)[-29:]
+                diff_sorting = np.argsort(dt)[-29:]
+                diff_data_v4[0,c] = label
+                diff_data_v4[1,c] = k
+                diff_data_v4[2:len(diff_sorting)+2, c] = dt[diff_sorting]
+                
+                peak_data_v4[0,c] = label
+                peak_data_v4[1,c] = k
+                peak_data_v4[2:len(peak_sorting)+2, c] = peaks[peak_sorting]
+                
+                peak_height_data_v4[0,c] = label
+                peak_height_data_v4[1,c] = k
+                peak_height_data_v4[2:len(peak_sorting)+2,c] = peak_heights[peak_sorting]
+                
+                c=c+1
+                
+            # data_dict={}
+            
+            # data_dict['diffs_v1'] = diff_data_v1
+            # data_dict['diffs_v2'] = diff_data_v2
+            # data_dict['diffs_v3'] = diff_data_v3
+            # data_dict['diffs_v4'] = diff_data_v4
+            
+            # data_dict['peaks_v2'] = peak_data_v3
+            # data_dict['peaks_v3'] = peak_data_v3
+            # data_dict['peaks_v4'] = peak_data_v4
+            
+            # data_dict['peak_heights_v2'] = peak_height_data_v2
+            # data_dict['peak_heights_v3'] = peak_height_data_v3
+            # data_dict['peak_heights_v4'] = peak_height_data_v4
+            
+            # data_dict = xr.Dataset(data_dict)
+            
+            
+            data_dict = xr.Dataset({'diffs_v1': (['ax_v1_0', 'pair'], diff_data_v1),
+                                    'diffs_v2': (['ax_0', 'pair'], diff_data_v2),
+                                    'peaks_v2': (['ax_0', 'pair'], peak_data_v2),
+                                    'peak_heights_v2': (['ax_0', 'pair'], peak_height_data_v2),
+                                    'diffs_v3': (['ax_0', 'label'], diff_data_v3),
+                                    'diffs_v4': (['ax_0', 'label'], diff_data_v4),
+                                    'peaks_v3': (['ax_0', 'label'], peak_data_v3),
+                                    'peaks_v4': (['ax_0', 'label'], peak_data_v4),
+                                    'peak_heights_v3': (['ax_0', 'label'], peak_height_data_v3),
+                                    'peak_heights_v4': (['ax_0', 'label'], peak_height_data_v4),
+                                    'pairs': (['pair', 'connection'], conn_list)
+                                    },
+                                   coords= {'ax_v1_0': np.arange(diff_data_v1.shape[0]),
+                                            'pair': np.arange(diff_data_v1.shape[1]),
+                                            'ax_0': np.arange(diff_data_v2.shape[0]),
+                                            'label': labels,
+                                            'connection': np.array([0,1])})
+                                                              
+            
+            data_dict.attrs['name'] = name
+            data_dict.attrs['tension'] = tension
+            data_dict.attrs['comment'] = 'comparison of different waiting time and filling peaks extraction methods'
+            
+            data_dict.attrs['v1'] = 'difference of sigmoid fit t0 of neighbor pores'
+            data_dict.attrs['v2'] = 'peaks obtained from combined filling curve of neighbor pairs'
+            data_dict.attrs['v3'] = 'peaks obtained from combined filling curve of one pore and all its neighbors'
+            data_dict.attrs['v4'] = 'peaks obtained from filling curve of one pore as reference'
+            data_dict.attrs['v1_v2_data_structure'] = '0: pore 1, 1: pore 2, rest: data'
+            data_dict.attrs['v3_v4_data_structure'] = '0: pore, 1: degree/# neighbors, rest: data'
+            
+            filename = os.path.join(sourceFolder, ''.join(['peak_diff_data_', name,'.nc']))
+            data_dict.to_netcdf(filename)
             
             
             
         
-result = Parallel(n_jobs= 4)(delayed(__main__)(sample) for sample in samples)      
+result = Parallel(n_jobs= 6)(delayed(__main__)(sample) for sample in samples)      
         
 # do a separate script or add for energy difference before peaks
 # problem: you need energy after first peak and before second peak
