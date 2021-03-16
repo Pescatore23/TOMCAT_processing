@@ -60,7 +60,7 @@ def yarn_pores(fiberFolder, targetFolder, name):
     pores = (pores*255).astype(np.uint8)
     imageio.imsave(os.path.join(targetFolder,name), pores)
 
-def interlace_masking(Stack, maskingthreshold=11000):
+def interlace_masking(Stack, maskingthreshold=20000):
     ref_mean = Stack[:,:,:1000].mean()
     for z in range(Stack.shape[2]):
         Stack[:,:,z] = Stack[:,:,z] - (Stack[:,:,z].mean() - ref_mean)
