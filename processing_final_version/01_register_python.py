@@ -211,9 +211,9 @@ for sample in samples:
     if sample in excluded_samples: continue
     # if not sample == 'T4_025_2_II': continue
     # if not sample in repeats: continue
-#    if sample[1] == '4': continue
+    # if sample[1] == '4': continue
 #    if not sample == 'T4_300_5_III': continue
-    # if sample == 'T4_025_4': continue #recos incomplete
+    if sample == 'T5_100_02_yarn_2': continue #recos incomplete
     folder=baseFolder
     newFolder=newBaseFolder
     stage='00_raw'   
