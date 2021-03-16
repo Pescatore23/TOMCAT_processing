@@ -92,7 +92,7 @@ for sample in samples:
     # if not sample[1]=='3': continue
 #    if sample == 'T4_025_3_III': continue
     print(sample)
-    if sample[1]=='4':
+    if sample[1]=='4' or sample[1] == '_':
         z_low,z_high=knots[sample]
     targetFolder = os.path.join(baseFolder,sample,"01a_weka_segmented_dry")
 #    targetFolder = os.path.join(baseFolder,sample,"01b_weka_segmented_mean")
