@@ -15,7 +15,7 @@ from joblib import Parallel, delayed
 import socket
 host = socket.gethostname()
 
-num_cores = 32
+num_cores = 16
 temp_folder = r"Z:\users\firo\joblib_tmp"
 if host == 'ddm05307':
     num_cores = 8
@@ -174,14 +174,14 @@ def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw',
     register_slice(sourceFolder,targetFolder,matFolder,slicelist[0],regfile)
     if parallel:
         if sample[1]=='3':          #register every slice separately in the case of single yarns
-            result=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample ) for z in range(zmax))
+            Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample ) for z in range(zmax))
         
         else:                       #interlaces seem to be suitable to save computation time by just registering some test slices and then apply transformation onto the rest
-            result=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample = sample) for z in slicelist[1:])
+            Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample = sample) for z in slicelist[1:])
             print('apply trans mat')            
         #            apply transformation on rest
             trans_mat=merge_transformation_matrices(matFolder)
-            result=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample, trans_mat_flag=True,trans_mat=trans_mat) for z in range(zmax))
+            Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample, trans_mat_flag=True,trans_mat=trans_mat) for z in range(zmax))
     else:
         for z in slicelist[1:]:
             register_slice(sourceFolder,targetFolder,matFolder,z)
