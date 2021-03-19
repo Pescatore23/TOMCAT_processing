@@ -38,7 +38,7 @@ repeats = ['T3_300_3', 'T3_025_1', 'T3_025_4', 'T3_025_9_III']
 #baseFolder=r'V:\disk2'
 #baseFolder = r'X:\TOMCAT3_processing_1'
 #baseFolder = r'Z:\TOMCAT_3'
-baseFolder = r'E:\Robert\Robert_TOMCAT_2'
+baseFolder = r'E:\Robert\Robert_TOMCAT_5_split'
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition
@@ -103,6 +103,7 @@ i=1
 
 for sample in samples:
 	if sample in repeats: continue
+	if sample == 'T5_100_02_yarn_2': continue
 	print(sample, "(",i,"/",len(samples),")")
 	i=i+1
 	#if sample[1] == '4': continue
