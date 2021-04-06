@@ -21,7 +21,7 @@ import robpylib
 z_low=1414
 z_high=1644
 
-baseFolder = r"E:\Robert\Robert_TOMCAT_2"
+baseFolder = r"E:\Robert_TOMCAT_5_split"
 #baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
 # baseFolder = 'X:\TOMCAT3_processing_1'
 samples=os.listdir(baseFolder)
@@ -59,6 +59,7 @@ excluded_samples=[
  'T3_025_4_III',    #little water, data set incomplete, missing time steps reconstructed at PSI-ra-cluster, but only little water -> not reasonable to process?!
  'T3_025_3_II',      #little, water wet with acetone
  'T4_025_5_III',     #wet from start
+ 'T5_100_02_yarn_2'  #some strange error
  ]
 
 
@@ -88,7 +89,7 @@ stage = '02_pystack_registered'
 for sample in samples:
     # if not sample == 'T3_025_9_III': continue
     # if not sample in repeats: continue
-    # if sample in excluded_samples: continue
+    if sample in excluded_samples: continue
     # if not sample[1]=='3': continue
 #    if sample == 'T4_025_3_III': continue
     print(sample)
