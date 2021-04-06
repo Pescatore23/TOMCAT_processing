@@ -32,7 +32,7 @@ repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 # baseFolder = r'O:\TOMCAT3_processing_1'
 # baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
 # baseFolder = r'E:\Robert_TOMCAT_3b'
-baseFolder = r"E:\Robert\Robert_TOMCAT_2"
+baseFolder = r"E:\Robert_TOMCAT_5_split"
 
 OverWrite = False
 newBaseFolder=False
