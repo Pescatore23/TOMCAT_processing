@@ -45,8 +45,8 @@ excluded_samples=[
  'T3_300_8',        #FOV moved
  'T3_025_7',        #water only in small pores
  'T3_025_4_III',    #little water, data set incomplete, missing time steps reconstructed at PSI-ra-cluster, but only little water -> not reasonable to process?!
- 'T3_025_3_II'      #little, water wet with acetone
-  'T5_100_02_yarn_2'  #some strange error
+ 'T3_025_3_II',      #little, water wet with acetone
+ 'T5_100_02_yarn_2'  #some strange error
  ]
 
 #excluded_samples=[]
