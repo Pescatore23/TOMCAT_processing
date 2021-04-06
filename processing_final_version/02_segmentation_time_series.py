@@ -34,7 +34,7 @@ repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 # baseFolder = r'E:\Robert_TOMCAT_3b'
 baseFolder = r"E:\Robert_TOMCAT_5_split"
 
-OverWrite = False
+OverWrite = True
 newBaseFolder=False
 # newBaseFolder = r'W:\TOMCAT_3_segmentation'
 num_cores = 32
@@ -115,8 +115,8 @@ def get_jump_height(currpx,pos,pos2=0,receding=False):
 
 def fft_grad_segmentation(imgs, poremask,z, waterpos=waterpos):
     # check=6000 #T3,T4
-    # check = 15000 #T5
-    check = 20000 #T2
+    check = 15000 #T5
+    # check = 20000 #T2
     # if z<waterpos: check=9500
     if z<waterpos: check=25000
     # timg = np.zeros(np.shape(imgs), dtype='uint8')
