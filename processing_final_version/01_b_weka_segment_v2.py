@@ -38,7 +38,7 @@ repeats = ['T3_300_3', 'T3_025_1', 'T3_025_4', 'T3_025_9_III']
 #baseFolder=r'V:\disk2'
 #baseFolder = r'X:\TOMCAT3_processing_1'
 #baseFolder = r'Z:\TOMCAT_3'
-baseFolder = r'E:\Robert\Robert_TOMCAT_5_split'
+baseFolder = r'E:\Robert_TOMCAT_5_split'
 
 excluded_samples=[
  'T3_100_4',        #FOV moved during acquisition
