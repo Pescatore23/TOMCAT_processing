@@ -236,6 +236,7 @@ def fft_segmentation(baseFolder=baseFolder, newDiskfolder=False):
     samples=makesamplelist(baseFolder)
     c=1
     for sample in samples:
+        if sample in excluded_samples: continue
 #        if not sample == 'T3_025_9_III': continue
         # if not sample in repeats: continue
         # if sample[1] == '4': continue
