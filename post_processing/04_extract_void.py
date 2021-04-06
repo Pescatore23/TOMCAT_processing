@@ -33,7 +33,7 @@ import scipy.ndimage
 #newBaseFolder = 'U:\TOMCAT_3_segmentation'
 #baseFolder = r'Z:\Robert_TOMCAT_3_Part_2'
 # baseFolder = r'E:\Robert_TOMCAT_3b'
-baseFolder = r"E:\Robert\Robert_TOMCAT_2"
+baseFolder = r"E:\Robert_TOMCAT_5_split"
 newBaseFolder = baseFolder
 
 
