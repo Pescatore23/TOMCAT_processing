@@ -46,6 +46,7 @@ excluded_samples=[
  'T3_025_7',        #water only in small pores
  'T3_025_4_III',    #little water, data set incomplete, missing time steps reconstructed at PSI-ra-cluster, but only little water -> not reasonable to process?!
  'T3_025_3_II'      #little, water wet with acetone
+  'T5_100_02_yarn_2'  #some strange error
  ]
 
 #excluded_samples=[]
@@ -121,7 +122,7 @@ for sample in os.listdir(baseFolder):
     
     num_cores=32#mp.cpu_count()
     
-    if sample[1]=='3':
+    if sample[1]=='3' or sample[1]=='5':
         Parallel(n_jobs=num_cores)(delayed(yarn_pores)(fiberFolder, targetFolder, name) for name in fibernames)
 
     if sample[1]=='4' or sample[1]=='_':

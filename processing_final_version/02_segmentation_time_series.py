@@ -56,6 +56,7 @@ excluded_samples=[
  'T3_025_4_III',    #little water, data set incomplete, missing time steps reconstructed at PSI-ra-cluster, but only little water -> not reasonable to process?!
  'T3_025_3_II',      #little, water wet with acetone
  'T4_025_5_III',    #wet from start
+  'T5_100_02_yarn_2'  #some strange error
  ]
 
 
