@@ -23,7 +23,7 @@ network_location = '//152.88.86.87/data118'
 #baseFolder = r'W:\Robert_TOMCAT_3_Part_2'
 #baseFolder = r'F:\Zwischenlager_Robert\TOMCAT_3'
 #baseFolder = os.path.join(network_location, 'Robert_TOMCAT_3b')
-baseFolder = r"E:\Robert_TOMCAT_3b"
+baseFolder = r"E:\Robert_TOMCAT_5_split"
 
 procFolder="04a_void_space"
 #procFolder = '04a_void_space_from_5'
