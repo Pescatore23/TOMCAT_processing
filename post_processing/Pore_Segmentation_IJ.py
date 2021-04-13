@@ -67,7 +67,7 @@ for sample in samples:
     skipFlag=False
     step=step+1
     if sample[1]=='4': continue
-    #if sample == 'T4_100_2_III': continue
+    if sample == 'T5_100_02_yarn_2': continue
     if sample in repeats: continue
     if not os.path.exists(os.path.join(baseFolder, sample, procFolder)): 
     	print('no void space data available')
