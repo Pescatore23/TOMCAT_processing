@@ -42,7 +42,7 @@ rho=997 #kg/m3
 
 #baseFolder = 'X:\\Samples_with_Water_inside'
 #baseFolder = r'U:\TOMCAT_3_segmentation'
-baseFolder = r"Z:\Robert_TOMCAT_3"
+baseFolder = r"E:\Robert_TOMCAT_3b"
 vx = 2.75E-6  #m
 rho = 997 #kg/m3  density of water
 #data_path = r"H:\11_Essential_Data\03_TOMCAT\07_TOMCA3_dynamic_Data"
@@ -50,9 +50,9 @@ rho = 997 #kg/m3  density of water
 
 drive = '//152.88.86.87/data118'
 # baseFolder = os.path.join(drive, 'Robert_TOMCAT_3_for_PNM')
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep_2')
+# data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep_2')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'for_PNM')
-# data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
+data_path = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4')
 
 if not os.path.exists(data_path):
     os.mkdir(data_path)  
