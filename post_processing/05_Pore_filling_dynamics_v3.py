@@ -25,6 +25,7 @@ import xarray as xr
 import scipy.optimize
 from joblib import Parallel, delayed
 import multiprocessing as mp
+import pickle
 
 parallel = False
 
@@ -39,6 +40,9 @@ time_limit = {'T3_100_10_III': 344,
 waterline = 1400
 px=2.75E-6 #m
 rho=997 #kg/m3
+
+# TIME = robpylib.TOMCAT.TIME.TIME
+TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p"),'rb')
 
 #baseFolder = 'X:\\Samples_with_Water_inside'
 #baseFolder = r'U:\TOMCAT_3_segmentation'
@@ -175,7 +179,7 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     t_max = transitions.max()+1
     
     if sample[0]=='T':
-        time_list = np.array(robpylib.TOMCAT.TIME.TIME[sample])
+        time_list = np.array(TIME[sample])
         t_max = time_list.shape[0]
     else:
         time_list=np.arange(t_max)*15 #[s]
