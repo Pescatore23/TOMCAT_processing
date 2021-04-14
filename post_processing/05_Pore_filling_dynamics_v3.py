@@ -42,7 +42,7 @@ px=2.75E-6 #m
 rho=997 #kg/m3
 
 # TIME = robpylib.TOMCAT.TIME.TIME
-TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p"),'rb')
+TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p",'rb'))
 
 #baseFolder = 'X:\\Samples_with_Water_inside'
 #baseFolder = r'U:\TOMCAT_3_segmentation'
