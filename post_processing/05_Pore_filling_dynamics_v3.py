@@ -179,7 +179,10 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     t_max = transitions.max()+1
     
     if sample[0]=='T':
-        time_list = np.array(TIME[sample])
+        if not sample[2] == '5':
+            time_list = np.array(TIME[sample])
+        elif sample[2] == '5':
+            time_list = np.array(TIME[sample[:-7]])
         t_max = time_list.shape[0]
     else:
         time_list=np.arange(t_max)*15 #[s]
