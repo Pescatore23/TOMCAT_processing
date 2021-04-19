@@ -414,6 +414,7 @@ c=0
 samples_crude = os.listdir(baseFolder)
 #samples = ['32_200_025H2_cont']
 samples = os.listdir(baseFolder)
+print(samples)
 # samples = []
 # for sample in samples_crude:
 #     if sample in robpylib.TOMCAT.INFO.samples_to_repeat:
