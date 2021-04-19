@@ -160,7 +160,7 @@ for filename in os.listdir(data_path):
 #    if c>0: continue
     dyn_data = xr.load_dataset(file)
     new_filename = ''.join(['pore_props_', dyn_data.attrs['name'],'.nc']) #'_size_',str(dyn_data.attrs['size_factor'])
-    print(dyn_data.attrs['name'].data)
+    print(dyn_data.attrs['name'])
     if os.path.exists(new_filename): continue
     label_matrix = dyn_data['label_matrix'].data
     labels = dyn_data['label'].data
