@@ -11,7 +11,7 @@ import numpy as np
 import json
 
 
-baseFolder = r"T:\disk1\T3"
+baseFolder = r"T:\disk1\T5"
 
 samples = os.listdir(baseFolder)
 
