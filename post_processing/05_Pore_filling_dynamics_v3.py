@@ -27,7 +27,7 @@ from joblib import Parallel, delayed
 import multiprocessing as mp
 import pickle
 
-parallel = False
+parallel = True
 
 num_cores = mp.cpu_count()
 num_cores = 16
