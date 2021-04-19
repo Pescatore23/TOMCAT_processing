@@ -19,8 +19,8 @@ num_cores = 16#mp.cpu_count()
 drive = '//152.88.86.87/data118'
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', processing_version)
-# data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
-data_path = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4')
+data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
+# data_path = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4')
 # data_path = r"Z:\Robert_TOMCAT_3_netcdf4_archives\expandedlabels"
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'expandedlabels')
 
@@ -162,6 +162,7 @@ for filename in os.listdir(data_path):
     dyn_data = xr.load_dataset(file)
     new_filename = ''.join(['pore_props_', dyn_data.attrs['name'],'.nc']) #'_size_',str(dyn_data.attrs['size_factor'])
     print(dyn_data.attrs['name'])
+    if dyn_data.attrs['name'] == 'T4_300_4_III': continue
     if os.path.exists(new_filename): continue
     label_matrix = dyn_data['label_matrix'].data
     labels = dyn_data['label'].data
