@@ -15,7 +15,7 @@ import robpylib
 # from scipy import sparse
 from scipy.interpolate import interp1d
 # import matplotlib.pyplot as plt
-num_cores = 8
+num_cores = 4
 
 # drive = r'\\152.88.86.87\data118'
 # drive = r"NAS"
