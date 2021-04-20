@@ -154,8 +154,8 @@ def __main__(sample):
             for label in labels:
                 # v3
                 _, k, dt, peaks, peak_heights = diffs_v3(label, adj_mat, sample_data, time)
-                peak_sorting = np.argsort(peak_heights)[-29:]
-                diff_sorting = np.argsort(dt)[-29:]   
+                peak_sorting = np.argsort(peak_heights)[-28:]
+                diff_sorting = np.argsort(dt)[-28:]   
                 
                 diff_data_v3[0,c] = label
                 diff_data_v3[1,c] = k
