@@ -8,10 +8,11 @@ import numpy as np
 import xarray as xr
 import os
 
-sourceFolder = r"A:\Robert_TOMCAT_3_netcdf4_archives\processed_1200_dry_seg_aniso_sep"
-sourceFolder2 = r"A:\Robert_TOMCAT_3_for_PNM"
-destFolder = r"A:\Robert_TOMCAT_3_netcdf4_archives\for_PNM2"
-
+sourceFolder = r"A:\Robert_TOMCAT_3b_netcdf4"
+# sourceFolder2 = r"A:\Robert_TOMCAT_3_for_PNM"
+destFolder = r"A:\Robert_TOMCAT_3b_netcdf4_for_PNM"
+if not os.path.exists(destFolder):
+    os.mkdir(destFolder)
 # baseFolder = r"A:\Robert_TOMCAT_3"
 
 
