@@ -11,12 +11,12 @@ import numpy as np
 import json
 
 
-baseFolder = r"T:\disk1\T5"
+baseFolder = r"T:\disk1\T3"
 
 samples = os.listdir(baseFolder)
 
 
-TIME = {}
+TIME3 = {}
 
 for sample in samples:
     metapath = os.path.join(baseFolder, sample, ''.join([sample,'_config.json']))
@@ -34,4 +34,4 @@ for sample in samples:
     for i in range(data.size):
         time_stamps[i] = data[i][-2]
         
-    TIME[sample] = time_stamps[::n]
+    TIME3[sample] = time_stamps[::n]/1e7
