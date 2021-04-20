@@ -242,7 +242,11 @@ def __main__(sample):
             
             
         
-result = Parallel(n_jobs= num_cores)(delayed(__main__)(sample) for sample in samples)      
+# result = Parallel(n_jobs= num_cores)(delayed(__main__)(sample) for sample in samples)      
+
+for sample in samples:
+    print(sample)
+    __main__(sample)
         
 # do a separate script or add for energy difference before peaks
 # problem: you need energy after first peak and before second peak
