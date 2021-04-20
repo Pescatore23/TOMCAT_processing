@@ -15,14 +15,14 @@ import robpylib
 # from scipy import sparse
 from scipy.interpolate import interp1d
 # import matplotlib.pyplot as plt
-
+num_cores = 8
 
 drive = r'\\152.88.86.87\data118'
 # drive = r"NAS"
-# drive =  r'Z:\'
+drive =  r'Z:\'
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
-data_path = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4') #TODO: change also peak definition fot T4!!
-# data_path = r'Z:\Robert_TOMCAT_3_netcdf4_archives'
+# data_path = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4') #TODO: change also peak definition fot T4!!
+data_path = r'Z:\Robert_TOMCAT_3_netcdf4_archives'
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 # processing_version = 'for_PNM'
 # folder = r'Z:\Robert_TOMCAT_3'
@@ -32,9 +32,9 @@ sourceFolder = data_path
 
 # TODO: revise peak heights for TOMCAT4
 
-heigth_crit = 150 #vx/s
-dist_crit = 7#s 7 #s 1s for TOMCAT_4 and 7s for TOMCAT 6
-prom_crit = 75 #vx/s
+heigth_crit = 150 #vx/s 300 for T4
+dist_crit = 1#s 7 #s 1s for TOMCAT_4 and 7s for TOMCAT 5
+prom_crit = 75 #vx/s 150 for T4
 
 samples = os.listdir(sourceFolder)
 
@@ -242,7 +242,7 @@ def __main__(sample):
             
             
         
-result = Parallel(n_jobs= 6)(delayed(__main__)(sample) for sample in samples)      
+result = Parallel(n_jobs= num_cores)(delayed(__main__)(sample) for sample in samples)      
         
 # do a separate script or add for energy difference before peaks
 # problem: you need energy after first peak and before second peak
