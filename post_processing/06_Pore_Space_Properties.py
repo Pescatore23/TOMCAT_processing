@@ -20,6 +20,7 @@ drive = '//152.88.86.87/data118'
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', processing_version)
 data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
+data_path = r"Z:\Robert_TOMCAT_3_combined_archives"
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4')
 # data_path = r"Z:\Robert_TOMCAT_3_netcdf4_archives\expandedlabels"
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'expandedlabels')
