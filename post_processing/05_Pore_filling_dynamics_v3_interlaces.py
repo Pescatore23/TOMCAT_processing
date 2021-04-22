@@ -66,7 +66,7 @@ if not os.path.exists(os.path.join(data_path, 'plots_label')):
     os.mkdir(os.path.join(data_path, 'plots_label'))
 
 
-label_folder = '05b_labels_new_alg_d5'
+label_folder = '05b_labels_split'
 
 
 transition_folder = '03_gradient_filtered_transitions'
