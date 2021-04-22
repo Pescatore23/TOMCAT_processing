@@ -22,10 +22,10 @@ for sample in samples:
     if sample in ['T4_025_1_III', 'T4_025_4', 'T4_100_2_III', 'T4_100_3', 'T4_300_1', 'T4_025_3', 'T4_100_5' ]: continue
 
 #   some error
-    if sample in ['T4_025_2_II', 'T4_100_4', 'T4_300_2_II']: continue
+    if not sample in [ 'T4_100_4', 'T4_300_2_II', 'T4_300_4_III']: continue
 
 #  not segmented
-    if sample in ['T4_300_4_III', 'T4_300_5']: continue
+    if sample in ['T4_025_2_II', 'T4_300_5']: continue
     print(sample)
     sourceFolder = os.path.join(baseFolder, sample, '05a_separated', 'disconnection=0.7 xsize=1.5 ysize=1.5 zsize=1 sigma=[] holes=0 particles=0 entire evaluation=[3D volumetric processing]')
     refFolder = os.path.join(baseFolder, sample, '04b_split_void')
