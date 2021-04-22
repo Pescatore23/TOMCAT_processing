@@ -19,6 +19,9 @@ import os
 drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 destination = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
+
+baseFolder = r"Z:\Robert_TOMCAT_4"
+destination = r"Z:\Robert_TOMCAT_4_netcdf4"
 overWrite = False
 temp_folder= r"Z:\users\firo\joblib_tmp"
 temp_folder = None
@@ -72,7 +75,7 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
 # label_path = r"A:\Robert_TOMCAT_4\T4_025_1_III\05b_labels"
     path = os.path.join(baseFolder, sample, '06_fiber_tracing', ''.join([sample,".CorrelationLines.xlsx"]))
     fiber_path = os.path.join(baseFolder, sample,'01a_weka_segmented_dry', 'classified')
-    label_path = os.path.join(baseFolder, sample, '05b_labels_new_alg')
+    label_path = os.path.join(baseFolder, sample, '05b_labels_new_alg_d5')
 
     segments = pd.read_excel(path, sheet_name = 2)
     points = pd.read_excel(path, sheet_name = 1)
