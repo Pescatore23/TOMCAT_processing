@@ -171,8 +171,8 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination, over
     
     if not os.path.exists(path) or overWrite:
         try:
-            metadata = xr.load_dataset(os.path.join(destination, ''.join(['pore_props_',sample,'.nc'])))
-            
+            # metadata = xr.load_dataset(os.path.join(destination, ''.join(['pore_props_',sample,'.nc'])))
+            metadata = xr.load_dataset(os.path.join(destination, ''.join(['dyn_data_',sample,'.nc'])))
             pore_affiliation, labels = track_pore_affiliation(sample, baseFolder)
             
             data = xr.Dataset({'pore_affiliation': ('label', pore_affiliation)},
