@@ -75,7 +75,7 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
 # label_path = r"A:\Robert_TOMCAT_4\T4_025_1_III\05b_labels"
     path = os.path.join(baseFolder, sample, '06_fiber_tracing', ''.join([sample,".CorrelationLines.xlsx"]))
     fiber_path = os.path.join(baseFolder, sample,'01a_weka_segmented_dry', 'classified')
-    label_path = os.path.join(baseFolder, sample, '05b_labels_new_alg_d5')
+    label_path = os.path.join(baseFolder, sample, '05b_labels_split')
 
     segments = pd.read_excel(path, sheet_name = 2)
     points = pd.read_excel(path, sheet_name = 1)
