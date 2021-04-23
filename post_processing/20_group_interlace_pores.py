@@ -69,7 +69,7 @@ def assign_pore(pore_object, fiber_object, label):
     result[0] =  label
     return result
 
-def track_pore_affiliation(sample, baseFolder=baseFolder):
+def track_pore_affiliation(sample, relevant_pores, baseFolder=baseFolder):
     # path = r"A:\Robert_TOMCAT_4\T4_025_1_III\06_fiber_tracing\T4_025_1_III.CorrelationLines.xlsx"
 # fiber_path = r"A:\Robert_TOMCAT_4\T4_025_1_III\01a_weka_segmented_dry\classified"
 # label_path = r"A:\Robert_TOMCAT_4\T4_025_1_III\05b_labels"
@@ -116,9 +116,11 @@ def track_pore_affiliation(sample, baseFolder=baseFolder):
     
     for pore in crude_pores:
         if pore is not None: 
-            bb = extend_bounding_box(pore, shp, pad=4)
-            pores.append(pore)
-            bounding_boxes.append(bb)
+            if pore is relevant_pores:
+           
+                bb = extend_bounding_box(pore, shp, pad=4)
+                pores.append(pore)
+                bounding_boxes.append(bb)
         
     
     pore_assigned = Parallel(n_jobs=16, temp_folder = temp_folder)(delayed(assign_pore)\
@@ -176,7 +178,8 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination, over
         try:
             # metadata = xr.load_dataset(os.path.join(destination, ''.join(['pore_props_',sample,'.nc'])))
             metadata = xr.load_dataset(os.path.join(destination, ''.join(['dyn_data_',sample,'.nc'])))
-            pore_affiliation, labels = track_pore_affiliation(sample, baseFolder)
+            relevant_pores = metadata['label'].data
+            pore_affiliation, labels = track_pore_affiliation(sample, relevant_pores, baseFolder)
             
             data = xr.Dataset({'pore_affiliation': ('label', pore_affiliation)},
                               coords= {'label': labels})
