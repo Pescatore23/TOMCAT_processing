@@ -137,10 +137,12 @@ def track_pore_affiliation(sample, relevant_pores, baseFolder=baseFolder, label_
     pore_affiliation = np.zeros(pore_assigned.shape[0], dtype=np.uint8)
     
     # populate vector: 1 -yarn1; 2-yarn2, 3-interlace
-    pore_affiliation[np.where(pore_assigned[:,2]>0)] = 1
-    pore_affiliation[np.where(pore_assigned[:,3]>0)] = 2
-    pore_affiliation[np.where(pore_assigned[:,4]>0)] = 3
-    
+    # pore_affiliation[np.where(pore_assigned[:,2]>0)] = 1
+    # pore_affiliation[np.where(pore_assigned[:,3]>0)] = 2
+    # pore_affiliation[np.where(pore_assigned[:,4]>0)] = 3
+    pore_affiliation[pore_assigned[:,2]>0] = 1
+    pore_affiliation[pore_assigned[:,3]>0] = 2
+    pore_affiliation[pore_assigned[:,4]>0] = 3   
     # top_pores = pore_assigned[pore_affiliation==1,0]
     # bottom_pores = pore_assigned[pore_affiliation==2,0]
     # interlace_pores = pore_assigned[pore_affiliation==3,0]
