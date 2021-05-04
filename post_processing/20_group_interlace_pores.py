@@ -69,7 +69,7 @@ def assign_pore(pore_object, fiber_object, label):
     result[0] =  label
     return result
 
-def track_pore_affiliation(sample, relevant_pores, baseFolder=baseFolder):
+def track_pore_affiliation(sample, relevant_pores, baseFolder=baseFolder, label_im = None):
     # path = r"A:\Robert_TOMCAT_4\T4_025_1_III\06_fiber_tracing\T4_025_1_III.CorrelationLines.xlsx"
 # fiber_path = r"A:\Robert_TOMCAT_4\T4_025_1_III\01a_weka_segmented_dry\classified"
 # label_path = r"A:\Robert_TOMCAT_4\T4_025_1_III\05b_labels"
@@ -107,7 +107,8 @@ def track_pore_affiliation(sample, relevant_pores, baseFolder=baseFolder):
     
     labeled_fibers = np.bitwise_and(fibers, yarns[0]) + 2*np.bitwise_and(fibers, yarns[1])         
     
-    label_im, label_names =  robpylib.CommonFunctions.ImportExport.ReadStackNew(label_path, track=False)
+    if label_im is None:
+        label_im, label_names =  robpylib.CommonFunctions.ImportExport.ReadStackNew(label_path, track=False)
     labels = np.unique(label_im)[1:]
     crude_pores = ndimage.find_objects(label_im)
     
@@ -179,7 +180,7 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination, over
             # metadata = xr.load_dataset(os.path.join(destination, ''.join(['pore_props_',sample,'.nc'])))
             metadata = xr.load_dataset(os.path.join(destination, ''.join(['dyn_data_',sample,'.nc'])))
             relevant_pores = metadata['label'].data
-            pore_affiliation, labels = track_pore_affiliation(sample, relevant_pores, baseFolder)
+            pore_affiliation, labels = track_pore_affiliation(sample, relevant_pores, baseFolder, label_im = metadata['label_matrix'].data)
             
             data = xr.Dataset({'pore_affiliation': ('label', pore_affiliation)},
                               coords= {'label': labels})
