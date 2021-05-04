@@ -39,6 +39,8 @@ time_limit = {'T3_100_10_III': 344,
               'T3_100_7': 206,
               'T3_100_10': 232}
 
+temp_folder = None
+num_cores = 4
 waterline = 2016
 px=2.75E-6 #m
 rho=997 #kg/m3
