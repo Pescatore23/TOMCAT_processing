@@ -20,11 +20,11 @@ drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 destination = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 
-baseFolder = r"Z:\Robert_TOMCAT_4"
-destination = r"Z:\Robert_TOMCAT_4_netcdf4"
+# baseFolder = r"Z:\Robert_TOMCAT_4"
+# destination = r"Z:\Robert_TOMCAT_4_netcdf4"
 overWrite = False
 temp_folder= r"Z:\users\firo\joblib_tmp"
-temp_folder = None
+# temp_folder = None
 
 def extend_bounding_box(s, shape, pad=3):
             a = deque()
