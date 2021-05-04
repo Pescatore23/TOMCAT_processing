@@ -15,6 +15,7 @@ from joblib import delayed, Parallel
 from collections import deque
 import xarray as xr
 import os
+import traceback
 
 drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
@@ -193,8 +194,10 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination, over
             
             data.to_netcdf(path)
             return 'completed'
-        except Exception as e:
-            return e
+        except Exception:# as e:
+            # return
+            traceback.print_exc()
+            
     else:
         return 'already done'
         
