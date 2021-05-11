@@ -110,22 +110,21 @@ def track_pore_affiliation(sample, relevant_pores, baseFolder=baseFolder, label_
     
     if label_im is None:
         label_im, label_names =  robpylib.CommonFunctions.ImportExport.ReadStackNew(label_path, track=False)
-    labels = np.unique(label_im)[1:]
+    labels_crude = np.unique(label_im)[1:]
     crude_pores = ndimage.find_objects(label_im)
     
-    pores = deque()
+    labels= deque()
     bounding_boxes = deque()
     
-    for pore in crude_pores:
+    for (pore, label) in zip(crude_pores, labels_crude):
         if pore is not None: 
-            if pore is relevant_pores:
-           
+            if label in relevant_pores:
                 bb = extend_bounding_box(pore, shp, pad=4)
-                pores.append(pore)
+                labels.append(label)
                 bounding_boxes.append(bb)
         
     
-    pore_assigned = Parallel(n_jobs=16, temp_folder = temp_folder)(delayed(assign_pore)\
+    pore_assigned = Parallel(n_jobs=8, temp_folder = temp_folder)(delayed(assign_pore)\
         (label_im[bb], labeled_fibers[bb], label) for (bb, label) in zip(bounding_boxes, labels))
         
     pore_assigned = np.array(pore_assigned)
@@ -209,7 +208,7 @@ samples = os.listdir(baseFolder)
 if '.DS_Store' in samples:
     samples.remove('.DS_Store')
 
-num_jobs = 8
+num_jobs = 4
 results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(sample_function)(sample, overWrite=overWrite) for sample in samples)
 
 for state in zip(samples, results):
