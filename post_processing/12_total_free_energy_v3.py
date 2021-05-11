@@ -20,6 +20,13 @@ from skimage.morphology import cube
 num_cores = 16
 temp_folder = None
 pc = False
+
+
+drive = r'\\152.88.86.87\data118'
+if host=='xerus.local': 
+    drive = r"NAS"
+    num_cores = 7
+    
 #  Part 1:
 if host == 'ddm05307':
     pc = True
@@ -39,6 +46,11 @@ if host == 'DDM06609':
     num_cores = 8
     temp_folder = r"Z:\users\firo\joblib_tmp"
 
+if host == 'hades':
+    drive = '/home/firo/NAS'
+    pc = True
+    num_cores = 4
+
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
 
@@ -52,10 +64,7 @@ k = 0.1
 lamb  = 0.6037
 iterations = 10
 
-drive = r'\\152.88.86.87\data118'
-if host=='xerus.local': 
-    drive = r"NAS"
-    num_cores = 7
+
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 # folder1 = os.path.join(drive, 'Robert_TOMCAT_3')
