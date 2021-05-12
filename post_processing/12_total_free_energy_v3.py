@@ -29,6 +29,8 @@ if host=='xerus.local':
     
 #  Part 1:
 if host == 'ddm05307':
+    drive = r'Z:'
+    temp_folder = r"F:\joblib_temp"
     pc = True
     num_cores = 5
 

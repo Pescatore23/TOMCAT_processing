@@ -15,7 +15,7 @@ import robpylib
 # from scipy import sparse
 from scipy.interpolate import interp1d
 # import matplotlib.pyplot as plt
-num_cores = 4
+num_cores = 8
 
 # drive = r'\\152.88.86.87\data118'
 # drive = r"NAS"
@@ -23,7 +23,7 @@ num_cores = 4
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4') #TODO: change also peak definition fot T4!!
 data_path = r'Z:\Robert_TOMCAT_3b_netcdf4'
-data_path = r'A:\Robert_TOMCAT_4_netcdf4'
+data_path = r'Z:\Robert_TOMCAT_4_netcdf4'
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 # processing_version = 'for_PNM'
 # folder = r'Z:\Robert_TOMCAT_3'
