@@ -20,7 +20,7 @@ import trimesh
 # from dask.distributed import Client
 # client = Client(processes=False)             # create local cluster
 
-num_cores = 30#mp.cpu_count()
+num_cores = 16#mp.cpu_count()
 
 rho = 997 #kg/m3
 vx = 2.75E-6 #m
@@ -34,10 +34,10 @@ iterations = 10
 smooth_decision = 'yes'
 
 temp_folder = r"Z:\users\firo\joblib_tmp"
-
+temp_folder = None
 drive = r'\\152.88.86.87\data118'
 # drive = r"NAS"
-# drive =  r'Z:\'
+drive =  r'Z:'
 data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
 # data_path = r'Z:\Robert_TOMCAT_3_netcdf4_archives'
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
