@@ -30,9 +30,7 @@ host = socket.gethostname()
 
 parallel = True
 
-num_cores = 32
-if host == 'ddm05307':
-    num_cores = 8
+
 temp_folder = r"Z:\users\firo\joblib_tmp"
 time_limit = {'T3_100_10_III': 344,
               'T3_300_5': 229,
@@ -40,7 +38,7 @@ time_limit = {'T3_100_10_III': 344,
               'T3_100_10': 232}
 
 temp_folder = None
-num_cores = 4
+num_cores = 8
 waterline = 2016
 px=2.75E-6 #m
 rho=997 #kg/m3
@@ -55,7 +53,9 @@ rho = 997 #kg/m3  density of water
 #data_path = r"C:\Zwischenlager\Dyn_Data"
 
 drive = '//152.88.86.87/data118'
-drive = r'Z:'
+if host == 'ddm05307':
+    # num_cores = 8
+    drive = r"Z:"
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep_2')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'for_PNM')
