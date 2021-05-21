@@ -19,7 +19,7 @@ import traceback
 
 drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
-destination = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
+destination = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
 
 # baseFolder = r"Z:\Robert_TOMCAT_4"
 # destination = r"Z:\Robert_TOMCAT_4_netcdf4"
