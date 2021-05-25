@@ -21,11 +21,11 @@ drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 destination = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
 
-baseFolder = r"Z:\Robert_TOMCAT_4"
-destination = r"Z:\Robert_TOMCAT_4_netcdf4_split_v2"
-overWrite = False
+baseFolder = r"A:\Robert_TOMCAT_4"
+destination = r"A:\Robert_TOMCAT_4_netcdf4_split_v2"
+overWrite = True
 temp_folder= r"Z:\users\firo\joblib_tmp"
-temp_folder = None
+# temp_folder = None
 
 def extend_bounding_box(s, shape, pad=3):
             a = deque()
@@ -116,9 +116,19 @@ def track_pore_affiliation(sample, relevant_pores, baseFolder=baseFolder, label_
     labels= deque()
     bounding_boxes = deque()
     
-    for (pore, label) in zip(crude_pores, labels_crude):
-        if pore is not None: 
-            if label in relevant_pores:
+    # for (pore, label) in zip(crude_pores, labels_crude):
+    #     if pore is not None: 
+    #         if label in relevant_pores:
+    #             bb = extend_bounding_box(pore, shp, pad=4)
+    #             labels.append(label)
+    #             bounding_boxes.append(bb)
+                
+    pc = -1
+    for pore in crude_pores:
+        if pore is not None:
+           pc = pc+1
+           label = labels_crude[pc]
+           if label in relevant_pores:
                 bb = extend_bounding_box(pore, shp, pad=4)
                 labels.append(label)
                 bounding_boxes.append(bb)
