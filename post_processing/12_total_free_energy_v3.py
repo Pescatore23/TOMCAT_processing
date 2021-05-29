@@ -73,7 +73,7 @@ iterations = 10
 folder1 = os.path.join(drive, 'Robert_TOMCAT_4')
 
 # sourceFolder = os.path.join(data_path, processing_version)
-sourceFolder = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4')
+sourceFolder = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
 
 samples = os.listdir(sourceFolder) 
 
