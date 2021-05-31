@@ -23,7 +23,7 @@ destination = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
 
 baseFolder = r"A:\Robert_TOMCAT_4"
 destination = r"A:\Robert_TOMCAT_4_netcdf4_split_v2"
-overWrite = True
+overWrite = False
 temp_folder= r"Z:\users\firo\joblib_tmp"
 # temp_folder = None
 
