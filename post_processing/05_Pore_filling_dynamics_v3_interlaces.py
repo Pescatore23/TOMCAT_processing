@@ -299,23 +299,23 @@ def R_squared(x,y, func, *p):
     return R
 
 def dyn_fit_step2(sample_data):
-    total_volume = sample_data['volume'].sum(axis = 0)
+    # total_volume = sample_data['volume'].sum(axis = 0)
     pore_volume = sample_data['volume']
     time = sample_data['time'].data
     labels = np.uint16(sample_data['label'].data)
     num_pores = len(labels)
-    sample_name = sample_data.attrs['name']
-    t_max = -1
+    # sample_name = sample_data.attrs['name']
+    # t_max = -1
     
-    if sample_name in list(time_limit.keys()):
-        t_max = time_limit[sample_name]
+    # if sample_name in list(time_limit.keys()):
+        # t_max = time_limit[sample_name]
     
     fits = []
     fits_sig = np.zeros([num_pores,4])
 
     for label in range(num_pores):
         
-        color = labels[label]
+        # color = labels[label]
         fit_data = sample_data['fit_data'][label, :]
         par_0 = -fit_data[1]*fit_data[0]
         if np.isnan(par_0): par_0 = 0               #reconversion to the adeqaute format of poly1d
