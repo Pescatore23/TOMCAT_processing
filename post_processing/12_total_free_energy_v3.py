@@ -67,13 +67,13 @@ lamb  = 0.6037
 iterations = 10
 
 
-# data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
-# processing_version = 'processed_1200_dry_seg_aniso_sep'
-# folder1 = os.path.join(drive, 'Robert_TOMCAT_3')
-folder1 = os.path.join(drive, 'Robert_TOMCAT_4')
-
-# sourceFolder = os.path.join(data_path, processing_version)
-sourceFolder = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
+data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
+processing_version = 'processed_1200_dry_seg_aniso_sep'
+folder1 = os.path.join(drive, 'Robert_TOMCAT_3')
+# folder1 = os.path.join(drive, 'Robert_TOMCAT_4')
+# folder1 = os.path.join(r"Y:", 'Robert_TOMCAT_3b')
+sourceFolder = os.path.join(data_path, processing_version)
+# sourceFolder = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4')
 
 samples = os.listdir(sourceFolder) 
 
