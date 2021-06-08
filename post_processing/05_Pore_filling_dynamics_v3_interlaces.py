@@ -24,8 +24,9 @@ import xarray as xr
 #import time
 import scipy.optimize
 from joblib import Parallel, delayed
-import multiprocessing as mp
+# import multiprocessing as mp
 import socket
+import pickle
 host = socket.gethostname()
 
 parallel = True
@@ -36,7 +37,7 @@ time_limit = {'T3_100_10_III': 344,
               'T3_300_5': 229,
               'T3_100_7': 206,
               'T3_100_10': 232}
-
+TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p",'rb'))
 # temp_folder = None
 num_cores = 8
 waterline = 2016
@@ -169,7 +170,7 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     t_max = transitions.max()+1
     
     if sample[0]=='T':
-        time_list = np.array(robpylib.TOMCAT.TIME.TIME[sample])
+        time_list = np.array(TIME[sample])
         t_max = time_list.shape[0]
     else:
         time_list=np.arange(t_max)*15 #[s]
