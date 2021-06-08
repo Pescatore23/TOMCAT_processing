@@ -11,9 +11,11 @@ import numpy as np
 import json
 
 
-baseFolder = r"T:\disk1\T3"
+baseFolder = r"T:\disk1\T5"
+targetFolder = r"X:\Robert_TOMCAT_5_split"
 
 samples = os.listdir(baseFolder)
+samples = os.listdir(targetFolder)
 
 
 TIME3 = {}
@@ -22,8 +24,8 @@ for sample in samples:
     sample_id = sample
     if sample[-6:-2] == 'yarn':
         sample_id = sample[:-7]
-    metapath = os.path.join(baseFolder, sample, ''.join([sample_id,'_config.json']))
-    datapath = os.path.join(baseFolder, sample, ''.join([sample_id,'.h5']))
+    metapath = os.path.join(baseFolder, sample_id, ''.join([sample_id,'_config.json']))
+    datapath = os.path.join(baseFolder, sample_id, ''.join([sample_id,'.h5']))
     
     metadata = json.load(open(metapath,'r'))
     datafile = h5py.File(datapath, 'r')
