@@ -23,6 +23,7 @@ pc = False
 
 
 drive = r'\\152.88.86.87\data118'
+drive = r'\\152.88.86.68\data118'
 if host=='xerus.local': 
     drive = r"NAS"
     num_cores = 7
@@ -30,6 +31,7 @@ if host=='xerus.local':
 #  Part 1:
 if host == 'ddm05307':
     drive = r'Z:'
+    drive = r'Y:'
     temp_folder = r"F:\joblib_temp"
     pc = True
     num_cores = 5
@@ -50,6 +52,7 @@ if host == 'DDM06609':
 
 if host == 'hades':
     drive = '/home/firo/NAS'
+    drive = '/home/firo/NAS2'
     pc = True
     num_cores = 4
 
@@ -69,11 +72,11 @@ iterations = 10
 
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 processing_version = 'processed_1200_dry_seg_aniso_sep'
-folder1 = os.path.join(drive, 'Robert_TOMCAT_3')
-# folder1 = os.path.join(drive, 'Robert_TOMCAT_4')
-# folder1 = os.path.join(r"Y:", 'Robert_TOMCAT_3b')
-sourceFolder = os.path.join(data_path, processing_version)
-# sourceFolder = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4')
+# folder1 = os.path.join(drive, 'Robert_TOMCAT_3')
+folder1 = os.path.join(drive, 'Robert_TOMCAT_5_split')
+# folder1 = os.path.join(r"Y:", 'Robert_TOMCAT_5_split')
+# sourceFolder = os.path.join(data_path, processing_version)
+sourceFolder = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4')
 
 samples = os.listdir(sourceFolder) 
 

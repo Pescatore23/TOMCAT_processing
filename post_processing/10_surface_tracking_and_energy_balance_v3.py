@@ -38,15 +38,15 @@ temp_folder = r"Z:\users\firo\joblib_tmp"
 temp_folder = None
 drive = r'\\152.88.86.87\data118'
 # drive = r"NAS"
-drive =  r'Z:'
+drive =  r'Y:'
 if host == 'hades':
     drive = r"NAS"
 # data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
-data_path = os.path.join(drive, 'Robert_TOMCAT_3b_netcdf4')
+data_path = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4')
 # data_path = r'Z:\Robert_TOMCAT_3_netcdf4_archives'
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 
-folder = os.path.join(r'Y:', 'Robert_TOMCAT_3b')
+folder = os.path.join(r'Y:', 'Robert_TOMCAT_5_split')
 # folder = r'Z:\Robert_TOMCAT_3'
 
 # sourceFolder = os.path.join(data_path, processing_version)
