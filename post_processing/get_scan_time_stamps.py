@@ -19,8 +19,11 @@ samples = os.listdir(baseFolder)
 TIME3 = {}
 
 for sample in samples:
-    metapath = os.path.join(baseFolder, sample, ''.join([sample,'_config.json']))
-    datapath = os.path.join(baseFolder, sample, ''.join([sample,'.h5']))
+    sample_id = sample
+    if sample[-6:-2] == 'yarn':
+        sample_id = sample[:-7]
+    metapath = os.path.join(baseFolder, sample, ''.join([sample_id,'_config.json']))
+    datapath = os.path.join(baseFolder, sample, ''.join([sample_id,'.h5']))
     
     metadata = json.load(open(metapath,'r'))
     datafile = h5py.File(datapath, 'r')

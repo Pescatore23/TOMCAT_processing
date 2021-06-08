@@ -37,7 +37,7 @@ time_limit = {'T3_100_10_III': 344,
               'T3_100_7': 206,
               'T3_100_10': 232}
 
-temp_folder = None
+# temp_folder = None
 num_cores = 8
 waterline = 2016
 px=2.75E-6 #m
@@ -52,14 +52,16 @@ rho = 997 #kg/m3  density of water
 #data_path = r"H:\11_Essential_Data\03_TOMCAT\07_TOMCA3_dynamic_Data"
 #data_path = r"C:\Zwischenlager\Dyn_Data"
 
-drive = '//152.88.86.87/data118'
+# drive = '//152.88.86.87/data118'
+drive = '//152.88.86.68/data118'
 if host == 'ddm05307':
     # num_cores = 8
     drive = r"Z:"
-baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
+baseFolder = os.path.join(drive, 'Robert_TOMCAT_5_split')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep_2')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'for_PNM')
-data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
+#data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
+data_path = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4')
 
 if not os.path.exists(data_path):
     os.mkdir(data_path)  
@@ -69,7 +71,8 @@ if not os.path.exists(os.path.join(data_path, 'plots_label')):
     os.mkdir(os.path.join(data_path, 'plots_label'))
 
 
-label_folder = '05b_labels_split_v2'
+# label_folder = '05b_labels_split_v2'
+label_folder = '05b_labels'
 
 
 transition_folder = '03_gradient_filtered_transitions'

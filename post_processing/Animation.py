@@ -19,14 +19,16 @@ from scipy import ndimage
 # import robpylib
 
 num_cores = 12# mp.cpu_count()
-
+temp_folder = r"Z:\users\firo\joblib_tmp"
 drive = '//152.88.86.87/data118'
-data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
-processing_version = 'processed_1200_dry_seg_aniso_sep'
+drive = r"A:"
+# data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
+# processing_version = 'processed_1200_dry_seg_aniso_sep'
 
 
-sourcefolder = os.path.join(drive, data_path, processing_version)
-targetfolder = os.path.join(drive, "Robert_TOMCAT_3_netcdf4_archives","Animations")
+# sourcefolder = os.path.join(drive, data_path, processing_version)
+sourcefolder = os.path.join(drive, "Robert_TOMCAT_4_netcdf4_split_v2")
+targetfolder = os.path.join(drive, "Robert_TOMCAT_4_netcdf4_split_v2","Animations")
 # r'R:\Scratch\305\_Robert\Animations'
 
 
@@ -161,20 +163,21 @@ for sample in samples:
     sample_data = xr.load_dataset(os.path.join(sourcefolder, sample))
     sample_name = sample_data.attrs['name']
     # if sample_name == 'T3_025_9': continue
-    # time = sample_data['time'].data
+    time = sample_data['time'].data
     LOI = sample_data['label'].data
     print(sample_name)
-    for label in LOI:
-        specific_rendering(sample_data, label, neighbours=False, z_limit=1200)
+    # for label in LOI:
+    #     specific_rendering(sample_data, label, neighbours=False, z_limit=1200)
     
-    # outfolder = os.path.join(targetfolder, sample_name, 'volume')
+    outfolder = os.path.join(targetfolder, sample_name, 'volume')
     
-#     if not os.path.exists(outfolder):
-#         os.makedirs(outfolder)
+    if not os.path.exists(outfolder):
+        os.makedirs(outfolder)
         
-#     transitions = sample_data['transition_matrix'].data
-#     t_max =  transitions.max()
+    transitions = sample_data['transition_matrix'].data
+    t_max =  transitions.max()
+    if t_max > 200: t_max=200
     
-#     Parallel(n_jobs=num_cores)(delayed(rendering)(t, transitions[:,:,:1200], time, outfolder) for t in range(t_max+1))
-# #    for t in range(t_max+1)    :
-# #        rendering(t, transitions, time, outfolder)
+    Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(rendering)(t, transitions, time, outfolder) for t in range(t_max+1))
+#    for t in range(t_max+1)    :
+#        rendering(t, transitions, time, outfolder)
