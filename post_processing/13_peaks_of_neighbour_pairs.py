@@ -18,8 +18,8 @@ from scipy.interpolate import interp1d
 num_cores = 8
 
 # drive = r'\\152.88.86.87\data118'
-drive = r"NAS2"
-# drive =  r"Z:\"
+# drive = r"NAS2"
+drive =  r"B:"
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 data_path = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4') #TODO: change also peak definition fot T4!!
 # data_path = r'Z:\Robert_TOMCAT_3b_netcdf4'

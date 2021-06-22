@@ -19,16 +19,19 @@ from scipy import ndimage
 # import robpylib
 
 num_cores = 12# mp.cpu_count()
-temp_folder = r"Z:\users\firo\joblib_tmp"
-drive = '//152.88.86.87/data118'
-drive = r"A:"
+# temp_folder = r"Z:\users\firo\joblib_tmp"
+# drive = '//152.88.86.87/data118'
+temp_folder = None
+drive = r"B:"
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 
 
 # sourcefolder = os.path.join(drive, data_path, processing_version)
-sourcefolder = os.path.join(drive, "Robert_TOMCAT_4_netcdf4_split_v2")
-targetfolder = os.path.join(drive, "Robert_TOMCAT_4_netcdf4_split_v2","Animations")
+# sourcefolder = os.path.join(drive, "Robert_TOMCAT_5_netcdf4")
+sourcefolder = r"A:\Robert_TOMCAT_3_combined_archives\unmasked"
+# targetfolder = os.path.join(drive, "Robert_TOMCAT_5_netcdf4","Animations")
+targetfolder = os.path.join(sourcefolder, "Animations")
 # r'R:\Scratch\305\_Robert\Animations'
 
 
@@ -162,7 +165,7 @@ for sample in samples:
 # #     print(sample[9:-3])
     sample_data = xr.load_dataset(os.path.join(sourcefolder, sample))
     sample_name = sample_data.attrs['name']
-    # if sample_name == 'T3_025_9': continue
+    if sample_name == 'T4_300_2_II': continue
     time = sample_data['time'].data
     LOI = sample_data['label'].data
     print(sample_name)
