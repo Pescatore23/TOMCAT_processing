@@ -14,7 +14,7 @@ import numpy as np
 px = 2.75E-6
 vx = px**3
 
-baseFolder = '/NAS/Robert_TOMCAT_4_netcdf4_split_v2'
+baseFolder = '/home/firo/NAS/Robert_TOMCAT_4_netcdf4_split_v2'
 
 file_list = os.listdir(baseFolder)
 
