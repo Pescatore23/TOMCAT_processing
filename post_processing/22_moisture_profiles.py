@@ -26,7 +26,7 @@ samples = []
 cc = 0
 for file in file_list:
     if file[:3] == 'dyn':
-        datafile = h5py.datafile(os.path.join(baseFolder, file))
+        datafile = h5py.File(os.path.join(baseFolder, file))
         time = np.array(datafile['time'])
         transitions = cp.array(datafile['transition_matrix'])
         time_steps = cp.unique(transitions)[1:]
