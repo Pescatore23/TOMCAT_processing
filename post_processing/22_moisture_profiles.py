@@ -38,7 +38,7 @@ for file in file_list:
         sample_profiles = np.zeros((2016,len(time)))
         any_water = transitions>0
         
-        for ts in range(1,271):
+        for ts in range(1,len(time)):
             if ts in time_steps:
                 water = np.bitwise_and(any_water,(transitions<ts+1))
                 profile = np.count_nonzero(water, axis = (0,1))
