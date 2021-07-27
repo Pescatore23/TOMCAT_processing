@@ -23,6 +23,9 @@ profiles = np.zeros((2016,271,12))
 samples = []
 
 cc = 0
+
+tflag = False
+
 for file in file_list:
     if file[:3] == 'dyn':
         datafile = h5py.File(os.path.join(baseFolder, file))
@@ -30,7 +33,7 @@ for file in file_list:
         transitions = np.array(datafile['transition_matrix'])
         time_steps = np.unique(transitions)[1:]
         
-        samples.append(datafile.attrs['name'].decode())
+        name = datafile.attrs['name'].decode()
         
         sample_profiles = np.zeros((2016,271))
         any_water = transitions>0
@@ -46,15 +49,15 @@ for file in file_list:
         profiles[:,:,cc] = sample_profiles
         cc = cc + 1
 
-data = xr.Dataset({'moisture_profile': (['height', 'time', 'sample'], profiles*vx)},
-                  coords = {'height': height,
-                           'time': time,
-                           'sample': samples})
-
-data['height'].attrs['units'] = 'm'
-data['time'].attrs['units'] = 's'
-
-destination = os.path.join(baseFolder, 'moisture_profiles.nc')
-data.to_netcdf(destination)
+        data = xr.Dataset({'moisture_profile': (['height', 'time'], profiles*vx)},
+                          coords = {'height': height,
+                                   'time': time})
+        
+        data['height'].attrs['units'] = 'm'
+        data['time'].attrs['units'] = 's'
+        data.attrs['name'] = name
+        
+        destination = os.path.join(baseFolder, ''.join([name,'moisture_profiles.nc']))
+        data.to_netcdf(destination)
         
         
