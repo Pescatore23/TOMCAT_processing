@@ -35,7 +35,7 @@ for file in file_list:
         
         name = datafile.attrs['name'].decode()
         
-        sample_profiles = np.zeros((2016,271))
+        sample_profiles = np.zeros((2016,len(time)))
         any_water = transitions>0
         
         for ts in range(1,271):
