@@ -49,7 +49,7 @@ for file in file_list:
         # profiles[:,:,cc] = sample_profiles
         cc = cc + 1
 
-        data = xr.Dataset({'moisture_profile': (['height', 'time'], profiles*vx)},
+        data = xr.Dataset({'moisture_profile': (['height', 'time'],  sample_profiles*vx)},
                           coords = {'height': height,
                                    'time': time})
         
