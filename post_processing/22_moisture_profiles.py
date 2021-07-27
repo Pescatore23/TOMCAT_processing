@@ -46,7 +46,7 @@ for file in file_list:
             else:
                 sample_profiles[:,ts] = sample_profiles[:,ts-1]
         
-        profiles[:,:,cc] = sample_profiles
+        # profiles[:,:,cc] = sample_profiles
         cc = cc + 1
 
         data = xr.Dataset({'moisture_profile': (['height', 'time'], profiles*vx)},
