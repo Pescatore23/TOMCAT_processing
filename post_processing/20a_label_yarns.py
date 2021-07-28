@@ -38,7 +38,7 @@ def dilate_skeleton(matrix):
     return matrix
 
 def function(shp, points, point_list):
-    matrix = np.zeros(shp, dtype=np.bool)
+    matrix = np.zeros(shp, dtype = bool)
     matrix = make_skeleton(matrix, point_list, points)
     matrix = dilate_skeleton(matrix)
     return matrix
@@ -88,14 +88,14 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
     yarn2 = yarns[1]
     
     results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn1[:,:,z]) for z in range(yarn1.shape[2]))
-    label = np.array(results)
+    label = np.array(results).transpose(1,2,0).astype(np.uint8)
     target1 = os.path.join(targetFolder,'yarn1')
     if not os.path.exists(target1):
         os.mkdir(target1)
     robpylib.CommonFunctions.ImportExport.WriteStackNew(target1, names, label)
     
     results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn2[:,:,z]) for z in range(yarn1.shape[2]))
-    label = np.array(results)
+    label = np.array(results).transpose(1,2,0).astype(np.uint8)
     target2 = os.path.join(targetFolder,'yarn2')
     if not os.path.exists(target2):
         os.mkdir(target2)
