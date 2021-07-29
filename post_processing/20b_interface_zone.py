@@ -30,21 +30,22 @@ interlace_labels = {}
 def function(sample):
     label_folder = os.path.join(baseFolder, sample,'05b_labels_split_v2')
     sample_folder = os.path.join(baseFolder, sample, '06c_yarn_labels') 
-    source1 = os.path.join(sample_folder, 'yarn1')
-    source2 = os.path.join(sample_folder, 'yarn1')
-    target = os.path.join(sample_folder, 'interface_zone')
-    if not os.path.exists(target):
-        os.mkdir(target)
+    if os.path.exists(sample_folder):
+        source1 = os.path.join(sample_folder, 'yarn1')
+        source2 = os.path.join(sample_folder, 'yarn1')
+        target = os.path.join(sample_folder, 'interface_zone')
+        if not os.path.exists(target):
+            os.mkdir(target)
+            
+        yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(source1, track=False, filetype=np.uint8)
+        yarn2, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(source2, track=False, filetype=np.uint8)
+        interface = np.bitwise_and(yarn1>0, yarn2>0)
+        robpylib.CommonFunctions.ImportExport.WriteStackNew(target, names, interface)
         
-    yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(source1, track=False, filetype=np.uint8)
-    yarn2, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(source2, track=False, filetype=np.uint8)
-    interface = np.bitwise_and(yarn1>0, yarn2>0)
-    robpylib.CommonFunctions.ImportExport.WriteStackNew(target, names, interface)
-    
-    inter_labels = 0
-    if os.path.exists(label_folder):
-        labels, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(label_folder, track=False)
-        inter_labels = np.unique(labels[interface])
+        inter_labels = 0
+        if os.path.exists(label_folder):
+            labels, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(label_folder, track=False)
+            inter_labels = np.unique(labels[interface])
     
     return sample, inter_labels
 
