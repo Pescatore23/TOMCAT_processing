@@ -35,7 +35,7 @@ def function(sample):
         
     yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(source1, track=False, filetype=np.uint8)
     yarn2, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(source2, track=False, filetype=np.uint8)
-    interface = np.bitwise_and(yarn1>0, yarn2>0)
+    interface = np.bitwise_and(yarn1>0, yarn2>0).astype(np.uint8)
     robpylib.CommonFunctions.ImportExport.WriteStackNew(target, names, interface)
     
     inter_labels = 0
