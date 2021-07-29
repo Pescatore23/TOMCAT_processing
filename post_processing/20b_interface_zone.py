@@ -8,7 +8,7 @@ import os
 import numpy as np
 import robpylib
 from joblib import Parallel, delayed
-import pickles
+import pickle
 
 
 
@@ -51,5 +51,5 @@ def function(sample):
 num_jobs = 4
 results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(function)(sample) for sample in samples)    
     
-pickles.dump(results, open(os.path.join(baseFolder, 'interface_labels'), 'rb'))
+pickle.dump(results, open(os.path.join(baseFolder, 'interface_labels'), 'rb'))
     
