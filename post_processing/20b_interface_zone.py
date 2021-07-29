@@ -28,7 +28,7 @@ def function(sample):
     label_folder = os.path.join(baseFolder, sample,'05b_labels_split_v2')
     sample_folder = os.path.join(baseFolder, sample, '06c_yarn_labels') 
     source1 = os.path.join(sample_folder, 'yarn1')
-    source2 = os.path.join(sample_folder, 'yarn1')
+    source2 = os.path.join(sample_folder, 'yarn2')
     target = os.path.join(sample_folder, 'interface_zone')
     if not os.path.exists(target):
         os.mkdir(target)
@@ -55,5 +55,5 @@ def function(sample):
 num_jobs = 4
 results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(function)(sample) for sample in samples)    
     
-pickle.dump(results, open(os.path.join(baseFolder, 'interface_labels.p'), 'rb'))
+pickle.dump(results, open(os.path.join(baseFolder, 'interface_labels.p'), 'wb'))
     
