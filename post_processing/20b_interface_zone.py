@@ -35,15 +35,20 @@ def function(sample):
         
     yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(source1, track=False, filetype=np.uint8)
     yarn2, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(source2, track=False, filetype=np.uint8)
-    interface = np.bitwise_and(yarn1>0, yarn2>0).astype(np.uint8)
+    yarn1 = yarn1>0
+    yarn2 = yarn2>0
+    
+    interface = np.bitwise_and(yarn1, yarn2).astype(np.uint8)
     robpylib.CommonFunctions.ImportExport.WriteStackNew(target, names, interface)
     
     inter_labels = 0
     if os.path.exists(label_folder):
         labels, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(label_folder, track=False)
-        inter_labels = np.unique(labels[interface])
+        inter_labels = np.unique(labels[interface])[1:]
+        yarn1_labels = np.unique(labels[yarn1])[1:]
+        yarn2_labels = np.unique(labels[yarn2])[1:]
     
-    return sample, inter_labels
+    return sample, inter_labels, yarn1_labels, yarn2_labels
 
 num_jobs = 4
 results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(function)(sample) for sample in samples)    
