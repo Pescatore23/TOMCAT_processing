@@ -55,5 +55,5 @@ def function(sample):
 num_jobs = 4
 results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(function)(sample) for sample in samples)    
     
-pickle.dump(results, open(os.path.join(baseFolder, 'interface_labels'), 'rb'))
+pickle.dump(results, open(os.path.join(baseFolder, 'interface_labels.p'), 'rb'))
     
