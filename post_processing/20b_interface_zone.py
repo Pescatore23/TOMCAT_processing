@@ -42,11 +42,13 @@ def function(sample):
     robpylib.CommonFunctions.ImportExport.WriteStackNew(target, names, interface)
     
     inter_labels = 0
+    yarn1_labels = 0
+    yarn2_labels = 0
     if os.path.exists(label_folder):
         labels, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(label_folder, track=False)
-        inter_labels = np.unique(labels[interface])[1:]
-        yarn1_labels = np.unique(labels[yarn1])[1:]
-        yarn2_labels = np.unique(labels[yarn2])[1:]
+        inter_labels = np.unique(labels[np.where(interface)])[1:]
+        yarn1_labels = np.unique(labels[np.where(yarn1)])[1:]
+        yarn2_labels = np.unique(labels[np.where(yarn2)])[1:]
     
     return sample, inter_labels, yarn1_labels, yarn2_labels
 
