@@ -158,7 +158,7 @@ def get_pore_props(pore_object, bounding_box, label):
     
 #c=0
 liste = os.listdir(data_path)
-liste.reverse()
+# liste.reverse()
 for filename in liste:
     if not filename[:3] == 'dyn': continue
     file = os.path.join(data_path, filename)
@@ -166,8 +166,8 @@ for filename in liste:
     dyn_data = xr.load_dataset(file)
     new_filename = ''.join(['pore_props_', dyn_data.attrs['name'],'.nc']) #'_size_',str(dyn_data.attrs['size_factor'])
     print(dyn_data.attrs['name'])
-    if dyn_data.attrs['name'] == 'T4_300_4_III': continue
-    if dyn_data.attrs['name'] == 'T4_025_4': continue
+    # if dyn_data.attrs['name'] == 'T4_300_4_III': continue
+    # if dyn_data.attrs['name'] == 'T4_025_4': continue
     if os.path.exists(new_filename): continue
     label_matrix = dyn_data['label_matrix'].data
     labels = dyn_data['label'].data
