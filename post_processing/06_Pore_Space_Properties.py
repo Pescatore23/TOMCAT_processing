@@ -12,6 +12,7 @@ import xarray as xr
 import os
 #import time
 from joblib import Parallel, delayed
+import h5py
 # import multiprocessing as mp
 
 
@@ -163,12 +164,16 @@ for filename in liste:
     if not filename[:3] == 'dyn': continue
     file = os.path.join(data_path, filename)
 #    if c>0: continue
-    dyn_data = xr.load_dataset(file)
-    new_filename = ''.join(['pore_props_', dyn_data.attrs['name'],'.nc']) #'_size_',str(dyn_data.attrs['size_factor'])
-    print(dyn_data.attrs['name'])
+    datafile = h5py.File(file)
+    name = datafile.attrs['name'].decode()
+    datafile.close()
+    
+    new_filename = ''.join(['pore_props_', name,'.nc']) #'_size_',str(dyn_data.attrs['size_factor'])
+    print(name)
     # if dyn_data.attrs['name'] == 'T4_300_4_III': continue
     # if dyn_data.attrs['name'] == 'T4_025_4': continue
     if os.path.exists(os.path.join(data_path, new_filename)): continue
+    dyn_data = xr.load_dataset(file)
     label_matrix = dyn_data['label_matrix'].data
     labels = dyn_data['label'].data
     
