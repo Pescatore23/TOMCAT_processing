@@ -168,7 +168,7 @@ for filename in liste:
     print(dyn_data.attrs['name'])
     # if dyn_data.attrs['name'] == 'T4_300_4_III': continue
     # if dyn_data.attrs['name'] == 'T4_025_4': continue
-    if os.path.exists(new_filename): continue
+    if os.path.exists(os.path.join(data_path, new_filename)): continue
     label_matrix = dyn_data['label_matrix'].data
     labels = dyn_data['label'].data
     
