@@ -39,7 +39,7 @@ time_limit = {'T3_100_10_III': 344,
               'T3_100_10': 232}
 TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p",'rb'))
 # temp_folder = None
-num_cores = 8
+num_cores = 12
 waterline = 2016
 px=2.75E-6 #m
 rho=997 #kg/m3
@@ -61,8 +61,8 @@ if host == 'ddm05307':
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_5_split')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep_2')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'for_PNM')
-#data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
-data_path = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4')
+data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim')
+# data_path = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4')
 
 if not os.path.exists(data_path):
     os.mkdir(data_path)  
@@ -72,8 +72,8 @@ if not os.path.exists(os.path.join(data_path, 'plots_label')):
     os.mkdir(os.path.join(data_path, 'plots_label'))
 
 
-# label_folder = '05b_labels_split_v2'
-label_folder = '05b_labels'
+label_folder = '05b_labels_split_v2'
+# label_folder = '05b_labels'
 
 
 transition_folder = '03_gradient_filtered_transitions'
@@ -161,7 +161,7 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     transitions[transitions>limit -1 ]=0       
     label_id, label_count = np.unique(labels,return_counts=True)
   
-    relevant_pores = np.where(label_count>30)[0][1:]   #remove value 0 from array (= background)
+    relevant_pores = np.where(label_count>0)[0][1:]   #remove value 0 from array (= background)
     number_pores = len(relevant_pores)
     relevant_labels = label_id[relevant_pores]
 
