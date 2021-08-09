@@ -97,7 +97,7 @@ def diffs_v4(label, data, time):
 
 def __main__(sample):
     if sample[:3] == 'dyn':
-        sample_data = xr.load_dataset(os.path.join(sourceFolder, sample))
+        sample_data = xr.open_dataset(os.path.join(sourceFolder, sample))
         name = sample_data.attrs['name']
         filename = os.path.join(sourceFolder, ''.join(['peak_diff_data_', name,'.nc']))
         if not os.path.exists(filename):
