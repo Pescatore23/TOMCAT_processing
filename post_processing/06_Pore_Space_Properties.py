@@ -163,6 +163,7 @@ liste = os.listdir(data_path)
 for filename in liste:
     if not filename[:3] == 'dyn': continue
     print(filename)
+    if filename == 'dyn_data_T4_100_2_III.nc': continue
     file = os.path.join(data_path, filename)
 #    if c>0: continue
     datafile = h5py.File(file)
