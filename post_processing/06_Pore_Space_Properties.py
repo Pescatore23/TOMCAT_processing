@@ -159,7 +159,7 @@ def get_pore_props(pore_object, bounding_box, label):
     
 #c=0
 liste = os.listdir(data_path)
-liste.reverse()
+# liste.reverse()
 for filename in liste:
     if not filename[:3] == 'dyn': continue
     file = os.path.join(data_path, filename)
