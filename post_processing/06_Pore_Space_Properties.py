@@ -162,6 +162,7 @@ liste = os.listdir(data_path)
 # liste.reverse()
 for filename in liste:
     if not filename[:3] == 'dyn': continue
+    print(filename)
     file = os.path.join(data_path, filename)
 #    if c>0: continue
     datafile = h5py.File(file)
