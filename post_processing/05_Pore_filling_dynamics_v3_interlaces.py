@@ -57,8 +57,9 @@ rho = 997 #kg/m3  density of water
 drive = '//152.88.86.68/data118'
 if host == 'ddm05307':
     # num_cores = 8
-    drive = r"Y:"
-baseFolder = os.path.join(drive, 'Robert_TOMCAT_5_split')
+    drive = r"Z:"
+# baseFolder = os.path.join(drive, 'Robert_TOMCAT_5_split')
+baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep_2')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'for_PNM')
 data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim')
