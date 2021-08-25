@@ -10,20 +10,27 @@ import xarray as xr
 import numpy as np
 import scipy as sp
 from joblib import Parallel, delayed
-import multiprocessing as mp
 import robpylib
 # from scipy import sparse
 from scipy.interpolate import interp1d
 # import matplotlib.pyplot as plt
 num_cores = 8
+import socket
+host = socket.gethostname()
+
 
 # drive = r'\\152.88.86.87\data118'
 # drive = r"NAS2"
 drive =  r"Z:"
+temp_folder = None
+if host == 'DDM06609': 
+    drive = r"A:"
+    temp_folder = r"Z:\users\firo\joblib_tmp"
+    
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4') #TODO: change also peak definition fot T4!!
 # data_path = r'Z:\Robert_TOMCAT_3b_netcdf4'
-data_path = r'Z:\Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim'
+data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim')
 # data_path = r'B:\Robert_TOMCAT_5_netcdf4'
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 # processing_version = 'for_PNM'
@@ -244,7 +251,7 @@ def __main__(sample):
             
             
         
-result = Parallel(n_jobs= num_cores)(delayed(__main__)(sample) for sample in samples)      
+result = Parallel(n_jobs= num_cores, temp_folder=temp_folder)(delayed(__main__)(sample) for sample in samples)      
 
 # for sample in samples:
 #     print(sample)
