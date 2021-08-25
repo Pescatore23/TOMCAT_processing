@@ -54,7 +54,8 @@ rho = 997 #kg/m3  density of water
 #data_path = r"C:\Zwischenlager\Dyn_Data"
 
 # drive = '//152.88.86.87/data118'
-drive = '//152.88.86.68/data118'
+# drive = '//152.88.86.68/data118'
+drive = r"A:"
 if host == 'ddm05307':
     # num_cores = 8
     drive = r"Z:"
