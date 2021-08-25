@@ -35,7 +35,7 @@ sourceFolder = data_path
 # TODO: revise peak heights for TOMCAT4
 
 heigth_crit = 300 #vx/s 300 for T4
-dist_crit = 7#s 7 #s 1s for TOMCAT_4 and 7s for TOMCAT 5
+dist_crit = 1#s 7 #s 1s for TOMCAT_4 and 7s for TOMCAT 5
 prom_crit = 150 #vx/s 150 for T4
 
 samples = os.listdir(sourceFolder)
