@@ -74,6 +74,11 @@ if host == 'hades':
     pc = True
     num_cores = 4
 
+if host == 'mavt-cbp-w001m':
+    drive = '/Users/robfisch/NAS'
+    pc = True
+    num_cores = 4
+
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
 
