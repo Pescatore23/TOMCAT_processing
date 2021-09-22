@@ -240,6 +240,7 @@ def __main__(sample):
             
             filename = os.path.join(sourceFolder, ''.join(['peak_diff_data_', name,'.nc']))
             data_dict.to_netcdf(filename)
+        sample_data.close()
             
             
             
