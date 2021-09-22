@@ -186,7 +186,7 @@ samples.sort()
 for sample in samples:
     if not sample[:3] == 'dyn': continue
     print(sample)
-    data = xr.load_dataset(os.path.join(sourceFolder, sample))
+    data = xr.open_dataset(os.path.join(sourceFolder, sample))
     name = data.attrs['name']
     k1 = knots[name][0]
     k2 = knots[name][1]   
@@ -203,6 +203,7 @@ for sample in samples:
     transition = transition[:,:,k1:k2]
     # void = void[:,:,:transition.shape[2]]
     time = data['time'].data
+    data.close()
     watermask = transition>0
     result = Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(interface_per_time_step)((transition<t+1)*watermask, void) for t in range(1,time.shape[0]))
     result = np.array(result)
