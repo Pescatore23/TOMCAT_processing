@@ -56,6 +56,7 @@ def filling(array, time):
 
     
 def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, knots=knots, samples=samples):
+    print(sample)
     dyn_data = xr.open_dataset(os.path.join(ncFolder, samples[sample]))
     transitions = dyn_data['transition_matrix'].data
     time  = dyn_data['time'].data
@@ -86,13 +87,13 @@ def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, kno
     y1_int_fill = filling(interface_transitions*yarn1, time)
     y2_int_fill = filling(interface_transitions*yarn2, time)
     
-    data = xr.Dataset({'top_yarn': (time, yarn1_fill.cumsum()),
-                       'bottom_yarn': (time, yarn2_fill.cumsum()),
-                       'interface': (time, int_fill.cumsum()),
-                       'knot': (time, knot_fill.cumsum()),
-                       'top_interface': (time, y1_int_fill.cumsum()),
-                       'bottom_interface': (time, y2_int_fill.cumsum()),
-                       'full_sample': (time,total)},
+    data = xr.Dataset({'top_yarn': ('time', yarn1_fill.cumsum()),
+                       'bottom_yarn': ('time', yarn2_fill.cumsum()),
+                       'interface': ('time', int_fill.cumsum()),
+                       'knot': ('time', knot_fill.cumsum()),
+                       'top_interface': ('time', y1_int_fill.cumsum()),
+                       'bottom_interface': ('time', y2_int_fill.cumsum()),
+                       'full_sample': ('time',total)},
                        coords = {'time': time})
     variables = list(data.keys())
     
