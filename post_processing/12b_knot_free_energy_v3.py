@@ -183,7 +183,7 @@ def interface_per_time_step(wet, void, smooth_decision = smooth_decision):#, wat
     return A_ws, A_wa, A_tot, A_wv, A_ws_label, A_wa_corr, A_wa_corr2
 
 samples.sort()
-for sample in samples.reverse():
+for sample in samples.reverse:
     if not sample[:3] == 'dyn': continue
     print(sample)
     data = xr.open_dataset(os.path.join(sourceFolder, sample))
