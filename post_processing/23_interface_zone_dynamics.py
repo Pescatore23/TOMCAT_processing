@@ -41,13 +41,26 @@ for file in files:
     if not file[:3] == 'dyn': continue
     sample = file[9:-3]
     samples[sample] = file
+    
+def convert_array(data_ref, data_array, time):
+    new_array = np.zeros(len(time), dtype=np.uint16)
+    new_array[data_ref] = data_array
+    return new_array
+
+def filling(array, time):
+    unique = np.unique(array, return_counts=True)
+    ts = unique[0][1:]
+    counts = unique[1][1:]
+    new_array = convert_array(ts, counts, time)
+    return new_array
 
     
-def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, knots=knots):
+def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, knots=knots, samples=samples):
     dyn_data = xr.open_dataset(os.path.join(ncFolder, samples[sample]))
     transitions = dyn_data['transition_matrix'].data
     time  = dyn_data['time'].data
-    total_fill = dyn_data['filling'].sum(dim='label')
+    total = dyn_data['volume'].sum(dim='label').data
+    attrs = dyn_data.attrs.copy()
     dyn_data.close()
     
     k1 = knots[sample][0]
@@ -56,26 +69,42 @@ def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, kno
     
     yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn1'))
     yarn1 = yarn1[:,:,k1:k2]
-    yarn1_trans, yarn1_counts =  np.unique(transitions*yarn1, return_counts=True)
+    yarn1_fill = filling(transitions*yarn1, time)
     
     yarn2, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn2'))
     yarn2 = yarn2[:,:,k1:k2]
-    yarn2_trans, yarn2_counts =  np.unique(transitions*yarn2, return_counts=True)
-    
-    yarn1_trans = yarn1_trans[1:]
-    yarn1_counts = yarn1_counts[1:]
-    yarn2_trans = yarn2_trans[1:]
-    yarn2_counts = yarn2_counts[1:]
+    yarn2_fill = filling(transitions*yarn2, time)
         
     interface, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','interface_zone'))
     interface = interface[:,:,k1:k2]
     names = names[k1:k2]
+    
     interface_transitions = interface*transitions
     
-    knot_trans, knot_counts = np.unique(transitions, return_counts=True)
-    knot_trans = knot_trans[1:]
-    knot_counts = knot_counts[1:]
-    int_trans, int_counts = np.unique(interface_transitions, return_counts=True)
-    int_trans = int_trans[1:]
-    int_counts = int_counts[1:]   
+    knot_fill = filling(transitions, time)
+    int_fill = filling(interface_transitions, time)
+    y1_int_fill = filling(interface_transitions*yarn1, time)
+    y2_int_fill = filling(interface_transitions*yarn2, time)
+    
+    data = xr.Dataset({'top_yarn': (time, yarn1_fill.cumsum()),
+                       'bottom_yarn': (time, yarn2_fill.cumsum()),
+                       'interface': (time, int_fill.cumsum()),
+                       'knot': (time, knot_fill.cumsum()),
+                       'top_interface': (time, y1_int_fill.cumsum()),
+                       'bottom_interface': (time, y2_int_fill.cumsum()),
+                       'full_sample': (time,total)},
+                       coords = {'time': time})
+    variables = list(data.keys())
+    
+    for var in variables:
+        data[var].attrs['units'] = 'px'
+    data['time'].attrs['units'] = 's'
+    data.attrs = attrs
+    filename = ''.join(['knot_dyn_', sample, '.nc'])
+    data.to_netcdf(os.path.join(ncFolder, filename))
+    
+for sample in samples.keys():
+    interface_dynamics(sample)
+    
+    
     
