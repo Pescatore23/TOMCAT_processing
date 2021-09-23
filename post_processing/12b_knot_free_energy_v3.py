@@ -73,6 +73,7 @@ if host == 'hades':
     # drive = '/home/firo/NAS2'
     pc = True
     num_cores = 6
+    temp_folder = '/home/firo/python_temp'
 
 if host == 'mavt-cbp-w001m':
     drive = '/Users/robfisch/NAS'

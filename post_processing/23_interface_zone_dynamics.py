@@ -66,6 +66,10 @@ def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, kno
     
     k1 = knots[sample][0]
     k2 = knots[sample][1]   
+    
+    bottom_outside = filling(transitions[:,:,k2:], time)
+    top_outside = filling(transitions[:,:,:k1], time)
+    
     transitions = transitions[:,:,k1:k2]
     
     yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn1'))
@@ -93,7 +97,9 @@ def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, kno
                        'knot': ('time', knot_fill.cumsum()),
                        'top_interface': ('time', y1_int_fill.cumsum()),
                        'bottom_interface': ('time', y2_int_fill.cumsum()),
-                       'full_sample': ('time',total)},
+                       'full_sample': ('time',total),
+                       'top_out': ('time', top_outside.cumsum()),
+                       'bottom_out': ('time', bottom_outside.cumsum())},
                        coords = {'time': time})
     variables = list(data.keys())
     
