@@ -8,14 +8,16 @@ Created on Fri Apr  3 12:16:16 2020
 import robpylib
 import os
 import numpy as np
+import pickle
 
 baseFolder = r"V:\Robert_TOMCAT_4"
 samples = os.listdir(baseFolder)
 
+TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p",'rb'))
 
 # sample = 'T3_300_8_III'
 
-def fucntion(sample, baseFolder = baseFolder):
+def function(sample, baseFolder = baseFolder):
     transition_folder = os.path.join(baseFolder,sample,'03_gradient_filtered_transitions')
     time_folder = os.path.join(baseFolder,sample,'03c_gradient_filtered_real_time')
     
@@ -24,7 +26,7 @@ def fucntion(sample, baseFolder = baseFolder):
     if not os.path.exists(time_folder):
         os.mkdir(time_folder)
         
-    time = robpylib.TOMCAT.TIME.TIME[sample]
+    time = TIME[sample]
     
     new_stack = np.zeros(Stack.shape, dtype=np.uint16)
     
