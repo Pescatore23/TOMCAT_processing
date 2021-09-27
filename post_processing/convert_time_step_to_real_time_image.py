@@ -31,7 +31,7 @@ def function(sample, baseFolder = baseFolder):
     new_stack = np.zeros(Stack.shape, dtype=np.uint16)
     
     for ts in range(len(time)):
-        new_stack[Stack==ts+1] = time[ts]
+        new_stack[Stack==ts+1] = np.uint16(time[ts])
         
     robpylib.CommonFunctions.ImportExport.WriteStackNew(time_folder, names, new_stack)
     
