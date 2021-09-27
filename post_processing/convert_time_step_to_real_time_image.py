@@ -9,20 +9,29 @@ import robpylib
 import os
 import numpy as np
 
-sample = 'T3_300_8_III'
-transition_folder = os.path.join(r'A:\Robert_TOMCAT_3',sample,'03_gradient_filtered_transitions')
-time_folder = os.path.join(r'A:\Robert_TOMCAT_3',sample,'03c_gradient_filtered_real_time')
+baseFolder = r"V:\Robert_TOMCAT_4"
+samples = os.listdir(baseFolder)
 
-Stack, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(transition_folder)
 
-if not os.path.exists(time_folder):
-    os.mkdir(time_folder)
+# sample = 'T3_300_8_III'
+
+def fucntion(sample, baseFolder = baseFolder):
+    transition_folder = os.path.join(baseFolder,sample,'03_gradient_filtered_transitions')
+    time_folder = os.path.join(baseFolder,sample,'03c_gradient_filtered_real_time')
     
-time = robpylib.TOMCAT.TIME.TIME[sample]
-
-new_stack = np.zeros(Stack.shape, dtype=np.uint16)
-
-for ts in range(len(time)):
-    new_stack[Stack==ts+1] = time[ts]
+    Stack, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(transition_folder)
     
-robpylib.CommonFunctions.ImportExport.WriteStackNew(time_folder, names, new_stack)
+    if not os.path.exists(time_folder):
+        os.mkdir(time_folder)
+        
+    time = robpylib.TOMCAT.TIME.TIME[sample]
+    
+    new_stack = np.zeros(Stack.shape, dtype=np.uint16)
+    
+    for ts in range(len(time)):
+        new_stack[Stack==ts+1] = time[ts]
+        
+    robpylib.CommonFunctions.ImportExport.WriteStackNew(time_folder, names, new_stack)
+    
+for sample in samples:
+    function(sample)
