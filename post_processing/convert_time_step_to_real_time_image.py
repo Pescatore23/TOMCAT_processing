@@ -20,20 +20,22 @@ TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p",'rb'))
 def function(sample, baseFolder = baseFolder):
     transition_folder = os.path.join(baseFolder,sample,'03_gradient_filtered_transitions')
     time_folder = os.path.join(baseFolder,sample,'03c_gradient_filtered_real_time')
-    
-    Stack, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(transition_folder)
+
+    print(sample)
     
     if not os.path.exists(time_folder):
+        Stack, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(transition_folder)
         os.mkdir(time_folder)
         
-    time = TIME[sample]
-    
-    new_stack = np.zeros(Stack.shape, dtype=np.uint16)
-    
-    for ts in range(len(time)):
-        new_stack[Stack==ts+1] = np.uint16(time[ts])
+        time = TIME[sample]
         
-    robpylib.CommonFunctions.ImportExport.WriteStackNew(time_folder, names, new_stack)
+        new_stack = np.zeros(Stack.shape, dtype=np.uint16)
+        
+        for ts in range(len(time)):
+            new_stack[Stack==ts+1] = np.uint16(time[ts])
+            
+        robpylib.CommonFunctions.ImportExport.WriteStackNew(time_folder, names, new_stack)
     
 for sample in samples:
+    if sample == '.DS_Store': continue
     function(sample)
