@@ -10,7 +10,8 @@ import os
 import numpy as np
 import pickle
 
-baseFolder = r"V:\Robert_TOMCAT_4"
+# baseFolder = r"V:\Robert_TOMCAT_4"
+baseFolder = r"/Users/robfisch/NAS"
 samples = os.listdir(baseFolder)
 
 TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p",'rb'))
