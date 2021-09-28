@@ -17,9 +17,10 @@ TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p",'rb'))
 
 # sample = 'T3_300_8_III'
 
+
 def function(sample, baseFolder = baseFolder):
     transition_folder = os.path.join(baseFolder,sample,'03_gradient_filtered_transitions')
-    time_folder = os.path.join(baseFolder,sample,'03c_gradient_filtered_real_time')
+    time_folder = os.path.join(baseFolder,sample,'03c_gradient_filtered_real_time_float')
 
     print(sample)
     
@@ -29,10 +30,10 @@ def function(sample, baseFolder = baseFolder):
         
         time = TIME[sample]
         
-        new_stack = np.zeros(Stack.shape, dtype=np.uint16)
+        new_stack = np.zeros(Stack.shape)
         
         for ts in range(len(time)):
-            new_stack[Stack==ts+1] = np.uint16(time[ts])
+            new_stack[Stack==ts+1] = time[ts]
             
         robpylib.CommonFunctions.ImportExport.WriteStackNew(time_folder, names, new_stack)
     
