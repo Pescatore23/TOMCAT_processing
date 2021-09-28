@@ -14,8 +14,8 @@ import pickle
 baseFolder = r"/Users/robfisch/NAS"
 samples = os.listdir(baseFolder)
 
-TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p",'rb'))
-
+# TIME = pickle.load(open(r"H:\11_Essential_Data\03_TOMCAT\TIME.p",'rb'))
+TIME = pickle.load(open(r"/Users/robfisch/TIME.p",'rb'))
 # sample = 'T3_300_8_III'
 
 
