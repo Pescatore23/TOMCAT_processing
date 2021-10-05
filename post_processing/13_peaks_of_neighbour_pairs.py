@@ -58,7 +58,7 @@ def resample_data(data, time, sampling=sampling):
     return new_time, new_data
 
 
-def neigbour_flux_analysis_v2(conn, data, time):
+def neigbour_flux_analysis_v2(conn, data, time, sampling = sampling):
     # returns the peaks of pore neighbor pairs
     volume = data['volume'].sel(label=conn[0]).data + data['volume'].sel(label=conn[1]).data
     flux = np.gradient(volume, time)
@@ -77,31 +77,31 @@ def diffs_v1(conn, data):
         dt=-1
     return conn[0], conn[1], dt
 
-def diffs_v2(conn, data, time):
+def diffs_v2(conn, data, time, sampling = sampling):
     peaks, props = neigbour_flux_analysis_v2(conn, data, time)
-    dt = np.diff(peaks)
+    dt = np.diff(peaks)*sampling
     peak_heights = props['peak_heights']
     return conn[0], conn[1], dt, peaks, peak_heights
 
-def diffs_v3(label, adj_mat, data, time):
+def diffs_v3(label, adj_mat, data, time, sampling = sampling):
     nb = np.where(adj_mat[label,:])[0]
     k = len(nb)-1
     volume = data['volume'].sel(label=nb).sum(axis=0).data
     flux = np.gradient(volume, time)
     new_time, new_flux = resample_data(flux, time)
     peaks, props = sp.signal.find_peaks(new_flux, height=heigth_crit, distance=dist_crit, prominence=prom_crit)
-    dt = np.diff(peaks)
+    dt = np.diff(peaks)*sampling
     peak_heights = props['peak_heights']
     return label, k, dt, peaks, peak_heights
     
 
-def diffs_v4(label, data, time):
+def diffs_v4(label, data, time, sampling = sampling):
     # returns the peak distances inside a pore
     volume = data['volume'].sel(label=label).data
     flux = np.gradient(volume, time)
     new_time, new_flux = resample_data(flux, time)
     peaks, props = sp.signal.find_peaks(new_flux,  height=heigth_crit, distance=dist_crit, prominence=prom_crit)
-    dt = np.diff(peaks)
+    dt = np.diff(peaks)*sampling
     peak_heights = props['peak_heights']
     return label, dt, peaks, peak_heights
 
