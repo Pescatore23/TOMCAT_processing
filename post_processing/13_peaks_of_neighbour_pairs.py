@@ -63,7 +63,7 @@ def neigbour_flux_analysis_v2(conn, data, time, sampling = sampling):
     volume = data['volume'].sel(label=conn[0]).data + data['volume'].sel(label=conn[1]).data
     flux = np.gradient(volume, time)
     new_time, new_flux = resample_data(flux, time)
-    peaks, props = sp.signal.find_peaks(new_flux, height=heigth_crit, distance=dist_crit, prominence=prom_crit)
+    peaks, props = sp.signal.find_peaks(new_flux, height=heigth_crit, distance=dist_crit/sampling, prominence=prom_crit)
     return peaks, props
     
 
@@ -89,7 +89,7 @@ def diffs_v3(label, adj_mat, data, time, sampling = sampling):
     volume = data['volume'].sel(label=nb).sum(axis=0).data
     flux = np.gradient(volume, time)
     new_time, new_flux = resample_data(flux, time)
-    peaks, props = sp.signal.find_peaks(new_flux, height=heigth_crit, distance=dist_crit, prominence=prom_crit)
+    peaks, props = sp.signal.find_peaks(new_flux, height=heigth_crit, distance=dist_crit/sampling, prominence=prom_crit)
     dt = np.diff(peaks)*sampling
     peak_heights = props['peak_heights']
     return label, k, dt, peaks, peak_heights
@@ -100,7 +100,7 @@ def diffs_v4(label, data, time, sampling = sampling):
     volume = data['volume'].sel(label=label).data
     flux = np.gradient(volume, time)
     new_time, new_flux = resample_data(flux, time)
-    peaks, props = sp.signal.find_peaks(new_flux,  height=heigth_crit, distance=dist_crit, prominence=prom_crit)
+    peaks, props = sp.signal.find_peaks(new_flux,  height=heigth_crit, distance=dist_crit/sampling, prominence=prom_crit)
     dt = np.diff(peaks)*sampling
     peak_heights = props['peak_heights']
     return label, dt, peaks, peak_heights
