@@ -26,6 +26,9 @@ temp_folder = None
 if host == 'DDM06609': 
     drive = r"A:"
     temp_folder = r"Z:\users\firo\joblib_tmp"
+if host == 'DDM06608': 
+    drive = r"V:"
+    temp_folder = r"Z:\users\firo\joblib_tmp"
     
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4') #TODO: change also peak definition fot T4!!
@@ -44,12 +47,13 @@ sourceFolder = data_path
 heigth_crit = 300 #vx/s 300 for T4
 dist_crit = 1#s 7 #s 1s for TOMCAT_4 and 7s for TOMCAT 5
 prom_crit = 150 #vx/s 150 for T4
+sampling = 0.4# resample data to maximum temporal resolution for equidistant time everywhere: T3:1s, T4:0.4s
 
 samples = os.listdir(sourceFolder)
 
-def resample_data(data, time):
+def resample_data(data, time, sampling=sampling):
     spline = interp1d(time, data, fill_value = 'extrapolate')
-    new_time = np.arange(time.min(),time.max(),1)
+    new_time = np.arange(time.min(),time.max(),sampling)
     new_data = spline(new_time)
     return new_time, new_data
 
