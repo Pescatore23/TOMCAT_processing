@@ -26,7 +26,7 @@ temp_folder = None
 if host == 'DDM06609': 
     drive = r"A:"
     temp_folder = r"Z:\users\firo\joblib_tmp"
-if host == 'DDM06608': 
+if host == 'ddm06608': 
     drive = r"V:"
     temp_folder = r"Z:\users\firo\joblib_tmp"
     
@@ -105,6 +105,19 @@ def diffs_v4(label, data, time):
     peak_heights = props['peak_heights']
     return label, dt, peaks, peak_heights
 
+def reconstruct_adj_matrix(old_diff_data):
+    conns = old_diff_data['pairs'].data
+    conn_list = list(conns)
+    size = conns.max()+1
+    adj_mat = np.zeros([size,size], dtype=np.bool)
+ 
+    for conn in conn_list:
+        adj_mat[conn[0], conn[1]] = True
+    
+    # make sure that matrix is symmetric (as it should be)
+    adj_mat = np.maximum(adj_mat, adj_mat.transpose())
+    
+    return adj_mat, conn_list
 
 def __main__(sample):
     if sample[:3] == 'dyn':
@@ -115,16 +128,30 @@ def __main__(sample):
             tension = sample_data.attrs['tension']
             time = sample_data['time'].data
             labels = sample_data['label'].data
-            label_mat = sample_data['label_matrix'].data
-            adj_mat = robpylib.CommonFunctions.pore_network.adjacency_matrix(label_mat, num_cores=8)
-            mask = np.ones(adj_mat.shape[0], np.bool)
-            mask[labels] = False
-            adj_mat[mask,:] = False
-            adj_mat[:,mask] = False 
-            adj_sparse = sp.sparse.coo_matrix(adj_mat)
-            conn_list = zip(adj_sparse.row, adj_sparse.col)
-            conn_list = list(conn_list)
+            old_file = os.path.join(sourceFolder, 'resampled_to_1s_too_crude', ''.join(['peak_diff_data_', name,'.nc']))
             
+            
+            if os.path.exists(old_file ):
+                old_diff_data = xr.load_dataset(old_file)
+                adj_mat, conn_list = reconstruct_adj_matrix(old_diff_data)
+                mask = np.ones(adj_mat.shape[0], np.bool)
+                mask[labels] = False
+                adj_mat[mask,:] = False
+                adj_mat[:,mask] = False 
+            
+            else:
+                label_mat = sample_data['label_matrix'].data
+                adj_mat = robpylib.CommonFunctions.pore_network.adjacency_matrix(label_mat, num_cores=8)
+                mask = np.ones(adj_mat.shape[0], np.bool)
+                mask[labels] = False
+                adj_mat[mask,:] = False
+                adj_mat[:,mask] = False 
+                adj_sparse = sp.sparse.coo_matrix(adj_mat)
+                conn_list = zip(adj_sparse.row, adj_sparse.col)
+                conn_list = list(conn_list)
+                
+
+                
             diff_data_v1 = np.zeros((3,len(conn_list)))-1
             
             diff_data_v2 = np.zeros((30, len(conn_list)))-1
