@@ -59,6 +59,9 @@ drive = r"A:"
 if host == 'ddm05307':
     # num_cores = 8
     drive = r"Z:"
+    
+if host == 'ddm06608':
+    drive = r"V:"
 # baseFolder = os.path.join(drive, 'Robert_TOMCAT_5_split')
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', 'processed_1200_dry_seg_aniso_sep_2')
@@ -143,7 +146,7 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     labels, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(labelFolder, track=False)
     
     if sample[0]=='T':
-        transitions2, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(transition_2_Folder, filetype=np.uint8, track=False)
+        transitions2, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(transition_2_Folder, filetype=np.uint16, track=False)
     else: transitions2 = np.zeros(transitions.shape, dtype=np.uint8)
     
 #    crop volume to ROI clearly above the water line
@@ -195,7 +198,7 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
     for label in relevant_labels:
         mask = labels==label
         labelmask[mask] = True
-        mask = np.uint8(mask)
+        mask = np.uint16(mask)
         TEST = transitions*mask    
         time_step, time_filling = np.unique(TEST[np.where(TEST>0)],return_counts=True)
         TEST = transitions2*mask
@@ -207,6 +210,9 @@ def get_Dyn_Data(sample, baseFolder=baseFolder):
             
             if len(back_step)>0:
                 data_filling[pore-1, back_step] = data_filling[pore-1, back_step] - back_filling
+        if sample == 'T4_100_4': #manually remove errors
+            if label == 8733 or label == 9001 or label == 9382 or label == 10000:
+                data_filling[pore-1, :] = 0
     data_volume = np.cumsum(data_filling, axis=1).astype(np.uint32)
     
 #    print('time pore analysis')
@@ -437,7 +443,7 @@ def mainfunction(sample, baseFolder = baseFolder, data_path = data_path):
 #         sample_data = get_Dyn_Data(sample)
 #         sample_data = dyn_fit_step2(sample_data)
 #         sample_data.to_netcdf(filename)
-    
+samples = ['T4_025_2_II']
 if parallel:
     results=Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(mainfunction)(sample) for sample in samples)
 # for sample in samples:

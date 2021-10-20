@@ -13,9 +13,10 @@ import pickle
 
 
 drive = '//152.88.86.87/data118'
+drive = r"Z:"
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 temp_folder= r"Z:\users\firo\joblib_tmp"
-
+temp_folder = None
 
 samples = os.listdir(baseFolder)
 

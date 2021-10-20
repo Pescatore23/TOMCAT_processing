@@ -18,7 +18,7 @@ import h5py
 
 num_cores = 16#mp.cpu_count()
 # drive = '//152.88.86.87/data118'
-drive = r"A:"
+drive = r"Z:"
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives', processing_version)
 data_path = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim')
@@ -172,6 +172,7 @@ for filename in liste:
     
     new_filename = ''.join(['pore_props_', name,'.nc']) #'_size_',str(dyn_data.attrs['size_factor'])
     print(name)
+    if not name == 'T4_100_5': continue
     # if dyn_data.attrs['name'] == 'T4_300_4_III': continue
     # if dyn_data.attrs['name'] == 'T4_025_4': continue
     if os.path.exists(os.path.join(data_path, new_filename)): continue

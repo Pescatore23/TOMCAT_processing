@@ -16,7 +16,7 @@ from joblib import Parallel, delayed
 #import multiprocessing as mp
 import xarray as xr
 from scipy import ndimage
-# import robpylib
+import robpylib
 
 num_cores = 12# mp.cpu_count()
 # temp_folder = r"Z:\users\firo\joblib_tmp"
@@ -29,7 +29,8 @@ drive = r"B:"
 
 # sourcefolder = os.path.join(drive, data_path, processing_version)
 # sourcefolder = os.path.join(drive, "Robert_TOMCAT_5_netcdf4")
-sourcefolder = r"A:\Robert_TOMCAT_3_combined_archives\unmasked"
+# sourcefolder = r"A:\Robert_TOMCAT_3_combined_archives\unmasked"
+sourcefolder = "/home/firo/NAS/Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim"
 # targetfolder = os.path.join(drive, "Robert_TOMCAT_5_netcdf4","Animations")
 targetfolder = os.path.join(sourcefolder, "Animations")
 # r'R:\Scratch\305\_Robert\Animations'
@@ -165,7 +166,7 @@ for sample in samples:
 # #     print(sample[9:-3])
     sample_data = xr.load_dataset(os.path.join(sourcefolder, sample))
     sample_name = sample_data.attrs['name']
-    if sample_name == 'T4_300_2_II': continue
+    # if sample_name == 'T4_300_2_II': continue
     time = sample_data['time'].data
     LOI = sample_data['label'].data
     print(sample_name)
@@ -179,7 +180,12 @@ for sample in samples:
         
     transitions = sample_data['transition_matrix'].data
     t_max =  transitions.max()
-    if t_max > 200: t_max=200
+    if t_max > 400: t_max=400
+    
+    interlaces, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join("/home/firo/NAS/Robert_TOMCAT_4", sample, '06c_yarn_labels','interface_zone' ))
+    transitions = transitions*interlaces
+    interlaces = None
+    
     
     Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(rendering)(t, transitions, time, outfolder) for t in range(t_max+1))
 #    for t in range(t_max+1)    :

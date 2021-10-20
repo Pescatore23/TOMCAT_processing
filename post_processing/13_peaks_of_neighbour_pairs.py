@@ -47,7 +47,7 @@ sourceFolder = data_path
 heigth_crit = 300 #vx/s 300 for T4
 dist_crit = 1#s 7 #s 1s for TOMCAT_4 and 7s for TOMCAT 5
 prom_crit = 150 #vx/s 150 for T4
-sampling = 0.4# resample data to maximum temporal resolution for equidistant time everywhere: T3:1s, T4:0.4s
+sampling = 0.1# resample data to 4x maximum temporal resolution for equidistant time everywhere: T3:1s, T4:0.2s
 
 samples = os.listdir(sourceFolder)
 
