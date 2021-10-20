@@ -182,7 +182,7 @@ for sample in samples:
     t_max =  transitions.max()
     if t_max > 400: t_max=400
     
-    interlaces, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join("/home/firo/NAS/Robert_TOMCAT_4", sample, '06c_yarn_labels','interface_zone' ))
+    interlaces, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join("/home/firo/NAS/Robert_TOMCAT_4", sample_name, '06c_yarn_labels','interface_zone' ))
     transitions = transitions*interlaces
     interlaces = None
     
