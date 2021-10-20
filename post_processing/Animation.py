@@ -22,7 +22,7 @@ num_cores = 12# mp.cpu_count()
 # temp_folder = r"Z:\users\firo\joblib_tmp"
 # drive = '//152.88.86.87/data118'
 temp_folder = None
-drive = r"B:"
+# drive = r"B:"
 # data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 # processing_version = 'processed_1200_dry_seg_aniso_sep'
 
@@ -30,7 +30,7 @@ drive = r"B:"
 # sourcefolder = os.path.join(drive, data_path, processing_version)
 # sourcefolder = os.path.join(drive, "Robert_TOMCAT_5_netcdf4")
 # sourcefolder = r"A:\Robert_TOMCAT_3_combined_archives\unmasked"
-sourcefolder = "/home/firo/NAS/Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim"
+sourcefolder = r"Z:\Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim"
 # targetfolder = os.path.join(drive, "Robert_TOMCAT_5_netcdf4","Animations")
 targetfolder = os.path.join(sourcefolder, "Animations")
 # r'R:\Scratch\305\_Robert\Animations'
