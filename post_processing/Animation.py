@@ -16,7 +16,7 @@ from joblib import Parallel, delayed
 #import multiprocessing as mp
 import xarray as xr
 from scipy import ndimage
-import robpylib
+# import robpylib
 
 num_cores = 12# mp.cpu_count()
 # temp_folder = r"Z:\users\firo\joblib_tmp"
@@ -32,10 +32,23 @@ temp_folder = None
 # sourcefolder = r"A:\Robert_TOMCAT_3_combined_archives\unmasked"
 sourcefolder = r"Z:\Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim"
 # targetfolder = os.path.join(drive, "Robert_TOMCAT_5_netcdf4","Animations")
-targetfolder = os.path.join(sourcefolder, "Animations")
+targetfolder = os.path.join(sourcefolder, "Animations2")
 # r'R:\Scratch\305\_Robert\Animations'
 
-
+transition_dict = {
+    'T4_025_4': (29,32),
+    'T4_025_1_III': (65,183),
+    'T4_100_2_III': (45,68),
+    'T4_025_3': (24,30),
+    'T4_100_3': (27,33),
+    'T4_100_4': (28,32),
+    'T4_100_5': (47, 75),
+    'T4_300_1': (30, 37),
+    'T4_300_2_II': (40, 47),
+    'T4_300_3_III': (30, 190), #at (30, 65) already some signal
+    'T4_300_4_III': (40, -1), #no water in upper yarn
+    'T4_300_5_III': (45,73)
+}
 
 #ax = fig.add_subplot(111, projection='3d')
 #
@@ -182,9 +195,11 @@ for sample in samples:
     t_max =  transitions.max()
     if t_max > 400: t_max=400
     
-    interlaces, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(r"Z:\Robert_TOMCAT_4", sample_name, '06c_yarn_labels','interface_zone' ))
-    transitions = transitions*interlaces
-    interlaces = None
+    transitions[transitions<transition_dict[sample_name][0]] = 0
+    transitions[transitions>transition_dict[sample_name][1]] = 0
+    # interlaces, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(r"Z:\Robert_TOMCAT_4", sample_name, '06c_yarn_labels','interface_zone' ))
+    # transitions = transitions*interlaces
+    # interlaces = None
     
     
     Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(rendering)(t, transitions, time, outfolder) for t in range(t_max+1))
