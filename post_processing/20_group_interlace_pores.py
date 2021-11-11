@@ -197,7 +197,7 @@ def sample_function(sample, baseFolder=baseFolder, destination=destination, over
             data.attrs = metadata.attrs
             data.attrs['explanation'] = '1 - top yarn, 2 - bottom yarn, 3 - interlace, 0 - not in contact'
             
-            filename = ''.join(['pore_affiliation_', sample,'.nc'])
+            filename = ''.join(['pore_affiliation_small_interface', sample,'.nc'])
             path = os.path.join(destination, filename)
             
             data.to_netcdf(path)

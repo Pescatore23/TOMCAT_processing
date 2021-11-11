@@ -45,7 +45,7 @@ def function(shp, points, point_list):
 
 def yarn_labeling(im):
     close = ndimage.morphology.binary_closing(im, iterations = 10)
-    dilate = ndimage.morphology.binary_dilation(close, structure = square(6))
+    dilate = ndimage.morphology.binary_dilation(close, structure = square(4))
     return dilate
 
 def track_yarn_affiliation(sample, baseFolder=baseFolder):
@@ -84,19 +84,26 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
     shp = fibers.shape
     
     yarns = Parallel(n_jobs=2, temp_folder = temp_folder)(delayed(function)(shp, points, point_list) for point_list in [top_points, bottom_points])
-    yarn1 = yarns[0]
-    yarn2 = yarns[1]
+    yarn1 = yarns[0].astype(np.uint8)
+    yarn2 = yarns[1].astype(np.uint8)
+    
+    targetfiber1 = os.path.join(targetFolder,'yarn1_fibers')
+    targetfiber2 = os.path.join(targetFolder,'yarn2_fibers')
+    
+    robpylib.CommonFunctions.ImportExport.WriteStackNew(targetfiber1, names, yarn1)
+    robpylib.CommonFunctions.ImportExport.WriteStackNew(targetfiber2, names, yarn2)
+    
     
     results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn1[:,:,z]) for z in range(yarn1.shape[2]))
     label = np.array(results).transpose(1,2,0).astype(np.uint8)
-    target1 = os.path.join(targetFolder,'yarn1')
+    target1 = os.path.join(targetFolder,'yarn1_small')
     if not os.path.exists(target1):
         os.mkdir(target1)
     robpylib.CommonFunctions.ImportExport.WriteStackNew(target1, names, label)
     
     results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn2[:,:,z]) for z in range(yarn1.shape[2]))
     label = np.array(results).transpose(1,2,0).astype(np.uint8)
-    target2 = os.path.join(targetFolder,'yarn2')
+    target2 = os.path.join(targetFolder,'yarn2_small')
     if not os.path.exists(target2):
         os.mkdir(target2)
     robpylib.CommonFunctions.ImportExport.WriteStackNew(target2, names, label)
