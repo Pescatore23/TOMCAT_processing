@@ -10,13 +10,14 @@ import xarray as xr
 import numpy as np
 import scipy as sp
 from joblib import Parallel, delayed
-import robpylib
+# import robpylib
 # from scipy import sparse
 from scipy.interpolate import interp1d
 # import matplotlib.pyplot as plt
 num_cores = 8
 import socket
 host = socket.gethostname()
+import networkx as nx
 
 
 # drive = r'\\152.88.86.87\data118'
@@ -119,6 +120,17 @@ def reconstruct_adj_matrix(old_diff_data):
     
     return adj_mat, conn_list
 
+def reconstruct_graph_from_netcdf4(path):
+    data = xr.load_dataset(path)
+    nodes = data['nodes'].data
+    mapping = {}
+    for i in range(len(nodes)):
+        mapping[i] = nodes[i]
+    adj_matrix = data['adj_matrix'].data
+    graph = nx.from_numpy_array(adj_matrix)
+    H = nx.relabel_nodes(graph, mapping)
+    return H
+    
 def __main__(sample):
     if sample[:3] == 'dyn':
         sample_data = xr.open_dataset(os.path.join(sourceFolder, sample))
@@ -128,27 +140,30 @@ def __main__(sample):
             tension = sample_data.attrs['tension']
             time = sample_data['time'].data
             labels = sample_data['label'].data
-            old_file = os.path.join(sourceFolder, 'resampled_to_1s_too_crude', ''.join(['peak_diff_data_', name,'.nc']))
+            # old_file = os.path.join(sourceFolder, 'resampled_to_1s_too_crude', ''.join(['peak_diff_data_', name,'.nc']))
             
             
-            if os.path.exists(old_file ):
-                old_diff_data = xr.load_dataset(old_file)
-                adj_mat, conn_list = reconstruct_adj_matrix(old_diff_data)
-                mask = np.ones(adj_mat.shape[0], np.bool)
-                mask[labels] = False
-                adj_mat[mask,:] = False
-                adj_mat[:,mask] = False 
+            # if os.path.exists(old_file ):
+            #     old_diff_data = xr.load_dataset(old_file)
+            #     adj_mat, conn_list = reconstruct_adj_matrix(old_diff_data)
+            #     mask = np.ones(adj_mat.shape[0], np.bool)
+            #     mask[labels] = False
+            #     adj_mat[mask,:] = False
+            #     adj_mat[:,mask] = False 
             
-            else:
-                label_mat = sample_data['label_matrix'].data
-                adj_mat = robpylib.CommonFunctions.pore_network.adjacency_matrix(label_mat, num_cores=8)
-                mask = np.ones(adj_mat.shape[0], np.bool)
-                mask[labels] = False
-                adj_mat[mask,:] = False
-                adj_mat[:,mask] = False 
-                adj_sparse = sp.sparse.coo_matrix(adj_mat)
-                conn_list = zip(adj_sparse.row, adj_sparse.col)
-                conn_list = list(conn_list)
+            # else:
+            #     label_mat = sample_data['label_matrix'].data
+            #     adj_mat = robpylib.CommonFunctions.pore_network.adjacency_matrix(label_mat, num_cores=8)
+            gpath = os.path.join(sourceFolder, ''.join(['network_',sample,'.nc']))
+            graph = reconstruct_graph_from_netcdf4(gpath)
+            adj_mat = nx.to_numpy(graph)
+            mask = np.ones(adj_mat.shape[0], np.bool)
+            mask[labels] = False
+            adj_mat[mask,:] = False
+            adj_mat[:,mask] = False 
+            adj_sparse = sp.sparse.coo_matrix(adj_mat)
+            conn_list = zip(adj_sparse.row, adj_sparse.col)
+            conn_list = list(conn_list)
                 
 
                 

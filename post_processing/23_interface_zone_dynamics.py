@@ -72,17 +72,24 @@ def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, kno
     
     transitions = transitions[:,:,k1:k2]
     
-    yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn1'))
-    yarn1 = yarn1[:,:,k1:k2]
-    yarn1_fill = filling(transitions*yarn1, time)
-    
-    yarn2, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn2'))
-    yarn2 = yarn2[:,:,k1:k2]
-    yarn2_fill = filling(transitions*yarn2, time)
-        
-    interface, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','interface_zone'))
+    interface, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','interface_zone_small'))
     interface = interface[:,:,k1:k2]
+    intmask = interface>0
     names = names[k1:k2]
+    
+    yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn1_small'))
+    yarn1 = yarn1[:,:,k1:k2]
+    yarn1trans = transitions*yarn1
+    yarn1trans[intmask] = 0
+    yarn1_fill = filling(yarn1trans, time)
+    
+    yarn2, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn2_small'))
+    yarn2 = yarn2[:,:,k1:k2]
+    yarn2trans = transitions*yarn2
+    yarn2trans[intmask] = 0
+    yarn2_fill = filling(yarn2trans, time)
+        
+
     
     interface_transitions = interface*transitions
     

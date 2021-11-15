@@ -11,15 +11,15 @@ import numpy as np
 import pandas as pd
 import robpylib
 from joblib import Parallel, delayed
-from skimage.morphology import square
+from skimage.morphology import square, disk
 
 
 drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')
 destination = os.path.join(drive, 'Robert_TOMCAT_4_netcdf4_split_v2')
 
-baseFolder = r"A:\Robert_TOMCAT_4"
-destination = r"A:\Robert_TOMCAT_4_netcdf4_split_v2"
+baseFolder = r"V:\Robert_TOMCAT_4"
+destination = r"V:\Robert_TOMCAT_4_netcdf4_split_v2"
 overWrite = False
 temp_folder= r"Z:\users\firo\joblib_tmp"
 
@@ -33,19 +33,76 @@ def make_skeleton(matrix, point_list, points):
     return matrix
 
 def dilate_skeleton(matrix):
-    dt = ndimage.morphology.distance_transform_cdt(~matrix)
-    matrix = dt<20
+    dt = ndimage.morphology.distance_transform_edt(~matrix)
+    matrix = dt<12
     return matrix
 
-def function(shp, points, point_list):
+def trace_function(shp, points, segments, fiber):
+    matrix = np.zeros(shp, dtype=bool)
+    point_ids = np.array([int(i) for i in segments['Point IDs'][fiber].split(',')])
+    iold=point_ids[0]
+    for i in point_ids[1:]:
+        X1 = np.array([points['X Coord'][iold], points['Y Coord'][iold], points['Z Coord'][iold]])
+        X2 = np.array([points['X Coord'][i], points['Y Coord'][i], points['Z Coord'][i]])
+        T = X2-X1            
+        DZ = T[2]
+        for z in range(DZ):
+            Xz = z*T/DZ + X1
+            matrix[Xz] = True
+        iold = i
+    return matrix
+
+def make_traces_parallel(shp, yarn, segments, points):
+    matrix = np.zeros(shp, dtype = int)
+    colors= 1 + np.arange(len(yarn))
+    results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(trace_function)(shp, points, segments, fiber) for fiber in yarn)
+    for (result, color) in zip(results, colors):
+        matrix[result] = color
+    return matrix, colors
+       
+
+def make_traces(matrix, yarn, segments, points):
+    count = 0
+    for fiber in yarn:
+        count = count+1
+        point_ids = np.array([int(i) for i in segments['Point IDs'][fiber].split(',')])
+        iold=point_ids[0]
+        for i in point_ids[1:]:
+            X1 = np.array([points['X Coord'][iold], points['Y Coord'][iold], points['Z Coord'][iold]])
+            X2 = np.array([points['X Coord'][i], points['Y Coord'][i], points['Z Coord'][i]])
+            T = X2-X1            
+            DZ = T[2]
+            for z in range(DZ):
+                Xz = z*T/DZ + X1
+                matrix[Xz] = count
+            iold = i
+        
+    return matrix, count 
+
+def expand_trace(matrix, radius, color):
+    dt = ndimage.morphology.distance_transform_edt(~(matrix==color))
+    matrix = dt<radius
+    return matrix
+
+def make_fibers(shp, yarn, segments, points, radius=12):
+    # matrix, count = make_traces(matrix, yarn, segments, points)
+    matrix, fiber_colors = make_traces_parallel(shp, yarn, segments, points)
+    results = Parallel(n_jobs=16, temp_folder = temp_folder)(delayed(expand_trace)(matrix, radius, color) for color in fiber_colors)
+    matrix = np.zeros(shp, dtype=int)
+    for (result, color) in zip(results, fiber_colors):
+        matrix[result] = color
+    return matrix
+
+def function(shp, points, point_list, segments):
     matrix = np.zeros(shp, dtype = bool)
-    matrix = make_skeleton(matrix, point_list, points)
-    matrix = dilate_skeleton(matrix)
+    # matrix = make_skeleton(matrix, point_list, points)
+    # matrix = dilate_skeleton(matrix)
+    matrix = make_fibers(matrix, point_list, points, segments)
     return matrix
 
 def yarn_labeling(im):
     close = ndimage.morphology.binary_closing(im, iterations = 10)
-    dilate = ndimage.morphology.binary_dilation(close, structure = square(4))
+    dilate = ndimage.morphology.binary_dilation(close, structure = disk(5))
     return dilate
 
 def track_yarn_affiliation(sample, baseFolder=baseFolder):
@@ -83,16 +140,22 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
     fibers = fibers>0
     shp = fibers.shape
     
-    yarns = Parallel(n_jobs=2, temp_folder = temp_folder)(delayed(function)(shp, points, point_list) for point_list in [top_points, bottom_points])
-    yarn1 = yarns[0].astype(np.uint8)
-    yarn2 = yarns[1].astype(np.uint8)
+    # yarns = Parallel(n_jobs=2, temp_folder = temp_folder)(delayed(function)(shp, points, point_list) for point_list in [top_points, bottom_points])
+    # yarn1 = yarns[0].astype(np.uint8)
+    # yarn2 = yarns[1].astype(np.uint8)
     
+    yarn1 = make_fibers(shp, top_yarn, segments, points)
+    yarn2 = make_fibers(shp, bottom_yarn, segments, points)
+    
+   
     targetfiber1 = os.path.join(targetFolder,'yarn1_fibers')
     targetfiber2 = os.path.join(targetFolder,'yarn2_fibers')
     
     robpylib.CommonFunctions.ImportExport.WriteStackNew(targetfiber1, names, yarn1)
     robpylib.CommonFunctions.ImportExport.WriteStackNew(targetfiber2, names, yarn2)
     
+    yarn1 = yarn1>0
+    yarn2 = yarn2>0
     
     results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn1[:,:,z]) for z in range(yarn1.shape[2]))
     label = np.array(results).transpose(1,2,0).astype(np.uint8)
@@ -112,6 +175,6 @@ samples = os.listdir(baseFolder)
 
 if '.DS_Store' in samples:
     samples.remove('.DS_Store')
-
-num_jobs = 4
-results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(track_yarn_affiliation)(sample) for sample in samples)    
+track_yarn_affiliation('T4_025_1_III')
+# num_jobs = 4
+# results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(track_yarn_affiliation)(sample) for sample in samples)    
