@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import robpylib
 from joblib import Parallel, delayed
+# import xarray as xr
 from skimage.morphology import square, disk
 
 
@@ -48,16 +49,19 @@ def trace_function(shp, points, segments, fiber):
         DZ = T[2]
         for z in range(DZ):
             Xz = z*T/DZ + X1
-            matrix[Xz] = True
+            Y = np.int16(Xz[0])
+            X = np.int16(Xz[1])
+            Z = np.int16(Xz[2])
+            matrix[X,Y,Z] = True
         iold = i
     return matrix
 
 def make_traces_parallel(shp, yarn, segments, points):
-    matrix = np.zeros(shp, dtype = int)
+    matrix = np.zeros(shp, dtype = np.uint8)
     colors= 1 + np.arange(len(yarn))
     results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(trace_function)(shp, points, segments, fiber) for fiber in yarn)
     for (result, color) in zip(results, colors):
-        matrix[result] = color
+        matrix[result.astype(bool)] = color
     return matrix, colors
        
 
@@ -81,16 +85,17 @@ def make_traces(matrix, yarn, segments, points):
 
 def expand_trace(matrix, radius, color):
     dt = ndimage.morphology.distance_transform_edt(~(matrix==color))
-    matrix = dt<radius
-    return matrix
+    return dt<radius
 
-def make_fibers(shp, yarn, segments, points, radius=12):
+def make_fibers(shp, yarn, segments, points, radius=10):
     # matrix, count = make_traces(matrix, yarn, segments, points)
+    print('make fiber traces')
     matrix, fiber_colors = make_traces_parallel(shp, yarn, segments, points)
-    results = Parallel(n_jobs=16, temp_folder = temp_folder)(delayed(expand_trace)(matrix, radius, color) for color in fiber_colors)
-    matrix = np.zeros(shp, dtype=int)
+    print('expand traces to fibers')
+    results = Parallel(n_jobs=8, temp_folder = temp_folder)(delayed(expand_trace)(matrix, radius, color) for color in fiber_colors)
+    matrix = np.zeros(shp, dtype=np.uint8)
     for (result, color) in zip(results, fiber_colors):
-        matrix[result] = color
+        matrix[result.astype(bool)] = color
     return matrix
 
 def function(shp, points, point_list, segments):
@@ -139,6 +144,8 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
     fibers, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiber_path, track=False)
     fibers = fibers>0
     shp = fibers.shape
+    fibers = None
+    # ncpath = os.path.join(ncfolder)
     
     # yarns = Parallel(n_jobs=2, temp_folder = temp_folder)(delayed(function)(shp, points, point_list) for point_list in [top_points, bottom_points])
     # yarn1 = yarns[0].astype(np.uint8)
@@ -154,27 +161,33 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
     robpylib.CommonFunctions.ImportExport.WriteStackNew(targetfiber1, names, yarn1)
     robpylib.CommonFunctions.ImportExport.WriteStackNew(targetfiber2, names, yarn2)
     
-    yarn1 = yarn1>0
-    yarn2 = yarn2>0
+    # yarn1 = yarn1>0
+    # yarn2 = yarn2>0
     
-    results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn1[:,:,z]) for z in range(yarn1.shape[2]))
-    label = np.array(results).transpose(1,2,0).astype(np.uint8)
-    target1 = os.path.join(targetFolder,'yarn1_small')
-    if not os.path.exists(target1):
-        os.mkdir(target1)
-    robpylib.CommonFunctions.ImportExport.WriteStackNew(target1, names, label)
+    # results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn1[:,:,z]) for z in range(yarn1.shape[2]))
+    # label = np.array(results).transpose(1,2,0).astype(np.uint8)
+    # target1 = os.path.join(targetFolder,'yarn1_small')
+    # if not os.path.exists(target1):
+    #     os.mkdir(target1)
+    # robpylib.CommonFunctions.ImportExport.WriteStackNew(target1, names, label)
     
-    results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn2[:,:,z]) for z in range(yarn1.shape[2]))
-    label = np.array(results).transpose(1,2,0).astype(np.uint8)
-    target2 = os.path.join(targetFolder,'yarn2_small')
-    if not os.path.exists(target2):
-        os.mkdir(target2)
-    robpylib.CommonFunctions.ImportExport.WriteStackNew(target2, names, label)
+    # results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn2[:,:,z]) for z in range(yarn1.shape[2]))
+    # label = np.array(results).transpose(1,2,0).astype(np.uint8)
+    # target2 = os.path.join(targetFolder,'yarn2_small')
+    # if not os.path.exists(target2):
+    #     os.mkdir(target2)
+    # robpylib.CommonFunctions.ImportExport.WriteStackNew(target2, names, label)
 
 samples = os.listdir(baseFolder)
 
 if '.DS_Store' in samples:
     samples.remove('.DS_Store')
-track_yarn_affiliation('T4_025_1_III')
-# num_jobs = 4
+# track_yarn_affiliation('T4_025_1_III')
+# num_jobs = 2
 # results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(track_yarn_affiliation)(sample) for sample in samples)    
+
+for sample in samples:
+    # if sample == 'T4_025_1_III': continue
+    print(sample)
+    track_yarn_affiliation(sample)
+    
