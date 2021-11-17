@@ -101,7 +101,7 @@ def make_fibers(shp, yarn, segments, points, radius=10):
     print('make fiber traces')
     matrix, fiber_colors = make_traces_parallel(shp, yarn, segments, points)
     print('expand traces to fibers')
-    results = Parallel(n_jobs=8, temp_folder = temp_folder)(delayed(expand_trace)(matrix, radius, color) for color in fiber_colors)
+    results = Parallel(n_jobs=5, temp_folder = temp_folder)(delayed(expand_trace)(matrix, radius, color) for color in fiber_colors)
     matrix = np.zeros(shp, dtype=np.uint8)
     for (result, color) in zip(results, fiber_colors):
         matrix[result.astype(bool)] = color
@@ -200,15 +200,10 @@ if '.DS_Store' in samples:
 # results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(track_yarn_affiliation)(sample) for sample in samples)    
 
 for sample in samples:
-    if sample == 'T4_025_4': continue
-    if sample == 'T4_100_2_III': continue
-    if sample == 'T4_100_3': continue
-    if sample == 'T4_300_1': continue
-    if sample == 'T4_300_3_III': continue
-    if sample == 'T4_025_2_II': continue
-    if sample == 'T4_025_1_III': continue
-    if sample == 'T4_025_3': continue
-    if sample == 'T4_100_4': continue
     print(sample)
+    if os.path.exists(os.path.join(baseFolder, sample, '06c_yarn_labels', 'all_fibers' )): 
+        print('already done')
+        continue
+
     track_yarn_affiliation(sample)
     
