@@ -130,19 +130,19 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
         os.mkdir(targetFolder)
     segments = pd.read_excel(path, sheet_name = 2)
     points = pd.read_excel(path, sheet_name = 1)
-    # nodes = pd.read_excel(path, sheet_name = 0)
+    nodes = pd.read_excel(path, sheet_name = 0)
     
-    # top_yarn = []
-    # bottom_yarn = []
+    top_yarn = []
+    bottom_yarn = []
     
-    # for segment in segments['Segment ID']:
-    #     node_ids = [segments['Node ID #1'][segment], segments['Node ID #2'][segment]]
-    #     position = nodes['Z Coord'][node_ids].mean()
+    for segment in segments['Segment ID']:
+        node_ids = [segments['Node ID #1'][segment], segments['Node ID #2'][segment]]
+        position = nodes['Z Coord'][node_ids].mean()
         
-    #     if position < 1012:
-    #         top_yarn.append(segment)
-    #     else:
-    #         bottom_yarn.append(segment)
+        if position < 1012:
+            top_yarn.append(segment)
+        else:
+            bottom_yarn.append(segment)
             
     # top_points = ','.join(segments['Point IDs'][top_yarn])
     # top_points = np.array([int(i) for i in top_points.split(',')])
