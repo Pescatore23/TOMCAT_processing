@@ -15,7 +15,7 @@ from joblib import Parallel, delayed
 # from skimage.morphology import square, disk
 # import cupy as cp
 # from cupyx.scipy import ndimage as ndi
-# from cucim.skimage.morphology import gpuball
+# from cucim.skimage.morphology import ball as gpuball
 from skimage.morphology import ball
 
 
@@ -78,7 +78,7 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
         node_ids = [segments['Node ID #1'][segment], segments['Node ID #2'][segment]]
         position = nodes['Z Coord'][node_ids].mean()
         
-        if position < 1012:
+        if position > 1012:
             top_yarn.append(segment)
         else:
             bottom_yarn.append(segment)
@@ -108,60 +108,82 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
     yarn1 = yarn1>0
     yarn2 = yarn2>0
     
-    print('expand fibers of first yarn')
-    print('1 - make one solid piece')
-    results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn1[:,:,z]) for z in range(yarn1.shape[2]))
-    label = np.array(results).transpose(1,2,0)
-    print('2 - 3D dilation')
-    # gpu_array = cp.array(label[:,:,k1-50:].copy())
-    # cpu_array = cp.asanumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(8)))
+    print('expand fibers of bottom yarn - skipped')
+    # print('1 - make one solid piece')
+    # results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn2[:,:,z]) for z in range(yarn1.shape[2]))
+    # label = np.array(results).transpose(1,2,0)
+    # print('2 - 3D dilation')
+    # # gpu_array = cp.array(label[:,:,k1-50:].copy())
+    # # cut1 = 2016-int(k1/2)
     
-    cpu_array = label[:,:,k1-50:]
-    cpu_array = ndimage.morphology.binary_dilation(cpu_array, structure=ball(10))
+    # # gpu_array = cp.array(label[:,:,k1-50:cut1])
+    # # cpu_array1 = cp.asnumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(9)))
     
-    label[:,:,k1-50:] = cpu_array
+    # # gpu_array = cp.array(label[:,:,cut1:])
+    # # cpu_array2 = cp.asnumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(9)))
+    
+    # # del gpu_array
+    
+    # # label[:,:,k1-50:cut1] = cpu_array1
+    # # label[:,:,cut1:] = cpu_array2
+    # # cpu_array = cp.asanumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(8)))
+    
+    # cpu_array = label
+    # cpu_array = ndimage.morphology.binary_dilation(cpu_array, structure=ball(10))
+    
+    # label = cpu_array
     
     
-    target1 = os.path.join(targetFolder,'yarn1')
-    if not os.path.exists(target1):
-        os.mkdir(target1)
-    robpylib.CommonFunctions.ImportExport.WriteStackNew(target1, names, label.astype(np.uint8))
+    # target1 = os.path.join(targetFolder,'yarn1')
+    # if not os.path.exists(target1):
+    #     os.mkdir(target1)
+    # robpylib.CommonFunctions.ImportExport.WriteStackNew(target1, names, label.astype(np.uint8))
     
-    print('expand fibers of second yarn')
-    print('1 - make one solid piece')
-    results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn2[:,:,z]) for z in range(yarn2.shape[2]))
-    label = np.array(results).transpose(1,2,0)
+    # print('expand fibers of top yarn')
+    # print('1 - make one solid piece')
+    # results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn1[:,:,z]) for z in range(yarn2.shape[2]))
+    # label = np.array(results).transpose(1,2,0)
     
-    print('2 - 3D dilation')
-    # gpu_array = cp.array(label[:,:,:k2+50].copy())
-    # cpu_array = cp.asnumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(8)))
+    # print('2 - 3D dilation skipped')
+    # cut2 = int(k2/2)
     
-    cpu_array = label[:,:,:k2+50]
-    cpu_array = ndimage.morphology.binary_dilation(cpu_array, structure=ball(10))
-    label[:,:,:k2+50] = cpu_array
+    # gpu_array = cp.array(label[:,:,:cut2])
+    # cpu_array1 = cp.asnumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(9)))
     
-    target2 = os.path.join(targetFolder,'yarn2')
-    if not os.path.exists(target2):
-        os.mkdir(target2)
-    robpylib.CommonFunctions.ImportExport.WriteStackNew(target2, names, label.astype(np.uint8))
+    # gpu_array = cp.array(label[:,:,cut2:k2+50])    
+    # cpu_array2 = cp.asnumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(9)))
+    
+    # del gpu_array
+    
+    # label[:,:,:cut2] = cpu_array1
+    # label[:,:,cut2:k2+50] = cpu_array2
+    
+    # cpu_array = label
+    # cpu_array = ndimage.morphology.binary_dilation(cpu_array, structure=ball(10))
+    # label = cpu_array
+    
+    # target2 = os.path.join(targetFolder,'yarn2')
+    # if not os.path.exists(target2):
+    #     os.mkdir(target2)
+    # robpylib.CommonFunctions.ImportExport.WriteStackNew(target2, names, label.astype(np.uint8))
     
 
 samples = os.listdir(baseFolder)
 
 if '.DS_Store' in samples:
     samples.remove('.DS_Store')
-track_yarn_affiliation('T4_025_1_III')
+# track_yarn_affiliation('T4_025_1_III')
 # num_jobs = 2
 # results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(track_yarn_affiliation)(sample) for sample in samples)    
-
+samples.reverse()
 for sample in samples:
-#     if sample == 'T4_025_4': continue
+    # if sample == 'T4_025_4': continue
 #     if sample == 'T4_100_2_III': continue
 #     if sample == 'T4_100_3': continue
 #     if sample == 'T4_300_1': continue
 #     if sample == 'T4_300_3_III': continue
 #     if sample == 'T4_025_2_II': continue
-#     if sample == 'T4_025_1_III': continue
+    # if sample == 'T4_025_1_III': continue
 #     if sample == 'T4_025_3': continue
 #     if sample == 'T4_100_4': continue
     print(sample)

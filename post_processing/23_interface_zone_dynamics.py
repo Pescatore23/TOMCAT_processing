@@ -67,23 +67,23 @@ def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, kno
     k1 = knots[sample][0]
     k2 = knots[sample][1]   
     
-    bottom_outside = filling(transitions[:,:,k2:], time)
-    top_outside = filling(transitions[:,:,:k1], time)
+    bottom_total = filling(transitions, time)
+    top_total = filling(transitions, time)
     
     transitions = transitions[:,:,k1:k2]
     
-    interface, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','interface_zone_small'))
+    interface, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','interface_zone'))
     interface = interface[:,:,k1:k2]
     intmask = interface>0
     names = names[k1:k2]
     
-    yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn1_small'))
+    yarn1, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn1'))
     yarn1 = yarn1[:,:,k1:k2]
     yarn1trans = transitions*yarn1
     yarn1trans[intmask] = 0
     yarn1_fill = filling(yarn1trans, time)
     
-    yarn2, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn2_small'))
+    yarn2, names = robpylib.CommonFunctions.ImportExport.ReadStackNew(os.path.join(baseFolder, sample, '06c_yarn_labels','yarn2'))
     yarn2 = yarn2[:,:,k1:k2]
     yarn2trans = transitions*yarn2
     yarn2trans[intmask] = 0
@@ -105,8 +105,8 @@ def interface_dynamics(sample, baseFolder = baseFolder, ncFolder = ncFolder, kno
                        'top_interface': ('time', y1_int_fill.cumsum()),
                        'bottom_interface': ('time', y2_int_fill.cumsum()),
                        'full_sample': ('time',total),
-                       'top_out': ('time', top_outside.cumsum()),
-                       'bottom_out': ('time', bottom_outside.cumsum())},
+                       'top_total': ('time', top_total.cumsum()),
+                       'bottom_total': ('time', bottom_total.cumsum())},
                        coords = {'time': time})
     variables = list(data.keys())
     
