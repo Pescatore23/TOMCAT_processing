@@ -12,8 +12,9 @@ import pandas as pd
 import robpylib
 from joblib import Parallel, delayed
 # import xarray as xr
-from skimage.morphology import square, disk
-
+from skimage.morphology import  disk
+# from cupyx.scipy import ndimage as ndi
+# from cucim.skimage.morphology import ball as gpuball
 
 drive = '//152.88.86.87/data118'
 baseFolder = os.path.join(drive, 'Robert_TOMCAT_4')

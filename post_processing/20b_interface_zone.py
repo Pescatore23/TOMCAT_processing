@@ -40,7 +40,9 @@ def function(sample):
     yarn2 = yarn2>0
     
     interface = np.bitwise_and(yarn1, yarn2).astype(np.uint8)
-    robpylib.CommonFunctions.ImportExport.WriteStackNew(target, names, interface)
+    yarn1 = np.bitwise_and(yarn1, ~interface)
+    yarn2 = np.bitwise_and(yarn2, ~interface)
+    # robpylib.CommonFunctions.ImportExport.WriteStackNew(target, names, interface)
     
     inter_labels = 0
     yarn1_labels = 0
@@ -53,8 +55,8 @@ def function(sample):
     
     return sample, inter_labels, yarn1_labels, yarn2_labels
 
-num_jobs = 4
+num_jobs = 8
 results = Parallel(n_jobs=num_jobs, temp_folder=temp_folder)(delayed(function)(sample) for sample in samples)    
     
-pickle.dump(results, open(os.path.join(baseFolder, 'interface_labels_fine_fibers_interface.p'), 'wb'))
+pickle.dump(results, open(os.path.join(baseFolder, 'interface_labels_fine_fibers_interface_clean.p'), 'wb'))
     

@@ -109,42 +109,42 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
     yarn2 = yarn2>0
     
     print('expand fibers of bottom yarn - skipped')
-    # print('1 - make one solid piece')
-    # results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn2[:,:,z]) for z in range(yarn1.shape[2]))
-    # label = np.array(results).transpose(1,2,0)
-    # print('2 - 3D dilation')
-    # # gpu_array = cp.array(label[:,:,k1-50:].copy())
-    # # cut1 = 2016-int(k1/2)
+    print('1 - make one solid piece')
+    results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn2[:,:,z]) for z in range(yarn1.shape[2]))
+    label = np.array(results).transpose(1,2,0)
+    print('2 - 3D dilation')
+    # gpu_array = cp.array(label[:,:,k1-50:].copy())
+    # cut1 = 2016-int(k1/2)
     
-    # # gpu_array = cp.array(label[:,:,k1-50:cut1])
-    # # cpu_array1 = cp.asnumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(9)))
+    # gpu_array = cp.array(label[:,:,k1-50:cut1])
+    # cpu_array1 = cp.asnumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(9)))
     
-    # # gpu_array = cp.array(label[:,:,cut1:])
-    # # cpu_array2 = cp.asnumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(9)))
+    # gpu_array = cp.array(label[:,:,cut1:])
+    # cpu_array2 = cp.asnumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(9)))
     
-    # # del gpu_array
+    # del gpu_array
     
-    # # label[:,:,k1-50:cut1] = cpu_array1
-    # # label[:,:,cut1:] = cpu_array2
-    # # cpu_array = cp.asanumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(8)))
+    # label[:,:,k1-50:cut1] = cpu_array1
+    # label[:,:,cut1:] = cpu_array2
+    # cpu_array = cp.asanumpy(ndi.morphology.binary_dilation(gpu_array, structure=gpuball(8)))
     
-    # cpu_array = label
-    # cpu_array = ndimage.morphology.binary_dilation(cpu_array, structure=ball(10))
+    cpu_array = label
+    cpu_array = ndimage.morphology.binary_dilation(cpu_array, structure=ball(10))
     
-    # label = cpu_array
+    label = cpu_array
     
     
-    # target1 = os.path.join(targetFolder,'yarn1')
-    # if not os.path.exists(target1):
-    #     os.mkdir(target1)
-    # robpylib.CommonFunctions.ImportExport.WriteStackNew(target1, names, label.astype(np.uint8))
+    target1 = os.path.join(targetFolder,'yarn1')
+    if not os.path.exists(target1):
+        os.mkdir(target1)
+    robpylib.CommonFunctions.ImportExport.WriteStackNew(target1, names, label.astype(np.uint8))
     
-    # print('expand fibers of top yarn')
-    # print('1 - make one solid piece')
-    # results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn1[:,:,z]) for z in range(yarn2.shape[2]))
-    # label = np.array(results).transpose(1,2,0)
+    print('expand fibers of top yarn')
+    print('1 - make one solid piece')
+    results = Parallel(n_jobs = 16, temp_folder = temp_folder)(delayed(yarn_labeling)(yarn1[:,:,z]) for z in range(yarn2.shape[2]))
+    label = np.array(results).transpose(1,2,0)
     
-    # print('2 - 3D dilation skipped')
+    print('2 - 3D dilation')
     # cut2 = int(k2/2)
     
     # gpu_array = cp.array(label[:,:,:cut2])
@@ -158,14 +158,14 @@ def track_yarn_affiliation(sample, baseFolder=baseFolder):
     # label[:,:,:cut2] = cpu_array1
     # label[:,:,cut2:k2+50] = cpu_array2
     
-    # cpu_array = label
-    # cpu_array = ndimage.morphology.binary_dilation(cpu_array, structure=ball(10))
-    # label = cpu_array
+    cpu_array = label
+    cpu_array = ndimage.morphology.binary_dilation(cpu_array, structure=ball(10))
+    label = cpu_array
     
-    # target2 = os.path.join(targetFolder,'yarn2')
-    # if not os.path.exists(target2):
-    #     os.mkdir(target2)
-    # robpylib.CommonFunctions.ImportExport.WriteStackNew(target2, names, label.astype(np.uint8))
+    target2 = os.path.join(targetFolder,'yarn2')
+    if not os.path.exists(target2):
+        os.mkdir(target2)
+    robpylib.CommonFunctions.ImportExport.WriteStackNew(target2, names, label.astype(np.uint8))
     
 
 samples = os.listdir(baseFolder)
