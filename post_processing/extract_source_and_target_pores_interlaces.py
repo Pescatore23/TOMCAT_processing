@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 
 baseFolder = r"A:\Robert_TOMCAT_4"
-
+leg_dict = {}
 
 def load_slice(sample, z=0, baseFolder = baseFolder):
     sourceFolder = os.path.join(baseFolder, sample, '05b_labels_split_v2')
@@ -43,10 +43,15 @@ def get_leg_vals(im,loc, vert=True):
     v2 = np.unique(im2)[1:]
     return v1,v2
 
-def leg_unique_values(sample, baseFolder=baseFolder, z1=0, z2=-1, bot_vert=False, top_vert=True):
+def leg_unique_values(sample, z1, z2, bot_vert, top_vert, baseFolder=baseFolder):
     print(sample)
     top_im = load_slice(sample, z=z1, baseFolder=baseFolder)
     t1, t2 = get_leg_vals(top_im, 'top', vert=top_vert)
     bot_im = load_slice(sample, z=z2, baseFolder=baseFolder)
     s1, s2 = get_leg_vals(bot_im, 'bot', vert=bot_vert)
     return s1, s2, t1, t2
+
+def populate_leg_dict(sample, leg_dict, baseFolder=baseFolder, z1=0, z2=-1, bot_vert=False, top_vert=True):
+    s1, s2, t1, t2 = leg_unique_values(sample, z1, z2, bot_vert, top_vert, baseFolder=baseFolder)
+    leg_dict[sample] = ((s1,s2),(t1,t2))
+    return leg_dict
