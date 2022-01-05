@@ -11,8 +11,8 @@ from ij import IJ
 
 import myFunctions as mf
 
-slice_number=540
-sample="R_m8_33_050_2"
+slice_number=1200
+sample="R_m4_33_050_2"
 
 processing_stage='02_pystack_registered'
 processing_stage='00_raw'
