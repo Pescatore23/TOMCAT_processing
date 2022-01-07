@@ -17,6 +17,7 @@ host = socket.gethostname()
 
 num_cores = 16
 temp_folder = r"Z:\users\firo\joblib_tmp"
+temp_folder = None
 if host == 'ddm05307':
     num_cores = 8
     temp_folder = None
@@ -33,8 +34,10 @@ mount=''
 #baseFolder = r'S:\Zwischenlager\disk1'
 #baseFolder=r'Y:\TOMCAT_3'
 baseFolder = r"E:\Robert_TOMCAT_5_split"
-# baseFolder = r"E:\Robert\Robert_TOMCAT_2"
 
+# baseFolder = r"E:\Robert\Robert_TOMCAT_2"
+if host == 'mavt-cbp-w001m':
+    baseFolder = '/Users/robfisch/Robert_TOMCAT_2'
 #newBaseFolder=r'X:\TOMCAT3_processing_1'
 #newBaseFolder=r'Y:\TOMCAT_3'
 newBaseFolder = baseFolder
@@ -173,7 +176,7 @@ def register(sample, baseFolder=baseFolder, newBaseFolder=False, stage='00_raw',
 
     register_slice(sourceFolder,targetFolder,matFolder,slicelist[0],regfile)
     if parallel:
-        if sample[1]=='3' or sample[1]=='_':          #register every slice separately in the case of single yarns
+        if sample[1]=='3':# or sample[1]=='_':          #register every slice separately in the case of single yarns
             Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(register_slice)(sourceFolder,targetFolder,matFolder,z,regfile, sample=sample ) for z in range(zmax))
         
         else:                       #interlaces seem to be suitable to save computation time by just registering some test slices and then apply transformation onto the rest
@@ -203,7 +206,7 @@ ___________________
 
 c=0
 samples=os.listdir(baseFolder)
-
+samples = ['R_m4_33_050_2']
 
 print(len(samples),' samples to calculate')
 
