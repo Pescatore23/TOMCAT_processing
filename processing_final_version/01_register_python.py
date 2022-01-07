@@ -94,7 +94,7 @@ def get_transformation(Tstack):
 
 def apply_transformation(Tstack, trans_matrix):
 #    Tstack=np.transpose(Tstack,(2,0,1))
-    outStack=np.zeros(Tstack.shape).astype(np.float)
+    outStack=np.zeros(Tstack.shape)
     for t in range(Tstack.shape[0]):
 #        print('t = ',t)
         tform = tf.AffineTransform(matrix=trans_matrix[t,:,:])
