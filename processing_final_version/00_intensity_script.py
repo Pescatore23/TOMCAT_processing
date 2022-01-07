@@ -19,6 +19,9 @@ import robpylib
 import numpy as np
 from joblib import Parallel, delayed
 import multiprocessing as mp
+import socket
+
+host = socket.gethostname()
 
 num_cores=mp.cpu_count()
 num_cores = 8
@@ -32,6 +35,9 @@ temp_folder = None
 # baseFolder = r"Z:\Robert_TOMCAT_3"
 baseFolder = r"E:\Robert\Robert_TOMCAT_2"
 # baseFolder = "E:\Robert_TOMCAT_3b"
+
+if host == 'mavt-cbp-w001m':
+    baseFolder = '/Users/robfisch/Robert_TOMCAT_2'
 
 repeats = robpylib.TOMCAT.INFO.samples_to_repeat
 #newDiskfolder=r'F:\Zwischenlager_Robert\TOMCAT_3'
@@ -111,7 +117,8 @@ def correctIntensityProfile(sample, newDiskfolder=newDiskfolder, parallel=parall
     
        
         
-samples=makesamplelist(baseFolder)
+# samples=makesamplelist(baseFolder)
+samples = ['R_m4_33_050_2']
 length=len(samples)
 c=1
 #if parallel:
