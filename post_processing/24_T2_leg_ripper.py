@@ -36,7 +36,7 @@ def rip_legs(sample, i, Stack, names, sourceFolder, timestepname):
     legfolder = ''.join([timestepname,'_leg_',str(i)])
     targetfolder = os.path.join(sourceFolder, legfolder)
     
-    WriteStackNew(os.join.path(targetfolder), legnames, leg, track=False)
+    WriteStackNew(os.path.join(targetfolder), legnames, leg, track=False)
     
     
 def timestep_operation(sample, sourceFolder, timestepname):
