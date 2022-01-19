@@ -33,8 +33,10 @@ def rip_legs(sample, i, Stack, names, sourceFolder, timestepname):
     legnames = names[z:z+dz]
     
     
-    legfolder = ''.join([timestepname,'_leg_',str(i)])
-    targetfolder = os.path.join(sourceFolder, legfolder)
+    legfolder = ''.join([sourceFolder,'_leg_',str(i)])
+    if not os.path.exists(legfolder):
+        os.makedirs(legfolder)
+    targetfolder = os.path.join(legfolder, timestepname)
     
     WriteStackNew(os.path.join(targetfolder), legnames, leg, track=False)
     
