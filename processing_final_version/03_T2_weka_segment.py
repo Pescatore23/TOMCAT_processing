@@ -28,38 +28,38 @@ import RobertFijiFunctions as rff
 from ij.io import FileSaver
 
 
-baseFolder = r'E:\Robert_TOMCAT_2'
+baseFolder = r"N:\Dep305\Robert_Fischer\Robert_TOMCAT_2"
 
-sample = 'R_m4_33_50_2'
+sample = 'R_m4_33_050_2'
 
 leg = '_leg_0'
 
-sourceFolder = ''.join(['02_pystack_registered', leg])
+sourceFolder = os.path.join(baseFolder,sample,''.join(['02_pystack_registered', leg]))
 
 targetFolder = os.path.join(baseFolder,sample,''.join(["04_weka_segmented",leg])) 
 
 if not os.path.exists(targetFolder):
-	os.mkdir(targetFolder)
+	os.makedirs(targetFolder)
 
-timestepnames = os.listdir(sourcefolder)
+timestepnames = os.listdir(sourceFolder)
 print(sample,leg)
 for timestep in timestepnames[:1]:
 
 	print(timestep)
 	
 	timestep_folder = os.path.join(sourceFolder, timestep)
-	target = os.path.join(targetfolder, timestep)
+	target = os.path.join(targetFolder, timestep)
 
-	if not os path.exists(target):
+	if not os.path.exists(target):
 		os.makedirs(target)
-	
+
 	test_set, _ = rff.openSilentStack(timestep_folder )
 	
 	numThreads=0 #0 is autodetected
 	
-	segmentator = trainableSegmentation.WekaSegmentation()
-	segmentator.loadClassifier(r"H:\11_Essential_Data\03_TOMCAT\11_thin_interlaces\R_m4_33_050_2\weka\classifier\leg_0_slice_400_time_series_spatial_refine.model")
-	
+	segmentator = trainableSegmentation.WekaSegmentation(test_set)
+	segmentator.loadClassifier(r"H:\\11_Essential_Data\\03_TOMCAT\\11_thin_interlaces\\R_m4_33_050_2\\weka\\classifier\\leg_0_slice_400_time_series_spatial_refine.model.model")
+	
 	result = segmentator.applyClassifier(test_set, numThreads, 0)     #0 for labeled image, 1 for probability map of each phase (=hyperstack)
 	
 	if not os.path.exists(os.path.join(target,'temp')):
@@ -68,7 +68,6 @@ for timestep in timestepnames[:1]:
 	
 	test_set = None
 	
-	logfile=open(''.join([targetFolder,'\\temp\\wekalog.txt']),'w')
 	for item in usedFeatures:
 		logfile.write("%s\n" % item)
 	logfile.write("%s\n" % tottime)

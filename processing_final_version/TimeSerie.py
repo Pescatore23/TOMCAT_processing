@@ -11,12 +11,13 @@ from ij import IJ
 
 import myFunctions as mf
 
-slice_number=1200
+slice_number=400
 sample="R_m4_33_050_2"
 
-processing_stage='02_pystack_registered'
-processing_stage='00_raw'
+processing_stage='02_pystack_registered_leg_0'
+#processing_stage='00_raw'
 #processing_stage='03_gradient_filtered'
+#processing_stage = '03_reg_ML_seg'
 
 #baseFolder = "V:\\TOMCAT_II_1"
 #baseFolder = "U:\\disk1"
