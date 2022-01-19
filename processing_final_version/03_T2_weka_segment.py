@@ -45,10 +45,9 @@ timestepnames = os.listdir(sourceFolder)
 print(sample,leg)
 
 segmentator = trainableSegmentation.WekaSegmentation()
-segmentator.loadClassifier(r"H:\\11_Essential_Data\\03_TOMCAT\\11_thin_interlaces\\R_m4_33_050_2\\weka\\classifier\\leg_0_slice_400_time_series_spatial_dry_200time_refine.model")
-	
-
-for timestep in timestepnames[:2]:
+segmentator.loadClassifier(r"H:\\11_Essential_Data\\03_TOMCAT\\11_thin_interlaces\\R_m4_33_050_2\\weka\\classifier\\leg_0_slice_400_time_series_spatial_dry_200time_leg_2_refine.model")	
+print('model loaded')
+for timestep in timestepnames[2:]:
 
 	print(timestep)
 	
@@ -58,12 +57,16 @@ for timestep in timestepnames[:2]:
 	if not os.path.exists(target):
 		os.makedirs(target)
 
-	test_set, _ = rff.openSilentStack(timestep_folder )
-	
+	test_set, _ = rff.openSilentStack(timestep_folder)
+
+	# segmentator = trainableSegmentation.WekaSegmentation(test_set)
+	# segmentator.loadClassifier(r"H:\\11_Essential_Data\\03_TOMCAT\\11_thin_interlaces\\R_m4_33_050_2\\weka\\classifier\\leg_0_slice_400_time_series_spatial_dry_200time_leg_2_refine.model")	
+	# print('model loaded')
 	numThreads=0 #0 is autodetected
 	
-	result = segmentator.applyClassifier(test_set, numThreads, 0)     #0 for labeled image, 1 for probability map of each phase (=hyperstack)
-	
+	result = segmentator.applyClassifier(test_set, 0, 0)     #0 for labeled image, 1 for probability map of each phase (=hyperstack)
+
+	#result = segmentator.getClassifiedImage()
 	if not os.path.exists(os.path.join(target,'temp')):
 			  os.makedirs(os.path.join(target,'temp'))
 	FileSaver(result).saveAsTiff(''.join([target,'\\temp\\wekastack.tif']))
