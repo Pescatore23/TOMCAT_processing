@@ -43,7 +43,12 @@ if not os.path.exists(targetFolder):
 
 timestepnames = os.listdir(sourceFolder)
 print(sample,leg)
-for timestep in timestepnames[:1]:
+
+segmentator = trainableSegmentation.WekaSegmentation()
+segmentator.loadClassifier(r"H:\\11_Essential_Data\\03_TOMCAT\\11_thin_interlaces\\R_m4_33_050_2\\weka\\classifier\\leg_0_slice_400_time_series_spatial_dry_200time_refine.model")
+	
+
+for timestep in timestepnames[:2]:
 
 	print(timestep)
 	
@@ -57,9 +62,6 @@ for timestep in timestepnames[:1]:
 	
 	numThreads=0 #0 is autodetected
 	
-	segmentator = trainableSegmentation.WekaSegmentation(test_set)
-	segmentator.loadClassifier(r"H:\\11_Essential_Data\\03_TOMCAT\\11_thin_interlaces\\R_m4_33_050_2\\weka\\classifier\\leg_0_slice_400_time_series_spatial_refine.model.model")
-	
 	result = segmentator.applyClassifier(test_set, numThreads, 0)     #0 for labeled image, 1 for probability map of each phase (=hyperstack)
 	
 	if not os.path.exists(os.path.join(target,'temp')):
@@ -68,11 +70,7 @@ for timestep in timestepnames[:1]:
 	
 	test_set = None
 	
-	for item in usedFeatures:
-		logfile.write("%s\n" % item)
-	logfile.write("%s\n" % tottime)
-	logfile.close()
-	
+
 	#for now, convert the tiff-Satck to tiff-sequence manually afterwards (does take less than fighting jython, fiji and weka, is also more efficnet due to parellel computing inside weka segmentation)
 	#maybe do a macro opening the stack and save it as sequence; probablity image is stored, to get binary just thershold >0.5 or anything reasonable
 	
