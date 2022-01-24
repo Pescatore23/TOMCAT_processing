@@ -50,8 +50,8 @@ def timestep_operation(sample, sourceFolder, timestepname):
     return True
         
 def sample_operation(sample, baseFolder=baseFolder):
-    sourceFolder = os.path.join(baseFolder, sample, '02_pystack_registered')
-    timestepnames = os.listdir(sourceFolder)[32:]
+    sourceFolder = os.path.join(baseFolder, sample, '01_intcorrect_med')
+    timestepnames = os.listdir(sourceFolder)
     
     Parallel(n_jobs = jobs, temp_folder = r"Z:\users\firo\joblib_tmp")(delayed(timestep_operation)(sample, sourceFolder, timestepname) for timestepname in timestepnames)
               
