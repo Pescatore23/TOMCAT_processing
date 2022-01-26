@@ -32,9 +32,9 @@ baseFolder = r"N:\Dep305\Robert_Fischer\Robert_TOMCAT_2"
 
 sample = 'R_m4_33_050_2'
 
-leg = '_leg_0'
+leg = '_leg_1'
 
-sourceFolder = os.path.join(baseFolder,sample,''.join(['02_pystack_registered', leg]))
+sourceFolder = os.path.join(baseFolder,sample,''.join(['01_intcorrect_med', leg]))
 
 targetFolder = os.path.join(baseFolder,sample,''.join(["04_weka_segmented",leg])) 
 
