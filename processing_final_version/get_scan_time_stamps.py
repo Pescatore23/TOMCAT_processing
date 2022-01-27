@@ -9,7 +9,7 @@ import h5py
 import os
 import numpy as np
 import json
-
+import pickle
 
 baseFolder = r"/Volumes/Volume/disk1_2"
 targetFolder = r"/Users/robfisch/NAS"
@@ -53,6 +53,5 @@ for sample in samples:
         
     TIME[sample] = time_stamps[::n]/1e7
 
-dumpfile = os.path.join(targetFolder, 'T2_time_part_1.txt')
-with open(dumpfile, 'w') as convert_file: 
-     convert_file.write(json.dumps(TIME))
+dumpfile = os.path.join(targetFolder, 'T2_time_part_1.p')
+pickle.dump(open(dumpfile, 'wb'), TIME)
