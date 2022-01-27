@@ -11,14 +11,14 @@ import numpy as np
 import json
 
 
-baseFolder = r"T:\disk1\T5"
-targetFolder = r"X:\Robert_TOMCAT_5_split"
+baseFolder = r"/Volumes/Volume/disk1_2"
+targetFolder = r"/Users/robfisch/NAS"
 
 samples = os.listdir(baseFolder)
-samples = os.listdir(targetFolder)
+# samples = os.listdir(targetFolder)
 
 
-TIME3 = {}
+TIME = {}
 
 for sample in samples:
     sample_id = sample
@@ -39,4 +39,8 @@ for sample in samples:
     for i in range(data.size):
         time_stamps[i] = data[i][-2]
         
-    TIME3[sample] = time_stamps[::n]/1e7
+    TIME[sample] = time_stamps[::n]/1e7
+
+dumpfile = os.path.join(targetFolder, 'T2_time_part_1.txt')
+with open(dumpfile, 'w') as convert_file: 
+     convert_file.write(json.dumps(TIME))
