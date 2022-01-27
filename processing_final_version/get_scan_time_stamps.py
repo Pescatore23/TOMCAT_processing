@@ -28,18 +28,22 @@ for sample in samples:
     metapath = os.path.join(baseFolder, sample_id, ''.join([sample_id,'_config.json']))
     datapath = os.path.join(baseFolder, sample_id, ''.join([sample_id,'.h5']))
     
-    if not os.path.exists(metapath):
-        print('config file not found')
-        continue
+    if  os.path.exists(metapath):
+        metadata = json.load(open(metapath,'r'))
+        n = metadata['nimages']
+        
+    else:
+        print('config file not found, hard coded n=500')
+        n = 500
+
     if not os.path.exists(datapath):
         print('h5 file not found')
         continue
     
-    metadata = json.load(open(metapath,'r'))
+    
     datafile = h5py.File(datapath, 'r')
     data = datafile['measurement']['instrument']['acquisition']['data']
-    
-    n = metadata['nimages']
+      
     
     data = np.array(data)
     time_stamps = np.zeros(data.size)
