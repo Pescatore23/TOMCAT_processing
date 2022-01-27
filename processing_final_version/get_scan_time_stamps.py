@@ -12,7 +12,7 @@ import json
 import pickle
 
 baseFolder = r"/Volumes/Volume/disk1_2"
-targetFolder = r"/Users/robfisch/NAS"
+targetFolder = r"/Users/robfisch"
 
 samples = os.listdir(baseFolder)
 # samples = os.listdir(targetFolder)
