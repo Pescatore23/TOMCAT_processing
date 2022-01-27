@@ -12,7 +12,7 @@ import json
 import pickle
 
 baseFolder = r"/Volumes/Volume/disk1_2"
-targetFolder = r"/Users/robfisch"
+targetFolder = r"/Users/robfisch/NAS"
 
 samples = os.listdir(baseFolder)
 # samples = os.listdir(targetFolder)
@@ -54,4 +54,4 @@ for sample in samples:
     TIME[sample] = time_stamps[::n]/1e7
 
 dumpfile = os.path.join(targetFolder, 'T2_time_part_1.p')
-pickle.dump(open(dumpfile, 'wb'), TIME)
+pickle.dump(TIME, open(dumpfile, 'wb'))
