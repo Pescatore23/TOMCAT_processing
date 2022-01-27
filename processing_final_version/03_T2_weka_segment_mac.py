@@ -34,7 +34,7 @@ baseFolder = r"/Users/robfisch/share/RawData/Dep305/Robert_Fischer/Robert_TOMCAT
 
 sample = 'R_m4_33_050_2'
 
-leg = '_leg_1'
+leg = '_leg_0'
 
 sourceFolder = os.path.join(baseFolder,sample,''.join(['01_intcorrect_med', leg]))
 
