@@ -73,11 +73,11 @@ iterations = 10
 data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 processing_version = 'processed_1200_dry_seg_aniso_sep'
 # folder1 = os.path.join(drive, 'Robert_TOMCAT_3')
-folder1 = os.path.join(drive, 'Robert_TOMCAT_5_split')
+folder1 = os.path.join(drive, 'Robert_TOMCAT_4')
 # folder1 = os.path.join(r"Y:", 'Robert_TOMCAT_5_split')
 # sourceFolder = os.path.join(data_path, processing_version)
-sourceFolder = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4')
-
+# sourceFolder = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4')
+sourceFolder = r"A:\Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim"
 samples = os.listdir(sourceFolder) 
 
 smooth_decision = 'yes'
