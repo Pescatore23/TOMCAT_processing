@@ -52,7 +52,7 @@ if host == 'DDM06609':
 
 if host == 'hades':
     drive = '/home/firo/NAS'
-    drive = '/home/firo/NAS2'
+    # drive = '/home/firo/NAS2'
     pc = True
     num_cores = 4
 
@@ -163,19 +163,22 @@ samples.sort()
 for sample in samples:
     if not sample[:3] == 'dyn': continue
     print(sample)
-    data = xr.load_dataset(os.path.join(sourceFolder, sample))
+    data = xr.open_dataset(os.path.join(sourceFolder, sample))
     name = data.attrs['name']
     filename = os.path.join(sourceFolder, ''.join(['total_energy_data_v3_1_', name, '.nc']))
     # filename = os.path.join( r'R:\Scratch\305\_Robert',''.join(['total_energy_data_v3_1_', name, '.nc']))
-    if os.path.exists(filename): continue
+    if os.path.exists(filename):
+        print('already done')
+        continue
     if name == 'T3_025_1': continue
     print(name)
     fiberpath = os.path.join(folder1, name, '01a_weka_segmented_dry', 'classified')
+    time = data['time'].data
+    data.close()
     fibers, _ = robpylib.CommonFunctions.ImportExport.ReadStackNew(fiberpath, track=False)
     void = fibers==0
     transition = data['transition_matrix'].data
     void = void[:,:,:transition.shape[2]]
-    time = data['time'].data
     watermask = transition>0
     result = Parallel(n_jobs=num_cores, temp_folder=temp_folder)(delayed(interface_per_time_step)((transition<t+1)*watermask, void) for t in range(1,time.shape[0]))
     result = np.array(result)
