@@ -59,7 +59,7 @@ if host == 'hades':
 if host == 'mpc2053.psi.ch' or host=='mpc1833.psi.ch':
     pc = True
     num_cores = 8
-    temp_folder = "/var/tmp/ntmounts/s/__fische_r/joblib_temp"
+    # temp_folder = "/var/tmp/ntmounts/s/__fische_r/joblib_temp"
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
