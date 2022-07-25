@@ -59,6 +59,7 @@ if host == 'hades':
 if host == 'mpc2053.psi.ch':
     pc = True
     num_cores = 8
+    temp_folder = "/mnt/nas_Uwrite/fische_r/joblib_temp"
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
