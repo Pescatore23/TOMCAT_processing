@@ -4,7 +4,6 @@ Created on Tue Feb 25 17:16:07 2020
 
 @author: firo
 """
-
 import xarray as xr
 import os
 import socket
@@ -17,7 +16,7 @@ from skimage import measure
 import robpylib
 from skimage.morphology import cube
 
-num_cores = 8
+num_cores = 4
 temp_folder = None
 pc = False
 
@@ -58,8 +57,9 @@ if host == 'hades':
     
 if host == 'mpc2053.psi.ch' or host=='mpc1833.psi.ch':
     pc = True
-    num_cores = 8
-    # temp_folder = "/var/tmp/ntmounts/s/__fische_r/joblib_temp"
+    num_cores = 4
+    temp_folder = "/tmp"
+
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
