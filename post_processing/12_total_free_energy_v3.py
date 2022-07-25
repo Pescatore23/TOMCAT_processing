@@ -17,7 +17,7 @@ from skimage import measure
 import robpylib
 from skimage.morphology import cube
 
-num_cores = 16
+num_cores = 8
 temp_folder = None
 pc = False
 
@@ -55,6 +55,10 @@ if host == 'hades':
     # drive = '/home/firo/NAS2'
     pc = True
     num_cores = 4
+    
+if host == 'mpc2053.psi.ch':
+    pc = True
+    num_cores = 8
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
 
