@@ -27,7 +27,7 @@ drive = r'\\152.88.86.68\data118'
 if host=='xerus.local': 
     drive = r"NAS"
     num_cores = 7
-    
+   
 #  Part 1:
 if host == 'ddm05307':
     drive = r'Z:'
@@ -74,11 +74,12 @@ data_path = os.path.join(drive, 'Robert_TOMCAT_3_netcdf4_archives')
 processing_version = 'processed_1200_dry_seg_aniso_sep'
 # folder1 = os.path.join(drive, 'Robert_TOMCAT_3')
 # folder1 = os.path.join(drive, 'Robert_TOMCAT_4')
-folder1 = r"A:\Robert_TOMCAT_4"
+folder1 = "/mnt/nas_Uwrite/fische_r/NAS_data"
 # folder1 = os.path.join(r"Y:", 'Robert_TOMCAT_5_split')
 # sourceFolder = os.path.join(data_path, processing_version)
 # sourceFolder = os.path.join(drive, 'Robert_TOMCAT_5_netcdf4')
-sourceFolder = r"A:\Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim"
+# sourceFolder = r"A:\Robert_TOMCAT_4_netcdf4_split_v2_no_pore_size_lim"
+sourceFolder = "/mnt/nas_Uwrite/fische_r/NAS_data"
 samples = os.listdir(sourceFolder) 
 
 smooth_decision = 'yes'
