@@ -56,7 +56,7 @@ if host == 'hades':
     pc = True
     num_cores = 4
     
-if host == 'mpc2053.psi.ch' or host=='mpc1833':
+if host == 'mpc2053.psi.ch' or host=='mpc1833.psi.ch':
     pc = True
     num_cores = 8
     temp_folder = "/mnt/nas_Uwrite/fische_r/joblib_temp"
