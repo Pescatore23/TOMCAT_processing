@@ -57,7 +57,7 @@ if host == 'hades':
     
 if host == 'mpc2053.psi.ch' or host=='mpc1833.psi.ch':
     pc = True
-    num_cores = 4
+    num_cores = 1
     temp_folder = "/dev/shm"
 
 
