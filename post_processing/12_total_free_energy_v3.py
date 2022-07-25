@@ -57,8 +57,8 @@ if host == 'hades':
     
 if host == 'mpc2053.psi.ch' or host=='mpc1833.psi.ch':
     pc = True
-    num_cores = 1
-    temp_folder = "/dev/shm"
+    num_cores = 4
+    temp_folder = "/home/fische_r/tmp"
 
 
 if pc == False: print('host is '+host+' , make sure you run the script on the proper machine')
