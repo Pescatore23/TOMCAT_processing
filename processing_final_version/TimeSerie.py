@@ -1,35 +1,48 @@
-
-
-import sys
 import os
+from ij import IJ, ImagePlus, ImageStack
 
-homeCodePath= "H:\\10_Python\\005_Scripts_from_others\\005_Marcelos_Processing_Files\\wicking-yarn-master\\wicking-yarn-master"
-if homeCodePath not in sys.path:
-    sys.path.append(homeCodePath)
+baseFolder = r"D:\Paper_3_wicking_yarn_interlaces\reconstructed_data"
 
-from ij import IJ
-
-import myFunctions as mf
-
+sample="T4_025_3"
 slice_number=300
-sample="R_m4_33_050_2"
 
-processing_stage='02_pystack_registered_leg_0'
-#processing_stage='00_raw'
+#processing_stage='02_pystack_registered_leg_0'
+processing_stage='00_raw'
 #processing_stage='03_gradient_filtered'
 #processing_stage = '03_reg_ML_seg'
 
-#baseFolder = "V:\\TOMCAT_II_1"
-#baseFolder = "U:\\disk1"
-#baseFolder= r"W:\TOMCAT_3_segmentation"
-#baseFolder = r'E:\\Robert_TOMCAT_3b'
-#baseFolder = r"Z:\Robert_TOMCAT_4"
-#baseFolder =r"E:\Robert_TOMCAT_3b"
-baseFolder = r"N:\Dep305\Robert_Fischer\Robert_TOMCAT_2"
+
+def openSampleImages(folder, imgNumber, name="stack"):
+    """Open all images in folder's subfolder corresponding to imgNumber"""
+    #folder = "E:\\TOMCAT_02\\pet300-1_seq2_water"
+    #folder = "E:\\TOMCAT_02\\pet300-1_seq2"
+    #imgNumber = 20;
+
+    names = []
+    scans = []
+    subfolders = [d for d in os.listdir(folder) if os.path.isdir(os.path.join(folder, d))]
+
+    isFirst = True
+    for subfolder in subfolders:
+        imgs = os.listdir(folder + "/" + subfolder)
+        if len(imgs) >= imgNumber:
+            currImp = IJ.openImage(folder + "/" + subfolder + "/" + imgs[imgNumber])
+            names.append(imgs[imgNumber])
+            scans.append(subfolder)
+            if isFirst:
+                stack = ImageStack(currImp.getWidth(), currImp.getHeight())
+                isFirst = False
+            stack.addSlice(currImp.getProcessor())
+
+    imp = ImagePlus("stack", stack)
+    imp.show()
+    imp.setTitle(name)
+    return imp, names, scans
+
 
 samples = os.listdir(baseFolder)
 samples = [sample]
 
 for sample in samples:
 	sourceFolder = os.path.join(baseFolder, sample, processing_stage)
-	original, names, scans = mf.openSampleImages(sourceFolder, slice_number, name=''.join([sample,"_slice_",str(slice_number)]))
+	original, names, scans = openSampleImages(sourceFolder, slice_number, name=''.join([sample,"_slice_",str(slice_number)]))
