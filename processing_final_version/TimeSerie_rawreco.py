@@ -20,7 +20,7 @@ def openSampleImages(folder, imgNumber, name="stack"):
 
     names = []
     scans = []
-    subfolders = [d for d in os.listdir(folder) if os.path.isdir(os.path.join(folder, d))]
+    subfolders = [d for d in os.listdir(folder) if os.path.isdir(os.path.join(folder, d)) and d[:3]=='rec']
     subfolders.sort()
 
     isFirst = True
@@ -45,5 +45,5 @@ samples = os.listdir(baseFolder)
 samples = [sample]
 
 for sample in samples:
-	sourceFolder = os.path.join(baseFolder, sample, processing_stage)
+	sourceFolder = os.path.join(baseFolder, sample)#, processing_stage)
 	original, names, scans = openSampleImages(sourceFolder, slice_number, name=''.join([sample,"_slice_",str(slice_number)]))
