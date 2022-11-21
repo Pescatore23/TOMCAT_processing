@@ -26,6 +26,7 @@ def openSampleImages(folder, imgNumber, name="stack"):
     isFirst = True
     for subfolder in subfolders:
         imgs = os.listdir(folder + "/" + subfolder)
+        imgs.sort()
         if len(imgs) >= imgNumber:
             currImp = IJ.openImage(folder + "/" + subfolder + "/" + imgs[imgNumber])
             names.append(imgs[imgNumber])
