@@ -10,6 +10,11 @@ requires my Python library robpylib Pescatore23/robpylib to run, mostly for imag
 ## Usage
 
 Those are scripts used for the specific analysis tasks that have evolved in quality over time and are not complete. Probably require adaption for any other use.
+The data is published in two datasets at:
+```url
+https://doi.org/10.16907/4e68fa32-b886-4a07-971b-981634ff1e67
+https://doi.org/10.16907/b638b0f7-b8ab-4b10-8950-fa7a61e8e2b8
+```
 
 ## Citation
 
@@ -37,11 +42,11 @@ If you find any parts of this repository useful for your work, please consider c
    title = {Wicking dynamics in yarns},
    journal = {Journal of Colloid and Interface Science},
    volume = {625},
-   pages = {1-11},
    DOI = {10.1016/j.jcis.2022.04.060},
    year = {2022},
    type = {Journal Article}
 }
+```
 
 ```bibtex
 @article{Fischer2022a,
